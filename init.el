@@ -34,8 +34,6 @@
   :bind (("s-m m" . magit-status)
 	 ("s-m l" . magit-log)
 	 ("s-m f" . magit-file-log)
-	 ("s-m b" . magit-blame-mode)
+	 ("s-m b" . magit-blame-mode))
   :config
   (setq magit-last-seen-setup-instructions "1.4.0"))
-
-
