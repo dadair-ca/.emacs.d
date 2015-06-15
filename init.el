@@ -18,6 +18,7 @@
 (load-library "style")
 (load-library "backups")
 (load-library "keys")
+(load-library "editing")
 
 ;; Keep Emacs custom-variables in a separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -42,3 +43,27 @@
 
 (use-package lua-mode
   :ensure t)
+
+(use-package clojure-mode
+  :ensure t)
+
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         ("C-c C->" . mc/mark-all-like-this)))
+
+(use-package expand-region
+  :ensure t
+  :bind ("C-=" . er/expand-region))
+
+(use-package paredit
+  :ensure t
+  :init 
+  (load-library "paredit-config"))
+
+(use-package helm
+  :ensure t
+  :config
+  (helm-mode t))
