@@ -27,7 +27,9 @@
 
 (use-package ace-jump-mode
   :ensure t
-  :bind ("C-." . ace-jump-mode))
+  :bind (("C-c w" . ace-jump-word-mode)
+	 ("C-c l" . ace-jump-line-mode)
+	 ("C-c c" . ace-jump-char-mode)))
 
 (use-package magit
   :ensure t
@@ -37,3 +39,6 @@
 	 ("s-m l" . magit-log)
 	 ("s-m f" . magit-file-log)
 	 ("s-m b" . magit-blame-mode)))
+
+(use-package lua-mode
+  :ensure t)
