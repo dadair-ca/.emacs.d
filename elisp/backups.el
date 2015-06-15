@@ -1,10 +1,6 @@
-;; Write backups files to their own directory
-(setq backup-directory-alist
-      `(("." . ,(expand-file-name
-		 (concat user-emacs-directory "backups")))))
-
-;; make backups, even when version-controlled
-(setq vc-make-backup-files t)
+;; Disable backups and auto-save
+(setq backup-inhibited t)
+(setq auto-save-default nil)
 
 ;; Provide the library to Emacs
 (provide 'backups)
