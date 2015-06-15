@@ -54,6 +54,9 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C->" . mc/mark-all-like-this)))
 
+(use-package projectile
+  :ensure t)
+
 (use-package expand-region
   :ensure t
   :bind ("C-=" . er/expand-region))
@@ -61,9 +64,11 @@
 (use-package paredit
   :ensure t
   :init 
-  (load-library "paredit-config"))
+  (load-library "config-paredit"))
 
 (use-package helm
   :ensure t
   :config
   (helm-mode t))
+
+(use-package org)

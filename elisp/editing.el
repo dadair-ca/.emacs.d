@@ -6,4 +6,6 @@
 
 (setq tab-always-indent 'complete) ;; smart tabbing
 
+(auto-fill-mode t) ;; always use auto-fill mode
+
 (provide 'editing)
