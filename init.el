@@ -19,7 +19,6 @@
 (load-library "backups")
 (load-library "keys")
 (load-library "editing")
-(load-library "system")
 
 ;; Keep Emacs custom-variables in a separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -73,3 +72,13 @@
   (helm-mode t))
 
 (use-package org)
+
+(use-package mu4e
+  :load-path "/usr/local/Cellar/mu/HEAD/share/emacs/site-lisp/mu4e"
+  :config
+  (load-library "config-mu4e"))
+
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (load-library "system"))
