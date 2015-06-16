@@ -19,6 +19,7 @@
 (load-library "backups")
 (load-library "keys")
 (load-library "editing")
+(load-library "system")
 
 ;; Keep Emacs custom-variables in a separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
