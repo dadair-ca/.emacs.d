@@ -1,5 +1,7 @@
 (require 'mu4e)
 
+(setq mu4e-mu-binary "/usr/local/bin/mu")
+
 (setq mu4e-maildir (expand-file-name "~/Maildir"))
 
 (setq mu4e-drafts-folder "/[Gmail].Drafts")
@@ -17,8 +19,7 @@
 
 (setq
  user-mail-address "adair.david@gmail.com"
- user-full-name "David Adair"
- message-signature (concat "Sent from Emacs."))
+ user-full-name "David Adair")
 
 (require 'smtpmail)
 
