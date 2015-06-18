@@ -2,7 +2,9 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
-	     '("melpa" . "http://melpa.org/packages/"))
+             '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
 ;; Bootstrap `use-package`
@@ -82,3 +84,6 @@
   :ensure t
   :config
   (load-library "system"))
+
+(use-package cider
+  :ensure t)
