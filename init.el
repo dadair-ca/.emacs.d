@@ -87,3 +87,6 @@
 
 (use-package cider
   :ensure t)
+
+(use-package markdown-mode
+  :ensure t)

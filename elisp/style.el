@@ -12,4 +12,7 @@
 ;; Highlight matching parentheses when the point is on them
 (show-paren-mode 1)
 
+;; Load a default theme
+(load-theme 'deeper-blue)
+
 (provide 'style)
