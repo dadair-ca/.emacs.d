@@ -31,17 +31,14 @@
 (use-package ace-jump-mode
   :ensure t
   :bind (("C-c w" . ace-jump-word-mode)
-	 ("C-c l" . ace-jump-line-mode)
-	 ("C-c c" . ace-jump-char-mode)))
+         ("C-c l" . ace-jump-line-mode)
+         ("C-c c" . ace-jump-char-mode)))
 
 (use-package magit
   :ensure t
   :init
   (setq magit-last-seen-setup-instructions "1.4.0")
-  :bind (("s-m m" . magit-status)
-	 ("s-m l" . magit-log)
-	 ("s-m f" . magit-file-log)
-	 ("s-m b" . magit-blame-mode)))
+  :bind ("s-m m" . magit-status))
 
 (use-package lua-mode
   :ensure t)
@@ -70,7 +67,7 @@
 
 (use-package paredit
   :ensure t
-  :init 
+  :init
   (load-library "config-paredit"))
 
 (use-package helm
@@ -113,3 +110,7 @@
 (use-package rainbow-delimiters
   :ensure t
   :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+(use-package nyan-mode
+  :ensure t
+  :init (nyan-mode))
