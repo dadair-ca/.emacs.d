@@ -49,6 +49,11 @@
 (use-package clojure-mode
   :ensure t)
 
+(use-package clj-refactor
+  :ensure t
+  :init
+  (load-library "config-cljrefactor"))
+
 (use-package multiple-cursors
   :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
@@ -90,3 +95,21 @@
 
 (use-package markdown-mode
   :ensure t)
+
+(use-package restclient
+  :ensure t)
+
+(use-package company
+  :ensure t
+  :config (add-hook 'after-init-hook 'global-company-mode))
+
+(use-package yesql-ghosts
+  :ensure t)
+
+(use-package yasnippet
+  :ensure t
+  :config (load-library "config-yasnippet"))
+
+(use-package rainbow-delimiters
+  :ensure t
+  :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))

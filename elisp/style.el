@@ -12,7 +12,12 @@
 ;; Highlight matching parentheses when the point is on them
 (show-paren-mode 1)
 
-;; Load a default theme
-(load-theme 'deeper-blue)
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/tomorrow-theme")
+(add-to-list 'load-path "~/.emacs.d/themes/tomorrow-theme")
+(load-theme 'tomorrow-night t)
+
+;;(set-face-attribute 'default nil :font "Inconsolatazi4-12")
+
+(fset 'yes-or-no-p 'y-or-n-p)
 
 (provide 'style)

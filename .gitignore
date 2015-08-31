@@ -21,3 +21,6 @@ session*
 .cask
 tramp
 /var/pcache
+/.mc-lists.el
+/bookmarks
+/ido.last
