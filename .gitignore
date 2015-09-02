@@ -24,3 +24,4 @@ tramp
 /.mc-lists.el
 /bookmarks
 /ido.last
+/.org-id-locations

@@ -16,8 +16,6 @@
 (add-to-list 'load-path "~/.emacs.d/themes/tomorrow-theme")
 (load-theme 'tomorrow-night t)
 
-;;(set-face-attribute 'default nil :font "Inconsolatazi4-12")
-
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (add-hook 'after-init-hook 'global-whitespace-mode)

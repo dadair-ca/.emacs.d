@@ -28,11 +28,47 @@
 
 ;; ---------- Configure Packages
 
-(use-package ace-jump-mode
+(use-package avy
   :ensure t
-  :bind (("C-c w" . ace-jump-word-mode)
-         ("C-c l" . ace-jump-line-mode)
-         ("C-c c" . ace-jump-char-mode)))
+  :bind (("C-:" . avy-goto-char-2)
+         ("M-g l" . avy-goto-line)
+         ("M-g w" . avy-goto-word-1)))
+
+(use-package cider
+  :ensure t)
+
+(use-package clj-refactor
+  :ensure t
+  :init
+  (load-library "config-cljrefactor"))
+
+(use-package clojure-mode
+  :ensure t)
+
+(use-package company
+  :ensure t
+  :config (add-hook 'after-init-hook 'global-company-mode))
+
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (load-library "system"))
+
+(use-package expand-region
+  :ensure t
+  :bind ("C-=" . er/expand-region))
+
+(use-package guru-mode
+  :ensure t
+  :init (add-hook 'prog-mode-hook 'guru-mode))
+
+(use-package helm
+  :ensure t
+  :config
+  (helm-mode t))
+
+(use-package lua-mode
+  :ensure t)
 
 (use-package magit
   :ensure t
@@ -40,16 +76,13 @@
   (setq magit-last-seen-setup-instructions "1.4.0")
   :bind ("s-m m" . magit-status))
 
-(use-package lua-mode
+(use-package markdown-mode
   :ensure t)
 
-(use-package clojure-mode
-  :ensure t)
-
-(use-package clj-refactor
-  :ensure t
-  :init
-  (load-library "config-cljrefactor"))
+(use-package mu4e
+  :load-path "/usr/local/Cellar/mu/HEAD/share/emacs/site-lisp/mu4e"
+  :config
+  (load-library "config-mu4e"))
 
 (use-package multiple-cursors
   :ensure t
@@ -58,59 +91,31 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C->" . mc/mark-all-like-this)))
 
-(use-package projectile
-  :ensure t)
-
-(use-package expand-region
+(use-package nyan-mode
   :ensure t
-  :bind ("C-=" . er/expand-region))
+  :init (nyan-mode))
+
+(use-package org)
 
 (use-package paredit
   :ensure t
   :init
   (load-library "config-paredit"))
 
-(use-package helm
+(use-package projectile
   :ensure t
-  :config
-  (helm-mode t))
+  :init (projectile-global-mode))
 
-(use-package org)
-
-(use-package mu4e
-  :load-path "/usr/local/Cellar/mu/HEAD/share/emacs/site-lisp/mu4e"
-  :config
-  (load-library "config-mu4e"))
-
-(use-package exec-path-from-shell
+(use-package rainbow-delimiters
   :ensure t
-  :config
-  (load-library "system"))
-
-(use-package cider
-  :ensure t)
-
-(use-package markdown-mode
-  :ensure t)
+  :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 (use-package restclient
-  :ensure t)
-
-(use-package company
-  :ensure t
-  :config (add-hook 'after-init-hook 'global-company-mode))
-
-(use-package yesql-ghosts
   :ensure t)
 
 (use-package yasnippet
   :ensure t
   :config (load-library "config-yasnippet"))
 
-(use-package rainbow-delimiters
-  :ensure t
-  :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-
-(use-package nyan-mode
-  :ensure t
-  :init (nyan-mode))
+(use-package yesql-ghosts
+  :ensure t)
