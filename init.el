@@ -39,6 +39,10 @@
   :bind ("M-p" . ace-window)
   :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
+(use-package ace-link
+  :ensure t
+  :init (ace-link-setup-default))
+
 (use-package cider
   :ensure t)
 
@@ -73,7 +77,7 @@
   (helm-mode t))
 
 (use-package lua-mode
-  :ensure t)
+  :defer t)
 
 (use-package magit
   :ensure t
@@ -82,7 +86,7 @@
   :bind ("s-m m" . magit-status))
 
 (use-package markdown-mode
-  :ensure t)
+  :defer t)
 
 (use-package mu4e
   :load-path "/usr/local/Cellar/mu/HEAD/share/emacs/site-lisp/mu4e"
@@ -116,7 +120,7 @@
   :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 (use-package restclient
-  :ensure t)
+  :defer t)
 
 (use-package yasnippet
   :ensure t
