@@ -34,6 +34,11 @@
          ("M-g l" . avy-goto-line)
          ("M-g w" . avy-goto-word-1)))
 
+(use-package ace-window
+  :ensure t
+  :bind ("M-p" . ace-window)
+  :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+
 (use-package cider
   :ensure t)
 
