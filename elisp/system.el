@@ -48,4 +48,6 @@
               ("NEXT" :foreground "magenta" :weight bold)
               ("DONE" :foreground "green" :weight bold))))
 
+(add-hook 'before-save-hook (lambda () (delete-trailing-whitespace)))
+
 (provide 'system)

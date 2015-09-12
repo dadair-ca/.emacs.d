@@ -30,13 +30,13 @@
 
 (use-package avy
   :ensure t
-  :bind (("C-:" . avy-goto-char-2)
+  :bind (("M-g g" . avy-goto-char-2)
          ("M-g l" . avy-goto-line)
          ("M-g w" . avy-goto-word-1)))
 
 (use-package ace-window
   :ensure t
-  :bind ("M-p" . ace-window)
+  :bind ("M-g i" . ace-window)
   :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
 (use-package ace-link
@@ -104,7 +104,8 @@
   :ensure t
   :init (nyan-mode))
 
-(use-package org)
+(use-package org
+  :defer t)
 
 (use-package paredit
   :ensure t
