@@ -11,7 +11,8 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-(require 'use-package)
+(eval-when-compile
+  (require 'use-package))
 
 ;; Add elisp folder for custom 'libraries'
 (add-to-list 'load-path "~/.emacs.d/elisp/")
@@ -71,14 +72,6 @@
   :ensure t
   :init (add-hook 'prog-mode-hook 'guru-mode))
 
-(use-package helm
-  :ensure t
-  :config
-  (helm-mode t))
-
-(use-package lua-mode
-  :defer t)
-
 (use-package magit
   :ensure t
   :init
@@ -105,7 +98,8 @@
   :init (nyan-mode))
 
 (use-package org
-  :defer t)
+  :defer t
+  :bind (("C-c a" . org-agenda)))
 
 (use-package paredit
   :ensure t
@@ -125,12 +119,7 @@
 
 (use-package yasnippet
   :ensure t
-  :config (load-library "config-yasnippet"))
+  :init (load-library "config-yasnippet"))
 
 (use-package yesql-ghosts
   :ensure t)
-
-(use-package golden-ratio
-  :ensure t
-  :init (progn (golden-ratio-mode 1)
-               (advice-add #'ace-window :after #'golden-ratio)))
