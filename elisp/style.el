@@ -19,6 +19,7 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (add-hook 'after-init-hook 'global-whitespace-mode)
+
 (setq whitespace-style (list 'face 'trailing))
 
 (add-hook 'prog-mode-hook 'prettify-symbols-mode)

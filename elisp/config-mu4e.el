@@ -1,12 +1,14 @@
 (require 'mu4e)
 
+(setq mail-user-agent 'mu4e-user-agent)
+
 (setq mu4e-mu-binary "/usr/local/bin/mu")
 
-(setq mu4e-maildir (expand-file-name "~/Maildir"))
-
-(setq mu4e-drafts-folder "/[Gmail].Drafts")
-(setq mu4e-sent-folder "/[Gmail].Sent Mail")
-(setq mu4e-trash-foler "/[Gmail].Trash")
+(setq mu4e-maildir (expand-file-name "~/Maildir")
+      mu4e-drafts-folder "/[Gmail].Drafts"
+      mu4e-sent-folder "/[Gmail].Sent Mail"
+      mu4e-trash-folder "/[Gmail].Trash"
+      mu4e-attachment-dir "~/Downloads")
 
 (setq mu4e-sent-messages-behavior 'delete)
 
@@ -15,7 +17,9 @@
         ("/[Gmail].Sent Mail" . ?s)
         ("/[Gmail].Trash" . ?t)))
 
-(setq mu4e-get-mail-command "offlineimap")
+(setq mu4e-get-mail-command "offlineimap"
+      mu4e-update-interval 120
+      mu4e-headers-auto-update t)
 
 (setq
  user-mail-address "adair.david@gmail.com"
@@ -35,7 +39,9 @@
       smtpmail-debug-info t)
 
 (setq mu4e-view-prefer-html t)
+
 (setq mu4e-show-images t)
+
 (when (fboundp 'imagemagick-register-types)
   (imagemagick-register-types))
 

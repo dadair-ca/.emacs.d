@@ -31,7 +31,7 @@
 
 (use-package avy
   :ensure t
-  :bind (("M-g g" . avy-goto-char-2)
+  :bind (("M-g g" . avy-goto-char)
          ("M-g l" . avy-goto-line)
          ("M-g w" . avy-goto-word-1)))
 
@@ -44,20 +44,21 @@
   :ensure t
   :init (ace-link-setup-default))
 
-(use-package cider
-  :ensure t)
+(use-package cider :ensure t)
 
 (use-package clj-refactor
   :ensure t
   :init
   (load-library "config-cljrefactor"))
 
-(use-package clojure-mode
-  :ensure t)
+(use-package clojure-mode :ensure t)
 
 (use-package company
   :ensure t
+  :diminish company-mode
   :config (add-hook 'after-init-hook 'global-company-mode))
+
+(use-package diminish :defer t)
 
 (use-package exec-path-from-shell
   :ensure t
@@ -70,7 +71,14 @@
 
 (use-package guru-mode
   :ensure t
+  :diminish guru-mode
   :init (add-hook 'prog-mode-hook 'guru-mode))
+
+(use-package helm
+  :disabled t
+  :ensure t
+  :diminish helm-mode
+  :config (helm-mode))
 
 (use-package magit
   :ensure t
@@ -98,7 +106,9 @@
   :init (nyan-mode))
 
 (use-package org
-  :defer t
+  :ensure t
+  :init (add-hook 'after-init-hook (lambda () (org-agenda nil "a")))
+  :config (load-library "config-org")
   :bind (("C-c a" . org-agenda)))
 
 (use-package paredit
@@ -114,11 +124,15 @@
   :ensure t
   :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
-(use-package restclient
-  :defer t)
+(use-package restclient :defer t)
+
+(use-package smex
+  :ensure t
+  :bind (("M-x" . smex)))
 
 (use-package yasnippet
   :ensure t
+  :diminish yas-minor-mode
   :init (load-library "config-yasnippet"))
 
 (use-package yesql-ghosts

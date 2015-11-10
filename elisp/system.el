@@ -40,15 +40,22 @@
       backup-directory-alist `(("." . ,(concat user-emacs-directory
                                                "backups"))))
 
-(setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "HOLD(h)" "DONE(d)"))))
-
-(setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "pink" :weight bold)
-              ("NEXT" :foreground "magenta" :weight bold)
-              ("HOLD" :foreground "white" :background "grey" :weight bold)
-              ("DONE" :foreground "green" :weight bold))))
-
 (add-hook 'before-save-hook (lambda () (delete-trailing-whitespace)))
+
+(setq sql-postgres-login-params
+      '((user :default "xzilend")
+        (database :default "pacsley-dev")
+        (server :default "localhost")
+        (port :default 5432)))
+
+(add-hook 'sql-interactive-mode-hook
+          (lambda ()
+            (toggle-truncate-lines t)))
+
+(setq dired-recursive-deletes 'always)
+(setq dired-recursive-copies 'always)
+
+(setq delete-by-moving-to-trash t
+      trash-directory "~/.Trash/emacs")
 
 (provide 'system)
