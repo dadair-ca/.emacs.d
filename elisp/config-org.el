@@ -4,7 +4,7 @@
 (setq org-directory "~/org"
       org-agenda-files (quote ("~/org/todos.org"))
       org-default-notes-file "~/org/notes.org"
-      org-refile-targets (quote ((org-agenda-files :maxlevel . 3))))
+      org-refile-targets (quote ((org-agenda-files :maxlevel . 2))))
 
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg"
       org-mobile-inbox-for-pull "~/org/mobile.org")
@@ -22,6 +22,15 @@
                         "DEFERRED(f@)"
                         "DONE(d!)"))))
 
+(setq org-todo-keyword-faces
+      '(("TODO"      . (:foreground "white"))
+        ("STARTED"   . (:foreground "blue"))
+        ("DELEGATED" . (:foreground "grey" :weight bold))
+        ("BLOCKED"   . (:foreground "red" :weight bold))
+        ("CANCELLED" . (:foreground "green"))
+        ("DEFERRED"  . (:foreground "green"))
+        ("DONE"      . (:foreground "green"))))
+
 (setq org-use-property-inheritance t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32,8 +41,7 @@
 
 (setq org-capture-templates
       (quote (("t" "todo" entry (file+headline "~/org/todos.org" "Inbox")
-               "* TODO %?\n%U\n"
-               :empty-lines-after 1))))
+               "* TODO %?\n"))))
 
 ; Use full outline paths for refile targets - we file directly with IDO
 (setq org-refile-use-outline-path t
