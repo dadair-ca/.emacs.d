@@ -24,7 +24,7 @@
 
 (setq org-todo-keyword-faces
       '(("TODO"      . (:foreground "white"))
-        ("STARTED"   . (:foreground "blue"))
+        ("STARTED"   . (:foreground "violet"))
         ("DELEGATED" . (:foreground "grey" :weight bold))
         ("BLOCKED"   . (:foreground "red" :weight bold))
         ("CANCELLED" . (:foreground "green"))
