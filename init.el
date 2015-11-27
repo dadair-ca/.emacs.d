@@ -112,13 +112,10 @@
   :ensure t
   :init (add-hook 'after-init-hook 'agenda-view)
   :config (load-library "config-org")
-  :bind (("C-c a" . agenda-view)
+  :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-M-n" . org-metadown)
          ("C-M-p" . org-metaup)))
-
-(use-package org-pomodoro
-  :ensure t)
 
 (use-package paredit
   :ensure t

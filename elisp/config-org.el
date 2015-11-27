@@ -2,7 +2,7 @@
 ;; ORG Files
 
 (setq org-directory "~/org"
-      org-agenda-files (quote ("~/org/todos.org"))
+      org-agenda-files '("~/org/todos.org" "~/org/inbox.org" "~/org/mobile.org")
       org-default-notes-file "~/org/notes.org"
       org-refile-targets (quote ((org-agenda-files :maxlevel . 2))))
 
@@ -48,6 +48,7 @@
         ("DONE" ("WAITING") ("CANCELLED") ("HOLD"))))
 
 (setq org-enforce-todo-dependencies t
+      org-enforce-todo-checkbox-dependencies t
       org-hide-leading-stars t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
