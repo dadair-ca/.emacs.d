@@ -101,13 +101,18 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C->" . mc/mark-all-like-this)))
 
-;(use-package nyan-mode :ensure t :init (nyan-mode))
+;;(use-package nyan-mode :ensure t :init (nyan-mode))
+
+(defun agenda-view ()
+  (interactive)
+  (org-agenda nil " ")
+  (delete-other-windows))
 
 (use-package org
   :ensure t
-  :init (add-hook 'after-init-hook (lambda () (org-agenda nil "a")))
+  :init (add-hook 'after-init-hook 'agenda-view)
   :config (load-library "config-org")
-  :bind (("C-c a" . org-agenda)
+  :bind (("C-c a" . agenda-view)
          ("C-c c" . org-capture)
          ("C-M-n" . org-metadown)
          ("C-M-p" . org-metaup)))

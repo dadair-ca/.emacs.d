@@ -27,6 +27,12 @@
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
+(defun gtd ()
+  (interactive)
+  (find-file "/Users/xzilend/org/todos.org"))
+
+(global-set-key (kbd "C-c b") 'gtd)
+
 (setq-default indent-tabs-mode nil)
 (setq x-select-enable-clipboard t
       x-select-enable-primary t

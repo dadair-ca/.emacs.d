@@ -13,13 +13,8 @@
 ;; TODO States, Tags, Priorities
 
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)"
-                        "NEXT(n)"
-                        "WAITING(w@/!)"
-                        "HOLD(h@/!)"
-                        "|"
-                        "CANCELLED(c@/!)"
-                        "DONE(d)"))))
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
 
 (setq org-todo-keyword-faces
       (quote (("TODO" :foreground "red")
@@ -44,13 +39,13 @@
                             ("FLAGGED" . ??))))
 
 (setq org-todo-state-tags-triggers
-      (quote (("CANCELLED" ("CANCELLED" . t))
-              ("WAITING" ("WAITING" . t))
-              ("HOLD" ("WAITING") ("HOLD" . t))
-              (done ("WAITING") ("HOLD"))
-              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+      '(("CANCELLED" ("CANCELLED" . t))
+        ("WAITING" ("CANCELLED") ("WAITING" . t))
+        ("HOLD" ("CANCELLED") ("WAITING") ("HOLD" . t))
+        (done ("WAITING") ("HOLD"))
+        ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+        ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+        ("DONE" ("WAITING") ("CANCELLED") ("HOLD"))))
 
 (setq org-enforce-todo-dependencies t
       org-hide-leading-stars t)
@@ -58,7 +53,27 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Agenda Views
 
-(setq org-agenda-compact-blocks t)
+(setq org-agenda-compact-blocks nil)
+
+(setq org-agenda-custom-commands
+      '((" " "Agenda"
+         ((agenda "" ((org-agenda-ndays 1)))
+          (tags-todo "+PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "Urgent Tasks")
+                      (org-agenda-sorting-strategy '(priority-up effort-down))))
+          (tags "REFILE"
+                ((org-agenda-overriding-header "Tasks to Refile")))
+          (todo "NEXT"
+                ((org-agenda-overriding-header "Next Tasks")
+                 (org-agenda-sorting-strategy '(priority-up effort-down))))
+          ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Effort Estimation and Clocking
+
+(setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM"
+      org-global-properties '(("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+                              ("STYLE_ALL" . "habit")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Capturing + Refilling
