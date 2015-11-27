@@ -14,34 +14,58 @@
 
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)"
-                        "STARTED(s!)"
-                        "DELEGATED(l@)"
-                        "BLOCKED(b@)"
+                        "NEXT(n)"
+                        "WAITING(w@/!)"
+                        "HOLD(h@/!)"
                         "|"
-                        "CANCELLED(c!)"
-                        "DEFERRED(f@)"
-                        "DONE(d!)"))))
+                        "CANCELLED(c@/!)"
+                        "DONE(d)"))))
 
 (setq org-todo-keyword-faces
-      '(("TODO"      . (:foreground "white"))
-        ("STARTED"   . (:foreground "violet"))
-        ("DELEGATED" . (:foreground "grey" :weight bold))
-        ("BLOCKED"   . (:foreground "red" :weight bold))
-        ("CANCELLED" . (:foreground "green"))
-        ("DEFERRED"  . (:foreground "green"))
-        ("DONE"      . (:foreground "green"))))
+      (quote (("TODO" :foreground "red")
+              ("NEXT" :foreground "cyan")
+              ("DONE" :foreground "green")
+              ("WAITING" :foreground "orange")
+              ("HOLD" :foreground "magenta")
+              ("CANCELLED" :foreground "green"))))
 
 (setq org-use-property-inheritance t)
+
+; Tags with fast selection keys
+(setq org-tag-alist (quote ((:startgroup)
+                            ("@errand" . ?e)
+                            ("@office" . ?o)
+                            ("@home" . ?H)
+                            (:endgroup)
+                            ("WAITING" . ?w)
+                            ("HOLD" . ?h)
+                            ("NOTE" . ?n)
+                            ("CANCELLED" . ?c)
+                            ("FLAGGED" . ??))))
+
+(setq org-todo-state-tags-triggers
+      (quote (("CANCELLED" ("CANCELLED" . t))
+              ("WAITING" ("WAITING" . t))
+              ("HOLD" ("WAITING") ("HOLD" . t))
+              (done ("WAITING") ("HOLD"))
+              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+
+(setq org-enforce-todo-dependencies t
+      org-hide-leading-stars t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Agenda Views
+
+(setq org-agenda-compact-blocks t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Capturing + Refilling
 
-;; Use C-c c to start capture mode
-(global-set-key (kbd "C-c c") 'org-capture)
-
 (setq org-capture-templates
-      (quote (("t" "todo" entry (file+headline "~/org/todos.org" "Inbox")
-               "* TODO %?\n"))))
+      (quote (("t" "todo" entry (file "~/org/inbox.org")
+               "* TODO %?"))))
 
 ; Use full outline paths for refile targets - we file directly with IDO
 (setq org-refile-use-outline-path t

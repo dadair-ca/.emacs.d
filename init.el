@@ -101,15 +101,19 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C->" . mc/mark-all-like-this)))
 
-(use-package nyan-mode
-  :ensure t
-  :init (nyan-mode))
+;(use-package nyan-mode :ensure t :init (nyan-mode))
 
 (use-package org
   :ensure t
   :init (add-hook 'after-init-hook (lambda () (org-agenda nil "a")))
   :config (load-library "config-org")
-  :bind (("C-c a" . org-agenda)))
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         ("C-M-n" . org-metadown)
+         ("C-M-p" . org-metaup)))
+
+(use-package org-pomodoro
+  :ensure t)
 
 (use-package paredit
   :ensure t
