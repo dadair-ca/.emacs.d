@@ -14,7 +14,6 @@
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/tomorrow-theme")
 (add-to-list 'load-path "~/.emacs.d/themes/tomorrow-theme")
-(load-theme 'tomorrow-night t)
 
 (fset 'yes-or-no-p 'y-or-n-p)
 

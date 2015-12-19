@@ -80,6 +80,9 @@
   :diminish helm-mode
   :config (helm-mode))
 
+(use-package ledger-mode
+  :ensure t)
+
 (use-package magit
   :ensure t
   :init

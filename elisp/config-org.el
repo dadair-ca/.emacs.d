@@ -2,7 +2,7 @@
 ;; ORG Files
 
 (setq org-directory "~/org"
-      org-agenda-files '("~/org/todos.org" "~/org/inbox.org" "~/org/mobile.org")
+      org-agenda-files '("~/org/todos.org" "~/org/inbox.org" "~/org/mobile.org" "~/diary")
       org-default-notes-file "~/org/notes.org"
       org-refile-targets (quote ((org-agenda-files :maxlevel . 2))))
 
@@ -13,39 +13,22 @@
 ;; TODO States, Tags, Priorities
 
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+      (quote ((sequence "PROJECT(p)" "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
 
 (setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "red")
-              ("NEXT" :foreground "cyan")
-              ("DONE" :foreground "green")
-              ("WAITING" :foreground "orange")
-              ("HOLD" :foreground "magenta")
-              ("CANCELLED" :foreground "green"))))
+      (quote (("PROJECT" :foreground "")
+              ("TODO" :foreground "")
+              ("NEXT" :foreground "")
+              ("DONE" :foreground "")
+              ("WAITING" :foreground "")
+              ("HOLD" :foreground "")
+              ("CANCELLED" :foreground ""))))
 
 (setq org-use-property-inheritance t)
 
 ; Tags with fast selection keys
-(setq org-tag-alist (quote ((:startgroup)
-                            ("@errand" . ?e)
-                            ("@office" . ?o)
-                            ("@home" . ?H)
-                            (:endgroup)
-                            ("WAITING" . ?w)
-                            ("HOLD" . ?h)
-                            ("NOTE" . ?n)
-                            ("CANCELLED" . ?c)
-                            ("FLAGGED" . ??))))
-
-(setq org-todo-state-tags-triggers
-      '(("CANCELLED" ("CANCELLED" . t))
-        ("WAITING" ("CANCELLED") ("WAITING" . t))
-        ("HOLD" ("CANCELLED") ("WAITING") ("HOLD" . t))
-        (done ("WAITING") ("HOLD"))
-        ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-        ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-        ("DONE" ("WAITING") ("CANCELLED") ("HOLD"))))
+(setq org-tag-alist (quote (("TWO" . ?2) ("FLAGGED" . ??))))
 
 (setq org-enforce-todo-dependencies t
       org-enforce-todo-checkbox-dependencies t
@@ -58,14 +41,20 @@
 
 (setq org-agenda-custom-commands
       '((" " "Agenda"
-         ((agenda "" ((org-agenda-ndays 1)))
+         ((agenda "" ((org-agenda-ndays 3)))
           (tags-todo "+PRIORITY=\"A\""
                      ((org-agenda-overriding-header "Urgent Tasks")
                       (org-agenda-sorting-strategy '(priority-up effort-down))))
           (tags "REFILE"
                 ((org-agenda-overriding-header "Tasks to Refile")))
+          (tags-todo "+TWO"
+                     ((org-agenda-overriding-header "Two-minute Tasks")
+                      (org-agenda-sorting-strategy '(priority-up effort-down))))
           (todo "NEXT"
                 ((org-agenda-overriding-header "Next Tasks")
+                 (org-agenda-sorting-strategy '(priority-up effort-down))))
+          (todo "TODO"
+                ((org-agenda-overriding-header "Todo Items")
                  (org-agenda-sorting-strategy '(priority-up effort-down))))
           ))))
 
@@ -79,9 +68,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Capturing + Refilling
 
+(require 'org-mu4e)
+(setq org-mu4e-link-query-in-headers-mode nil)
+
 (setq org-capture-templates
       (quote (("t" "todo" entry (file "~/org/inbox.org")
-               "* TODO %?"))))
+               "* TODO %?\n%a\n"))))
 
 ; Use full outline paths for refile targets - we file directly with IDO
 (setq org-refile-use-outline-path t

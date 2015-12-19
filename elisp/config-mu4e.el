@@ -2,6 +2,19 @@
 
 (setq mail-user-agent 'mu4e-user-agent)
 
+(defun shr-html2text ()
+  "Replacement for standard html2text using shr."
+  (interactive)
+  (let ((dom (libxml-parse-html-region (point-min) (point-max)))
+        (shr-width fill-column)
+  (shr-inhibit-images t)
+    (shr-bullet " "))
+     (erase-buffer)
+     (shr-insert-document dom)
+     (goto-char (point-min))))
+
+(setq mu4e-html2text-command 'shr-html2text)
+
 (setq mu4e-mu-binary "/usr/local/bin/mu")
 
 (setq mu4e-maildir (expand-file-name "~/Maildir")
@@ -17,9 +30,7 @@
         ("/[Gmail].Sent Mail" . ?s)
         ("/[Gmail].Trash" . ?t)))
 
-(setq mu4e-get-mail-command "offlineimap"
-      mu4e-update-interval 120
-      mu4e-headers-auto-update t)
+(setq mu4e-get-mail-command "offlineimap")
 
 (setq
  user-mail-address "adair.david@gmail.com"
