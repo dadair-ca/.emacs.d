@@ -4,7 +4,7 @@
 ;; Add the local bin to the emacs executables path
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
-(desktop-save-mode 1)
+(desktop-save-mode 0)
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -31,7 +31,7 @@
 
 (defun gtd ()
   (interactive)
-  (find-file "/Users/xzilend/org/todos.org"))
+  (find-file "/Users/dadair/org/todos.org"))
 
 (global-set-key (kbd "C-c b") 'gtd)
 
@@ -50,15 +50,11 @@
 
 (add-hook 'before-save-hook (lambda () (delete-trailing-whitespace)))
 
-(setq sql-postgres-login-params
-      '((user :default "xzilend")
-        (database :default "pacsley-dev")
-        (server :default "localhost")
-        (port :default 5432)))
-
 (add-hook 'sql-interactive-mode-hook
           (lambda ()
             (toggle-truncate-lines t)))
+
+(add-to-list 'auto-mode-alist '("\\.jsx?$" . javascript-mode))
 
 (setq dired-recursive-deletes 'always)
 (setq dired-recursive-copies 'always)

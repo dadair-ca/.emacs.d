@@ -2,33 +2,26 @@
 ;; ORG Files
 
 (setq org-directory "~/org"
-      org-agenda-files '("~/org/todos.org" "~/org/inbox.org" "~/org/mobile.org" "~/diary")
+      org-agenda-files '("~/org/todos.org" "~/.diary")
       org-default-notes-file "~/org/notes.org"
       org-refile-targets (quote ((org-agenda-files :maxlevel . 2))))
-
-(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg"
-      org-mobile-inbox-for-pull "~/org/mobile.org")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TODO States, Tags, Priorities
 
 (setq org-todo-keywords
-      (quote ((sequence "PROJECT(p)" "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+      (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
 
 (setq org-todo-keyword-faces
-      (quote (("PROJECT" :foreground "")
-              ("TODO" :foreground "")
-              ("NEXT" :foreground "")
-              ("DONE" :foreground "")
-              ("WAITING" :foreground "")
-              ("HOLD" :foreground "")
-              ("CANCELLED" :foreground ""))))
+      (quote (("TODO" :foreground "")
+              ("STARTED" :foreground "violet")
+              ("DONE" :foreground "green")
+              ("WAITING" :foreground "orange")
+              ("HOLD" :foreground "orange")
+              ("CANCELLED" :foreground "red"))))
 
 (setq org-use-property-inheritance t)
-
-; Tags with fast selection keys
-(setq org-tag-alist (quote (("TWO" . ?2) ("FLAGGED" . ??))))
 
 (setq org-enforce-todo-dependencies t
       org-enforce-todo-checkbox-dependencies t
@@ -45,35 +38,17 @@
           (tags-todo "+PRIORITY=\"A\""
                      ((org-agenda-overriding-header "Urgent Tasks")
                       (org-agenda-sorting-strategy '(priority-up effort-down))))
-          (tags "REFILE"
-                ((org-agenda-overriding-header "Tasks to Refile")))
-          (tags-todo "+TWO"
-                     ((org-agenda-overriding-header "Two-minute Tasks")
-                      (org-agenda-sorting-strategy '(priority-up effort-down))))
-          (todo "NEXT"
-                ((org-agenda-overriding-header "Next Tasks")
-                 (org-agenda-sorting-strategy '(priority-up effort-down))))
           (todo "TODO"
                 ((org-agenda-overriding-header "Todo Items")
                  (org-agenda-sorting-strategy '(priority-up effort-down))))
           ))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Effort Estimation and Clocking
-
-(setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM"
-      org-global-properties '(("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
-                              ("STYLE_ALL" . "habit")))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Capturing + Refilling
 
-(require 'org-mu4e)
-(setq org-mu4e-link-query-in-headers-mode nil)
-
 (setq org-capture-templates
-      (quote (("t" "todo" entry (file "~/org/inbox.org")
-               "* TODO %?\n%a\n"))))
+      '(("t" "todo" entry (file+headline "~/org/todos.org" "Inbox")
+         "* TODO %?\n")))
 
 ; Use full outline paths for refile targets - we file directly with IDO
 (setq org-refile-use-outline-path t

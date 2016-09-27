@@ -27,3 +27,5 @@ tramp
 /.org-id-locations
 /network-security.data
 /smex-items
+.emacs.desktop
+srecode-map.el

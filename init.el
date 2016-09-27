@@ -2,9 +2,9 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/"))
+             '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
+             '("marmalade" . "https://marmalade-repo.org/packages/"))
 (package-initialize)
 
 ;; Bootstrap `use-package`
@@ -44,7 +44,36 @@
   :ensure t
   :init (ace-link-setup-default))
 
-(use-package cider :ensure t)
+(use-package ag :ensure t)
+
+(defun cider-reset ()
+  (interactive)
+  (cider-interactive-eval
+   "(ns user)
+    (dev)
+    (reset)"))
+
+(defun cider-test ()
+  (interactive)
+  (cider-interactive-eval
+   "(require '[eftest.runner :as t])
+    (t/run-tests (t/find-tests \"test\") {:report eftest.report.pretty/report})"))
+
+(defun cider-stop ()
+  (interactive)
+  (cider-interactive-eval
+   "(ns user)
+    (dev)
+    (stop)"))
+
+(use-package cider
+  :ensure t
+  :bind
+  ("C-c r" . cider-reset)
+  ("C-c t" . cider-test)
+  ("C-c s" . cider-stop)
+  :config
+  (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))"))
 
 (use-package clj-refactor
   :ensure t
@@ -58,7 +87,15 @@
   :diminish company-mode
   :config (add-hook 'after-init-hook 'global-company-mode))
 
-(use-package diminish :defer t)
+(use-package diminish :ensure t)
+
+(use-package dockerfile-mode :ensure t)
+
+(use-package editorconfig
+  :ensure t
+  :init
+  (add-hook 'prog-mode-hook (editorconfig-mode 1))
+  (add-hook 'text-mode-hook (editorconfig-mode 1)))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -74,28 +111,13 @@
   :diminish guru-mode
   :init (add-hook 'prog-mode-hook 'guru-mode))
 
-(use-package helm
-  :disabled t
-  :ensure t
-  :diminish helm-mode
-  :config (helm-mode))
-
-(use-package ledger-mode
-  :ensure t)
-
 (use-package magit
   :ensure t
   :init
   (setq magit-last-seen-setup-instructions "1.4.0")
   :bind ("s-m m" . magit-status))
 
-(use-package markdown-mode
-  :defer t)
-
-(use-package mu4e
-  :load-path "/usr/local/Cellar/mu/HEAD/share/emacs/site-lisp/mu4e"
-  :config
-  (load-library "config-mu4e"))
+(use-package markdown-mode :ensure t)
 
 (use-package multiple-cursors
   :ensure t
@@ -104,16 +126,10 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C->" . mc/mark-all-like-this)))
 
-;;(use-package nyan-mode :ensure t :init (nyan-mode))
-
-(defun agenda-view ()
-  (interactive)
-  (org-agenda nil " ")
-  (delete-other-windows))
+(use-package nyan-mode :ensure t :init (nyan-mode))
 
 (use-package org
   :ensure t
-  :init (add-hook 'after-init-hook 'agenda-view)
   :config (load-library "config-org")
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
@@ -133,16 +149,34 @@
   :ensure t
   :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
-(use-package restclient :defer t)
+(use-package restclient :ensure t)
 
 (use-package smex
   :ensure t
   :bind (("M-x" . smex)))
+
+(use-package web-mode
+  :ensure t
+  :config
+  (setq-default
+   ;; js2-mode
+   js2-basic-offset 2
+   ;; web-mode
+   css-indent-offset 2
+   web-mode-markup-indent-offset 2
+   web-mode-css-indent-offset 2
+   web-mode-code-indent-offset 2
+   web-mode-attr-indent-offset 2)
+  (with-eval-after-load 'web-mode
+    (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
+    (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
+    (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))))
 
 (use-package yasnippet
   :ensure t
   :diminish yas-minor-mode
   :init (load-library "config-yasnippet"))
 
-(use-package yesql-ghosts
-  :ensure t)
+(use-package yaml-mode :ensure t)
+
+(use-package yesql-ghosts :ensure t)

@@ -1,3 +1,5 @@
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+
 (require 'mu4e)
 
 (setq mail-user-agent 'mu4e-user-agent)
@@ -27,6 +29,7 @@
 
 (setq mu4e-maildir-shortcuts
       '(("/INBOX" . ?i)
+        ("/[Gmail].All Mail" . ?a)
         ("/[Gmail].Sent Mail" . ?s)
         ("/[Gmail].Trash" . ?t)))
 
