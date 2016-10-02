@@ -72,8 +72,10 @@
   ("C-c r" . cider-reset)
   ("C-c t" . cider-test)
   ("C-c s" . cider-stop)
+  ("C-c k" . cider-repl-clear-buffer)
   :config
-  (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))"))
+  (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
+  (add-hook 'cider-mode-hook (eldoc-mode t)))
 
 (use-package clj-refactor
   :ensure t
@@ -126,15 +128,7 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C->" . mc/mark-all-like-this)))
 
-(use-package nyan-mode :ensure t :init (nyan-mode))
-
-(use-package org
-  :ensure t
-  :config (load-library "config-org")
-  :bind (("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         ("C-M-n" . org-metadown)
-         ("C-M-p" . org-metaup)))
+(use-package nyan-mode :defer t :init (nyan-mode))
 
 (use-package paredit
   :ensure t
@@ -157,6 +151,9 @@
 
 (use-package web-mode
   :ensure t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.jsx?$" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
   :config
   (setq-default
    ;; js2-mode
@@ -178,5 +175,3 @@
   :init (load-library "config-yasnippet"))
 
 (use-package yaml-mode :ensure t)
-
-(use-package yesql-ghosts :ensure t)

@@ -29,12 +29,6 @@
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
-(defun gtd ()
-  (interactive)
-  (find-file "/Users/dadair/org/todos.org"))
-
-(global-set-key (kbd "C-c b") 'gtd)
-
 (setq-default indent-tabs-mode nil)
 (setq x-select-enable-clipboard t
       x-select-enable-primary t
@@ -54,12 +48,7 @@
           (lambda ()
             (toggle-truncate-lines t)))
 
-(add-to-list 'auto-mode-alist '("\\.jsx?$" . javascript-mode))
-
 (setq dired-recursive-deletes 'always)
 (setq dired-recursive-copies 'always)
-
-(setq delete-by-moving-to-trash t
-      trash-directory "~/.Trash/emacs")
 
 (provide 'system)
