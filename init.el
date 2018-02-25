@@ -46,48 +46,38 @@
 
 (use-package ag :ensure t)
 
-(defun cider-reset ()
-  (interactive)
-  (cider-interactive-eval
-   "(ns user)
-    (dev)
-    (reset)"))
+(use-package auto-package-update
+  :ensure t
+  :config
+  (setq auto-package-update-delete-old-versions t
+        auto-package-update-interval 4)
+  (auto-package-update-maybe))
 
-(defun cider-test ()
-  (interactive)
-  (cider-interactive-eval
-   "(require '[eftest.runner :as t])
-    (t/run-tests (t/find-tests \"test\") {:report eftest.report.pretty/report})"))
-
-(defun cider-stop ()
-  (interactive)
-  (cider-interactive-eval
-   "(ns user)
-    (dev)
-    (stop)"))
+(use-package clojure-mode
+  :ensure t
+  :config
+  (add-hook 'clojure-mode-hook #'paredit-mode))
 
 (use-package cider
   :ensure t
-  :bind
-  ("C-c r" . cider-reset)
-  ("C-c t" . cider-test)
-  ("C-c s" . cider-stop)
-  ("C-c k" . cider-repl-clear-buffer)
   :config
-  (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
-  (add-hook 'cider-mode-hook (eldoc-mode t)))
+  (add-hook 'cider-mode-hook #'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook #'eldoc-mode)
+  (add-hook 'cider-repl-mode-hook #'paredit-mode))
 
 (use-package clj-refactor
   :ensure t
   :init
-  (load-library "config-cljrefactor"))
-
-(use-package clojure-mode :ensure t)
+  (load-library "config-cljrefactor")
+  :config
+  (setq cljr-favor-prefix-notation t))
 
 (use-package company
   :ensure t
   :diminish company-mode
   :config (add-hook 'after-init-hook 'global-company-mode))
+
+(use-package dash-at-point :ensure t)
 
 (use-package diminish :ensure t)
 
@@ -99,6 +89,8 @@
   (add-hook 'prog-mode-hook (editorconfig-mode 1))
   (add-hook 'text-mode-hook (editorconfig-mode 1)))
 
+(use-package ensime :defer t)
+
 (use-package exec-path-from-shell
   :ensure t
   :config
@@ -107,6 +99,13 @@
 (use-package expand-region
   :ensure t
   :bind ("C-=" . er/expand-region))
+
+(use-package fill-column-indicator
+  :ensure t
+  :init
+  (add-hook 'prog-mode-hook #'turn-on-fci-mode)
+  (setq fci-rule-color "#47422A")
+  (setq fci-rule-width 2))
 
 (use-package guru-mode
   :ensure t
@@ -128,12 +127,13 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C->" . mc/mark-all-like-this)))
 
-(use-package nyan-mode :defer t :init (nyan-mode))
-
 (use-package paredit
   :ensure t
-  :init
-  (load-library "config-paredit"))
+  :config
+  (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook #'paredit-mode)
+  (add-hook 'lisp-mode-hook #'paredit-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'paredit-mode))
 
 (use-package projectile
   :ensure t
@@ -145,9 +145,13 @@
 
 (use-package restclient :ensure t)
 
+(use-package scala-mode :ensure t)
+
 (use-package smex
   :ensure t
   :bind (("M-x" . smex)))
+
+(use-package typescript-mode :ensure t)
 
 (use-package web-mode
   :ensure t
@@ -174,4 +178,11 @@
   :diminish yas-minor-mode
   :init (load-library "config-yasnippet"))
 
+(use-package yasnippet-snippets
+  :ensure t)
+
 (use-package yaml-mode :ensure t)
+
+(use-package which-key
+  :ensure t
+  :init (which-key-mode))

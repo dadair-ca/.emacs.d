@@ -29,3 +29,5 @@ tramp
 /smex-items
 .emacs.desktop
 srecode-map.el
+/.last-package-update-day
+/projectile.cache

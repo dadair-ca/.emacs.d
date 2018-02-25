@@ -51,4 +51,6 @@
 (setq dired-recursive-deletes 'always)
 (setq dired-recursive-copies 'always)
 
+(setq-default fill-column 80)
+
 (provide 'system)
