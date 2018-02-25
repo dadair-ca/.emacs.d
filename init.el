@@ -77,19 +77,13 @@
   :diminish company-mode
   :config (add-hook 'after-init-hook 'global-company-mode))
 
-(use-package dash-at-point :ensure t)
-
 (use-package diminish :ensure t)
-
-(use-package dockerfile-mode :ensure t)
 
 (use-package editorconfig
   :ensure t
   :init
   (add-hook 'prog-mode-hook (editorconfig-mode 1))
   (add-hook 'text-mode-hook (editorconfig-mode 1)))
-
-(use-package ensime :defer t)
 
 (use-package exec-path-from-shell
   :ensure t
@@ -145,33 +139,11 @@
 
 (use-package restclient :ensure t)
 
-(use-package scala-mode :ensure t)
-
 (use-package smex
   :ensure t
   :bind (("M-x" . smex)))
 
 (use-package typescript-mode :ensure t)
-
-(use-package web-mode
-  :ensure t
-  :init
-  (add-to-list 'auto-mode-alist '("\\.jsx?$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
-  :config
-  (setq-default
-   ;; js2-mode
-   js2-basic-offset 2
-   ;; web-mode
-   css-indent-offset 2
-   web-mode-markup-indent-offset 2
-   web-mode-css-indent-offset 2
-   web-mode-code-indent-offset 2
-   web-mode-attr-indent-offset 2)
-  (with-eval-after-load 'web-mode
-    (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
-    (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
-    (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))))
 
 (use-package yasnippet
   :ensure t
