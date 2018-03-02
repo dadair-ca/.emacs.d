@@ -94,9 +94,16 @@
   :ensure t
   :bind ("C-=" . er/expand-region))
 
+(defun on-off-fci-before-company(command)
+  (when (string= "show" command)
+    (turn-off-fci-mode))
+  (when (string= "hide" command)
+    (turn-on-fci-mode)))
+
 (use-package fill-column-indicator
   :ensure t
   :init
+  (advice-add 'company-call-frontends :before #'on-off-fci-before-company)
   (add-hook 'prog-mode-hook #'turn-on-fci-mode)
   (setq fci-rule-color "#47422A")
   (setq fci-rule-width 2))
@@ -143,7 +150,9 @@
   :ensure t
   :bind (("M-x" . smex)))
 
-(use-package typescript-mode :ensure t)
+(use-package typescript-mode
+  :mode "\\.tsx?\\'"
+  :ensure t)
 
 (use-package yasnippet
   :ensure t

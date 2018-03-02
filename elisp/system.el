@@ -51,4 +51,7 @@
 (setq dired-recursive-deletes 'always)
 (setq dired-recursive-copies 'always)
 
+;; disable the annoying bell sound
+(setq ring-bell-function 'ignore)
+
 (provide 'system)
