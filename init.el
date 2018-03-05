@@ -22,6 +22,7 @@
 (load-library "backups")
 (load-library "keys")
 (load-library "editing")
+(load-library "config-org")
 
 ;; Keep Emacs custom-variables in a separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -103,6 +104,7 @@
 (use-package fill-column-indicator
   :ensure t
   :init
+  ;; https://github.com/alpaker/Fill-Column-Indicator/issues/54
   (advice-add 'company-call-frontends :before #'on-off-fci-before-company)
   (add-hook 'prog-mode-hook #'turn-on-fci-mode)
   (setq fci-rule-color "#47422A")
