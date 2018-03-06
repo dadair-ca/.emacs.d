@@ -1,8 +1,6 @@
 (setq org-agenda-files (quote ("~/Dropbox/org/todo.org"
                                "~/Dropbox/org/cohesic.org")))
 
-(run-at-time "00:59" 3600 'org-save-all-org-buffers)
-
 (setq org-use-fast-todo-selection t)
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
