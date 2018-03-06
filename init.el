@@ -28,24 +28,23 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
-;; ---------- Configure Packages
+;; ---------- Libraries
+
+(use-package diminish :demand t)
+
+;; ---------- Packages
 
 (use-package avy
-  :ensure t
   :bind (("M-g g" . avy-goto-char)
          ("M-g l" . avy-goto-line)
          ("M-g w" . avy-goto-word-1)))
 
 (use-package ace-window
-  :ensure t
   :bind ("M-g i" . ace-window)
   :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
-(use-package ace-link
-  :ensure t
-  :init (ace-link-setup-default))
-
-(use-package ag :ensure t)
+(use-package ag
+  :commands (ag ag-dired ag-files))
 
 (use-package auto-package-update
   :ensure t
@@ -55,36 +54,39 @@
   (auto-package-update-maybe))
 
 (use-package clojure-mode
-  :ensure t
-  :config
-  (add-hook 'clojure-mode-hook #'paredit-mode))
+  :mode "\\.clj[scx]?\\'")
 
 (use-package cider
-  :ensure t
+  :after (clojure-mode)
   :config
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'paredit-mode))
 
 (use-package clj-refactor
-  :ensure t
+  :after (clojure-mode)
   :init
   (load-library "config-cljrefactor")
   :config
   (setq cljr-favor-prefix-notation t))
 
 (use-package company
-  :ensure t
-  :diminish company-mode
-  :config (add-hook 'after-init-hook 'global-company-mode))
-
-(use-package diminish :ensure t)
+  :defer 5
+  :diminish
+  :commands (company-mode company-indent-or-complete-common)
+  :init
+  (dolist (hook '(emacs-lisp-mode-hook
+                  clojure-mode-hook))
+    (add-hook hook
+              #'(lambda ()
+                  (local-set-key (kbd "<tab>")
+                                 #'company-indent-or-complete-common))))
+  :config
+  (global-company-mode 1))
 
 (use-package editorconfig
-  :ensure t
-  :init
-  (add-hook 'prog-mode-hook (editorconfig-mode 1))
-  (add-hook 'text-mode-hook (editorconfig-mode 1)))
+  :diminish
+  :hook ((prog-mode text-mode) . editorconfig-mode))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -92,7 +94,6 @@
   (load-library "system"))
 
 (use-package expand-region
-  :ensure t
   :bind ("C-=" . er/expand-region))
 
 (defun on-off-fci-before-company(command)
@@ -115,46 +116,42 @@
   :diminish guru-mode
   :init (add-hook 'prog-mode-hook 'guru-mode))
 
+(use-package ledger-mode
+  :mode "\\.ledger\\'")
+
 (use-package magit
-  :ensure t
   :init
   (setq magit-last-seen-setup-instructions "1.4.0")
   :bind ("s-m m" . magit-status))
 
-(use-package markdown-mode :ensure t)
-
 (use-package multiple-cursors
-  :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C->" . mc/mark-all-like-this)))
 
 (use-package paredit
-  :ensure t
+  :diminish
+  :hook ((lisp-mode emacs-lisp-mode) . paredit-mode)
   :config
-  (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
-  (add-hook 'lisp-interaction-mode-hook #'paredit-mode)
-  (add-hook 'lisp-mode-hook #'paredit-mode)
-  (add-hook 'eval-expression-minibuffer-setup-hook #'paredit-mode))
+  (require 'eldoc)
+  (eldoc-add-command 'paredit-backward-delete
+                     'paredit-close-round))
 
 (use-package projectile
-  :ensure t
-  :init (projectile-global-mode))
+  :defer 5
+  :diminish
+  :config
+  (projectile-global-mode))
 
-(use-package rainbow-delimiters
-  :ensure t
-  :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-
-(use-package restclient :ensure t)
+(use-package restclient
+  :mode "\\.https?\\'")
 
 (use-package smex
-  :ensure t
   :bind (("M-x" . smex)))
 
 (use-package typescript-mode
-  :mode "\\.tsx?\\'"
-  :ensure t)
+  :mode "\\.tsx?\\'")
 
 (use-package yasnippet
   :ensure t
@@ -164,8 +161,20 @@
 (use-package yasnippet-snippets
   :ensure t)
 
-(use-package yaml-mode :ensure t)
+(use-package yaml-mode
+  :mode "\\.ya?ml\\'")
 
 (use-package which-key
-  :ensure t
-  :init (which-key-mode))
+  :defer 5
+  :diminish
+  :commands (which-key-mode)
+  :config
+  (which-key-mode))
+
+(use-package whitespace
+  :diminish (global-whitespace-mode
+             whitespace-mode
+             whitespace-newline-mode)
+  :commands (whitespace-buffer
+             whitespace-cleanup
+             whitespace-mode))
