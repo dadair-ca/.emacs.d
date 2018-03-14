@@ -151,14 +151,14 @@
 
 (use-package paredit
   :diminish
-  :hook ((lisp-mode emacs-lisp-mode) . paredit-mode)
+  :hook ((lisp-mode emacs-lisp-mode clojure-mode) . paredit-mode)
   :config
   (require 'eldoc)
   (eldoc-add-command 'paredit-backward-delete
                      'paredit-close-round))
 
 (use-package projectile
-  :defer 5
+  :demand
   :diminish
   :config
   (projectile-global-mode))

@@ -54,4 +54,6 @@
 ;; disable the annoying bell sound
 (setq ring-bell-function 'ignore)
 
+(global-auto-revert-mode t)
+
 (provide 'system)

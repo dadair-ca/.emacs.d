@@ -1,5 +1,7 @@
 (setq org-agenda-files (quote ("~/Dropbox/org/todo.org"
-                               "~/Dropbox/org/cohesic.org")))
+                               "~/Dropbox/org/cohesic.org"
+                               "~/Dropbox/org/refile.org"
+                               "~/Dropbox/org/refile-beorg.org")))
 
 (setq org-use-fast-todo-selection t)
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
@@ -41,5 +43,12 @@
    (ledger . t)
    (python . t)
    (sh . t)))
+
+(setq org-agenda-custom-commands
+      (quote ((" " "Agenda"
+               ((agenda "" nil)
+                (tags "REFILE"
+                      ((org-agenda-overriding-header "Tasks to Refile")
+                       (org-tags-match-list-sublevels nil))))))))
 
 (provide 'config-org)
