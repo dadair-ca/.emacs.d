@@ -31,3 +31,4 @@ tramp
 srecode-map.el
 /.last-package-update-day
 /projectile.cache
+/elisp/config-sql.el
