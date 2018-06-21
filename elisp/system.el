@@ -20,6 +20,8 @@
 (require 'saveplace)
 (setq-default save-place t)
 
+(require 'midnight)
+
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
@@ -56,4 +58,7 @@
 
 (global-auto-revert-mode t)
 
+(setq column-number-mode t)
+
 (provide 'system)
+;;; system.el ends here

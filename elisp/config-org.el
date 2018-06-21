@@ -3,6 +3,18 @@
                                "~/Dropbox/org/refile.org"
                                "~/Dropbox/org/refile-beorg.org")))
 
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
+
+(setq org-todo-keyword-faces
+      (quote (("TODO" :foreground "systemRedColor" :weight normal)
+              ("NEXT" :foreground "systemBlueColor" :weight normal)
+              ("DONE" :foreground "systemGreenColor" :weight normal)
+              ("WAITING" :foreground "systemOrangeColor" :weight normal)
+              ("HOLD" :foreground "systemPurpleColor" :weight normal)
+              ("CANCELLED" :foreground "systemGreenColor" :weight normal))))
+
 (setq org-use-fast-todo-selection t)
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
@@ -42,13 +54,16 @@
    (latex . t)
    (ledger . t)
    (python . t)
-   (sh . t)))
+   (shell . t)))
 
 (setq org-agenda-custom-commands
       (quote ((" " "Agenda"
                ((agenda "" nil)
                 (tags "REFILE"
                       ((org-agenda-overriding-header "Tasks to Refile")
-                       (org-tags-match-list-sublevels nil))))))))
+                       (org-tags-match-list-sublevels nil)))
+                (tags-todo "-CANCELLED/!NEXT"
+                           ((org-agenda-overriding-header "Next Tasks")
+                            (org-tags-match-list-sublevels t))))))))
 
 (provide 'config-org)

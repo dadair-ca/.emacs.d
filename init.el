@@ -1,5 +1,3 @@
-(defconst emacs-start-time (current-time))
-
 (defvar file-name-handler-alist-old file-name-handler-alist)
 
 (setq package-enable-at-startup nil
@@ -30,6 +28,7 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
 (eval-when-compile
   (require 'use-package))
 
@@ -48,9 +47,11 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
+(setq use-package-always-ensure t)
+
 ;; ---------- Libraries
 
-(use-package diminish :demand t)
+(use-package diminish)
 
 ;; ---------- Packages
 
@@ -60,7 +61,8 @@
          ("M-g w" . avy-goto-word-1)))
 
 (use-package ace-window
-  :bind ("M-g i" . ace-window)
+  :bind (("M-g i" . ace-window)
+         ("C-M-g i" . ace-swap-window))
   :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
 (use-package ag
@@ -74,21 +76,22 @@
   (auto-package-update-maybe))
 
 (use-package clojure-mode
-  :mode "\\.clj[scx]?\\'")
+  :mode ("\\.clj[scx]?\\'" "\\.edn\\'"))
 
 (use-package cider
   :after (clojure-mode)
   :config
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
-  (add-hook 'cider-repl-mode-hook #'paredit-mode))
+  (add-hook 'cider-repl-mode-hook #'paredit-mode)
+  (setq cider-font-lock-dynamically '(macro core function var)))
 
 (use-package clj-refactor
   :after (clojure-mode)
   :init
   (load-library "config-cljrefactor")
   :config
-  (setq cljr-favor-prefix-notation t))
+  (setq cljr-favor-prefix-notation nil))
 
 (use-package company
   :defer 5
@@ -104,9 +107,14 @@
   :config
   (global-company-mode 1))
 
+(use-package ensime
+  :mode "\\.scala\\'")
+
+(use-package scala-mode
+  :mode "\\.scala\\'")
+
 (use-package editorconfig
-  :diminish
-  :hook ((prog-mode text-mode) . editorconfig-mode))
+  :config (editorconfig-mode 1))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -116,20 +124,9 @@
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 
-(defun on-off-fci-before-company(command)
-  (when (string= "show" command)
-    (turn-off-fci-mode))
-  (when (string= "hide" command)
-    (turn-on-fci-mode)))
-
-(use-package fill-column-indicator
+(use-package flycheck
   :ensure t
-  :init
-  ;; https://github.com/alpaker/Fill-Column-Indicator/issues/54
-  (advice-add 'company-call-frontends :before #'on-off-fci-before-company)
-  (add-hook 'prog-mode-hook #'turn-on-fci-mode)
-  (setq fci-rule-color "#47422A")
-  (setq fci-rule-width 2))
+  :config (global-flycheck-mode))
 
 (use-package guru-mode
   :ensure t
@@ -158,20 +155,38 @@
   (eldoc-add-command 'paredit-backward-delete
                      'paredit-close-round))
 
+(use-package prettier-js
+  :ensure t
+  :hook ((web-mode tide-mode typescript-mode) . prettier-js-mode))
+
 (use-package projectile
-  :demand
+  :ensure t
   :diminish
   :config
-  (projectile-global-mode))
+  (projectile-mode))
 
 (use-package restclient
   :mode "\\.https?\\'")
 
 (use-package smex
+  :ensure t
   :bind (("M-x" . smex)))
 
-(use-package typescript-mode
-  :mode "\\.tsx?\\'")
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save idle-change new-line mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1))
+
+(use-package tide
+  :ensure t
+  :mode ("\\.tsx\\'" "\\.ts\\'")
+  :config
+  (setq company-tooltip-align-annotations t)
+  (add-hook 'typescript-mode-hook #'setup-tide-mode))
 
 (use-package yasnippet
   :ensure t
@@ -184,6 +199,17 @@
 (use-package yaml-mode
   :mode "\\.ya?ml\\'")
 
+(use-package web-mode
+  :mode "\\.tsx?\\'"
+  :config
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-auto-indentation nil)
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (when (string-equal "tsx" (file-name-extension buffer-file-name))
+                (setup-tide-mode))))
+  (flycheck-add-mode 'typescript-tslint 'web-mode))
+
 (use-package which-key
   :defer 5
   :diminish
@@ -195,19 +221,11 @@
   :diminish (global-whitespace-mode
              whitespace-mode
              whitespace-newline-mode)
-  :commands (whitespace-buffer
+  :commands (whitespace-buffer.
              whitespace-cleanup
              whitespace-mode))
 
-(let ((elapsed (float-time (time-subtract (current-time)
-                                          emacs-start-time))))
-  (message "Loading %s...done (%.3fs)" load-file-name elapsed))
+(put 'downcase-region 'disabled nil)
 
-(add-hook 'after-init-hook
-          `(lambda ()
-             (let ((elapsed
-                    (float-time
-                     (time-subtract (current-time) emacs-start-time))))
-               (message "Loading %s...done (%.3fs) [after-init]"
-                        ,load-file-name elapsed)))
-          t)
+(provide 'init.el)
+;;; init.el ends here

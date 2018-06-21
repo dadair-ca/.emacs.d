@@ -19,9 +19,11 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
-(add-hook 'after-init-hook 'global-whitespace-mode)
+(setq whitespace-line-column 100
+      whitespace-style '(face lines-tail))
 
-(setq whitespace-style (list 'face 'trailing))
+(add-hook 'after-init-hook 'global-whitespace-mode)
+(add-hook 'prog-mode-hook #'whitespace-mode)
 
 (add-hook 'prog-mode-hook 'prettify-symbols-mode)
 
