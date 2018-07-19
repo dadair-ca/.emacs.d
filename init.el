@@ -65,9 +65,6 @@
          ("C-M-g i" . ace-swap-window))
   :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
-(use-package ag
-  :commands (ag ag-dired ag-files))
-
 (use-package auto-package-update
   :ensure t
   :config
@@ -134,6 +131,40 @@
   :diminish guru-mode
   :init (add-hook 'prog-mode-hook 'guru-mode))
 
+(use-package helm
+  :ensure t
+  :diminish
+  :config
+  (helm-mode 1)
+  (helm-autoresize-mode 1)
+  (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
+  (global-set-key (kbd "C-x b") 'helm-mini)
+  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-c h o") 'helm-occur)
+  (setq helm-M-x-fuzzy-match t
+        helm-buffers-fuzzy-matching t
+        helm-recentf-fuzzy-match t)
+  (unless (boundp 'completion-in-region-function)
+    (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+    (define-key emacs-lisp-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)))
+
+(use-package helm-ag
+  :after (helm-mode))
+
+(use-package helm-descbinds
+  :after (helm-mode))
+
+(use-package helm-org-rifle
+  :after (org-mode))
+
+(use-package helm-projectile
+  :ensure t
+  :diminish
+  :config (helm-projectile-on))
+
 (use-package ledger-mode
   :mode "\\.ledger\\'")
 
@@ -169,9 +200,9 @@
 (use-package restclient
   :mode "\\.https?\\'")
 
-(use-package smex
-  :ensure t
-  :bind (("M-x" . smex)))
+;; (use-package smex
+;;   :ensure t
+;;   :bind (("M-x" . smex)))
 
 (defun setup-tide-mode ()
   (interactive)

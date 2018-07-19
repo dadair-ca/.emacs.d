@@ -68,7 +68,7 @@
    (latex . t)
    (ledger . t)
    (python . t)
-   (sh . t)))
+   (shell . t)))
 
 (setq org-agenda-custom-commands
       (quote ((" " "Agenda"
