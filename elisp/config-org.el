@@ -1,3 +1,6 @@
+(add-to-list 'org-modules 'org-habit t)
+(setq org-habit-graph-column 70)
+
 (setq org-agenda-files (quote ("~/Dropbox/org/gtd.org"
                                "~/Dropbox/org/cohesic.org"
                                "~/Dropbox/org/refile.org"
@@ -37,7 +40,7 @@
               ("n" "note" entry (file "~/Dropbox/org/notes.org")
                "* %? :NOTE:\n%U\n%a\n")
               ("h" "Habit" entry (file "~/Dropbox/org/refile.org")
-               "* TODO %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:END:\n")
+               "* TODO %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:END:\n%U\n%a\n")
               ("g" "Goal" entry (file "~/Dropbox/org/refile.org")
                "* TODO %? :GOAL:\n%U\n%a\n"))))
 
@@ -76,10 +79,11 @@
                 (tags "REFILE"
                       ((org-agenda-overriding-header "Tasks to Refile")
                        (org-tags-match-list-sublevels nil)))
-                (org-agenda-list-stuck-projects)
                 (tags-todo "-CANCELLED/!NEXT"
                            ((org-agenda-overriding-header "Next Tasks")
-                            (org-tags-match-list-sublevels t))))))))
+                            (org-tags-match-list-sublevels t)))
+                (todo "WAITING"
+                           ((org-agenda-overriding-header "Waiting On"))))))))
 
 (setq org-confirm-babel-evaluate nil)
 
