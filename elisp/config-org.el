@@ -8,12 +8,12 @@
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
 
 (setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "systemRedColor" :weight normal)
-              ("NEXT" :foreground "systemBlueColor" :weight normal)
-              ("DONE" :foreground "systemGreenColor" :weight normal)
-              ("WAITING" :foreground "systemOrangeColor" :weight normal)
-              ("HOLD" :foreground "systemPurpleColor" :weight normal)
-              ("CANCELLED" :foreground "systemGreenColor" :weight normal))))
+      (quote (("TODO" :foreground "firebrick1" :weight normal)
+              ("NEXT" :foreground "deep sky blue" :weight normal)
+              ("DONE" :foreground "spring green" :weight normal)
+              ("WAITING" :foreground "tomato" :weight normal)
+              ("HOLD" :foreground "burlywood" :weight normal)
+              ("CANCELLED" :foreground "spring green" :weight normal))))
 
 (setq org-use-fast-todo-selection t)
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)

@@ -154,6 +154,9 @@
 (use-package helm-ag
   :after (helm-mode))
 
+(use-package helm-bibtex
+  :after (helm-mode))
+
 (use-package helm-descbinds
   :after (helm-mode))
 
@@ -178,6 +181,16 @@
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C->" . mc/mark-all-like-this)))
+
+(use-package org-noter
+  :after (org-mode))
+
+(use-package org-ref
+  :after (org-mode)
+  :config
+  (setq org-ref-bibliography-notes "~/Dropbox/Documents/Medical School/Research/Bibliography/notes.org"
+        org-ref-default-bibliography '("~/Dropbox/Documents/Medical School/Research/Bibliography/master.bib")
+        org-ref-pdf-directory "~/Dropbox/Documents/Medical School/Research/Bibliography/PDFs/"))
 
 (use-package paredit
   :diminish
