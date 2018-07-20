@@ -81,4 +81,6 @@
                            ((org-agenda-overriding-header "Next Tasks")
                             (org-tags-match-list-sublevels t))))))))
 
+(setq org-confirm-babel-evaluate nil)
+
 (provide 'config-org)

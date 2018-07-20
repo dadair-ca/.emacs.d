@@ -65,6 +65,9 @@
          ("C-M-g i" . ace-swap-window))
   :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
+(use-package ace-link
+  :bind (("M-g o" . ace-link-org)))
+
 (use-package auto-package-update
   :ensure t
   :config
