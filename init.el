@@ -155,7 +155,11 @@
   :after (helm-mode))
 
 (use-package helm-bibtex
-  :after (helm-mode))
+  :after (helm-mode)
+  :config
+  (setq bibtex-completion-bibliography "~/Dropbox/Documents/Medical-School/Research/Bibliography/master.bib"
+        bibtex-completion-library-path "~/Dropbox/Documents/Medical-School/Research/Bibliography/PDFs"
+        bibtex-completion-notes-path "~/Dropbox/Documents/Medical-School/Research/Bibliography/notes.org"))
 
 (use-package helm-descbinds
   :after (helm-mode))
@@ -186,11 +190,11 @@
   :after (org-mode))
 
 (use-package org-ref
-  :after (org-mode)
+  :ensure t
   :config
-  (setq org-ref-bibliography-notes "~/Dropbox/Documents/Medical School/Research/Bibliography/notes.org"
-        org-ref-default-bibliography '("~/Dropbox/Documents/Medical School/Research/Bibliography/master.bib")
-        org-ref-pdf-directory "~/Dropbox/Documents/Medical School/Research/Bibliography/PDFs/"))
+  (setq org-ref-bibliography-notes "~/Dropbox/Documents/Medical-School/Research/Bibliography/notes.org")
+  (setq org-ref-default-bibliography '("~/Dropbox/Documents/Medical-School/Research/Bibliography/master.bib"))
+  (setq org-ref-pdf-directory "~/Dropbox/Documents/Medical-School/Research/Bibliography/PDFs/"))
 
 (use-package paredit
   :diminish
@@ -212,10 +216,6 @@
 
 (use-package restclient
   :mode "\\.https?\\'")
-
-;; (use-package smex
-;;   :ensure t
-;;   :bind (("M-x" . smex)))
 
 (defun setup-tide-mode ()
   (interactive)
