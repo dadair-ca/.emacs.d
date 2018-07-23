@@ -20,13 +20,6 @@
 (setq org-use-fast-todo-selection t)
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
-(setq org-tag-alist (quote ((:startgroup)
-                            ("@errands" . ?e)
-                            ("@home" . ?h)
-                            ("@laptop" . ?l)
-                            ("@office" . ?o)
-                            (:endgroup))))
-
 (setq org-directory "~/Dropbox/org")
 (setq org-default-notes-file "~/Dropbox/org/notes.org")
 
