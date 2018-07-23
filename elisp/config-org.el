@@ -1,4 +1,3 @@
-(add-to-list 'org-modules 'org-habit t)
 (setq org-habit-graph-column 70)
 
 (setq org-agenda-files (quote ("~/Dropbox/org/gtd.org"
