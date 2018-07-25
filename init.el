@@ -19,6 +19,8 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives
              '("marmalade" . "https://marmalade-repo.org/packages/"))
@@ -41,7 +43,11 @@
 (load-library "keys")
 (load-library "editing")
 (load-library "config-org")
-(load-library "config-sql")
+
+;; SQL config only exists on work laptop
+(let ((cohesic-sql-config "config-sql"))
+  (when (locate-library cohesic-sql-config)
+      (load-library "config-sql")))
 
 ;; Keep Emacs custom-variables in a separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -72,7 +78,8 @@
   :ensure t
   :config
   (setq auto-package-update-delete-old-versions t
-        auto-package-update-interval 4)
+        auto-package-update-interval 4
+        auto-package-update-hide-results t)
   (auto-package-update-maybe))
 
 (use-package clojure-mode
@@ -200,16 +207,23 @@
   (setq org-ref-pdf-directory "~/Dropbox/Documents/Medical-School/Research/Bibliography/PDFs/"))
 
 (use-package paredit
+  :ensure t
   :diminish
-  :hook ((lisp-mode emacs-lisp-mode clojure-mode) . paredit-mode)
   :config
+  (add-hook 'lisp-mode-hook #'paredit-mode)
+  (add-hook 'clojure-mode-hook #'paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
   (require 'eldoc)
   (eldoc-add-command 'paredit-backward-delete
                      'paredit-close-round))
 
 (use-package prettier-js
+  :pin melpa
   :ensure t
-  :hook ((web-mode tide-mode typescript-mode) . prettier-js-mode))
+  :config
+  (add-hook 'web-mode-hook #'prettier-js-mode)
+  (add-hook 'tide-mode-hook #'prettier-js-mode)
+  (add-hook 'typescript-mode-hook #'prettier-js-mode))
 
 (use-package projectile
   :ensure t
