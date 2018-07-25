@@ -1,4 +1,3 @@
-(add-to-list 'org-modules 'org-habit t)
 (setq org-habit-graph-column 70)
 
 (setq org-agenda-files (quote ("~/Dropbox/org/gtd.org"
@@ -51,15 +50,15 @@
 (setq org-outline-path-complete-in-steps nil)
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
 
+(setq org-startup-indented nil)
+
 (setq org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-skip-deadline-if-done t)
-(setq org-startup-indented t)
 (setq org-agenda-start-on-weekday nil)
 (setq org-agenda-span 7)
 (setq org-reverse-note-order t)
-(setq org-deadline-warning-days 14)
+(setq org-deadline-warning-days 30)
 (setq org-agenda-show-all-dates t)
-(setq org-fast-tag-selection-single-key (quote expert))
 
 (org-babel-do-load-languages
  'org-babel-load-languages
