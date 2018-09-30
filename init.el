@@ -135,6 +135,7 @@
         doom-themes-enable-italic t)
   (load-theme 'doom-one t)
   (doom-themes-visual-bell-config)
+  (doom-themes-neotree-config)
   (doom-themes-org-config))
 
 (use-package ensime
@@ -231,7 +232,9 @@
   :ensure t
   :config
   (global-set-key [f8] 'neotree-toggle)
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  (setq neo-smart-open t)
+  (setq projectile-switch-project-action 'neotree-projectile-action))
 
 (use-package org-noter
   :after (org-mode))
