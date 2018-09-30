@@ -16,8 +16,6 @@
 (add-to-list 'load-path "~/.emacs.d/themes/tomorrow-theme")
 (load-theme `tomorrow-night t)
 
-;;(set-face-attribute 'highlight nil :background "midnight blue")
-
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (setq whitespace-line-column 100
