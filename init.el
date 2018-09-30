@@ -60,6 +60,9 @@
 
 ;; ---------- Packages
 
+(use-package all-the-icons
+  :ensure t)
+
 (use-package ag)
 
 (use-package avy
@@ -124,6 +127,15 @@
   (setq dashboard-items '((recents . 5)
                           (bookmarks . 5)
                           (projects . 5))))
+
+(use-package doom-themes
+  :ensure t
+  :config
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-one t)
+  (doom-themes-visual-bell-config)
+  (doom-themes-org-config))
 
 (use-package ensime
   :mode "\\.scala\\'"
@@ -214,6 +226,12 @@
   :ensure t
   :config
   (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display))
+
+(use-package neotree
+  :ensure t
+  :config
+  (global-set-key [f8] 'neotree-toggle)
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package org-noter
   :after (org-mode))
