@@ -19,8 +19,6 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives
              '("marmalade" . "https://marmalade-repo.org/packages/"))
@@ -61,6 +59,8 @@
 
 ;; ---------- Packages
 
+(use-package ag)
+
 (use-package avy
   :bind (("M-g g" . avy-goto-char)
          ("M-g l" . avy-goto-line)
@@ -75,6 +75,7 @@
   :bind (("M-g o" . ace-link-org)))
 
 (use-package auto-package-update
+  :disabled
   :ensure t
   :config
   (setq auto-package-update-delete-old-versions t
@@ -91,7 +92,8 @@
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'paredit-mode)
-  (setq cider-font-lock-dynamically '(macro core function var)))
+  (setq cider-font-lock-dynamically '(macro core function var))
+  (setq cider-auto-test-mode t))
 
 (use-package clj-refactor
   :after (clojure-mode)
@@ -114,6 +116,14 @@
   :config
   (global-company-mode 1))
 
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-items '((recents . 5)
+                          (bookmarks . 5)
+                          (projects . 5))))
+
 (use-package ensime
   :mode "\\.scala\\'"
   :config (setq ensime-startup-notification nil))
@@ -135,6 +145,9 @@
 (use-package flycheck
   :ensure t
   :config (global-flycheck-mode))
+
+(use-package flycheck-joker
+  :ensure t)
 
 (use-package guru-mode
   :ensure t
@@ -204,7 +217,7 @@
   :config
   (setq org-ref-bibliography-notes "~/Dropbox/Documents/Medical-School/Research/Bibliography/notes.org")
   (setq org-ref-default-bibliography '("~/Dropbox/Documents/Medical-School/Research/Bibliography/master.bib"))
-  (setq org-ref-pdf-directory "~/Dropbox/Documents/Medical-School/Research/Bibliography/PDFs/"))
+  (setq org-ref-pdf-directory "~/Dropbox/Documents/Medical-School/Research/Bibliography/PDFs"))
 
 (use-package paredit
   :ensure t
@@ -229,10 +242,11 @@
   :ensure t
   :diminish
   :config
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-mode))
 
 (use-package restclient
-  :mode "\\.https?\\'")
+  :mode ("\\.https?\\'" . restclient-mode))
 
 (defun setup-tide-mode ()
   (interactive)
@@ -241,7 +255,8 @@
   (setq flycheck-check-syntax-automatically '(save idle-change new-line mode-enabled))
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
-  (company-mode +1))
+  (company-mode +1)
+  (web-mode))
 
 (use-package tide
   :ensure t
@@ -266,6 +281,7 @@
   :config
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-auto-indentation nil)
+  (setq web-mode-enable-auto-quoting nil)
   (add-hook 'web-mode-hook
             (lambda ()
               (when (string-equal "tsx" (file-name-extension buffer-file-name))
