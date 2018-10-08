@@ -112,7 +112,8 @@
   :commands (company-mode company-indent-or-complete-common)
   :init
   (dolist (hook '(emacs-lisp-mode-hook
-                  clojure-mode-hook))
+                  clojure-mode-hook
+                  typescript-mode-hook))
     (add-hook hook
               #'(lambda ()
                   (local-set-key (kbd "<tab>")
@@ -229,12 +230,12 @@
   (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display))
 
 (use-package neotree
+  :disabled
   :ensure t
   :config
   (global-set-key [f8] 'neotree-toggle)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-  (setq neo-smart-open t)
-  (setq projectile-switch-project-action 'neotree-projectile-action))
+  (setq neo-smart-open t))
 
 (use-package org-noter
   :after (org-mode))
@@ -258,12 +259,9 @@
                      'paredit-close-round))
 
 (use-package prettier-js
-  :pin melpa
   :ensure t
   :config
-  (add-hook 'web-mode-hook #'prettier-js-mode)
-  (add-hook 'tide-mode-hook #'prettier-js-mode)
-  (add-hook 'typescript-mode-hook #'prettier-js-mode))
+  (add-hook 'web-mode-hook #'prettier-js-mode))
 
 (use-package projectile
   :ensure t
@@ -275,22 +273,17 @@
 (use-package restclient
   :mode ("\\.https?\\'" . restclient-mode))
 
-(defun setup-tide-mode ()
-  (interactive)
-  (tide-setup)
-  (flycheck-mode +1)
-  (setq flycheck-check-syntax-automatically '(save idle-change new-line mode-enabled))
-  (eldoc-mode +1)
-  (tide-hl-identifier-mode +1)
-  (company-mode +1)
-  (web-mode))
+(use-package typescript-mode
+  :ensure t
+  :mode "\\.tsx?\\'")
 
 (use-package tide
   :ensure t
-  :mode ("\\.tsx\\'" "\\.ts\\'")
+  :after (typescript-mode)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode))
   :config
-  (setq company-tooltip-align-annotations t)
-  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+  (setq flycheck-check-syntax-automatically '(save idle-change new-line mode-enabled)))
 
 (use-package yasnippet
   :ensure t
@@ -304,16 +297,12 @@
   :mode "\\.ya?ml\\'")
 
 (use-package web-mode
-  :mode "\\.tsx?\\'"
   :config
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-auto-indentation nil)
   (setq web-mode-enable-auto-quoting nil)
-  (add-hook 'web-mode-hook
-            (lambda ()
-              (when (string-equal "tsx" (file-name-extension buffer-file-name))
-                (setup-tide-mode))))
-  (flycheck-add-mode 'typescript-tslint 'web-mode))
+  (flycheck-add-mode 'typescript-tslint 'web-mode)
+  (add-hook 'typescript-mode-hook #'web-mode))
 
 (use-package which-key
   :defer 5
