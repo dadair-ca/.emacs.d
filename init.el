@@ -40,7 +40,6 @@
 (load-library "backups")
 (load-library "keys")
 (load-library "editing")
-(load-library "config-mu4e")
 (load-library "config-org")
 
 ;; SQL config only exists on work laptop
@@ -223,11 +222,6 @@
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C->" . mc/mark-all-like-this)))
-
-(use-package mu4e-alert
-  :ensure t
-  :config
-  (add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display))
 
 (use-package neotree
   :disabled
