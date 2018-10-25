@@ -1,0 +1,39 @@
+# -*- mode: snippet -*-
+# name: transport
+# key: transport
+# --
+(ns $1
+  (:require [bypass.lib.results.data :as results]
+            [integrant.core :as ig]
+            [clojure.spec.alpha :as s]
+            [spell-spec.alpha :as spell]
+            [bypass.lib.transport.routing :as routing]
+            [bypass.lib.sockets.interceptors :as socket-ints]
+            [bypass.lib.results.interceptors :as result-ints]))
+
+(def topic-id $2)
+
+(def on-join
+  {:name ::on-join
+   :enter (fn [ctx]
+            (results/declare-result
+             ctx
+             (results/make-ok "Joined topic.")))})
+
+(defn- join-interceptors [{:keys [sockets]}]
+  [(socket-ints/topic-joiner sockets)
+   on-join])
+
+(defn- leave-interceptors [{:keys [sockets]}]
+  [(socket-ints/guard-joined? sockets)
+   (socket-ints/topic-leaver sockets)
+   (result-ints/ok)])
+
+(s/def $3 map?) ;; FIXME
+
+(defmethod ig/init-key ::topic [_ opts]
+  (routing/->TopicDefinition
+   topic-id
+   $3
+   (join-interceptors opts)
+   (leave-interceptors opts)))

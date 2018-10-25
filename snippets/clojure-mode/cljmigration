@@ -1,0 +1,31 @@
+# -*- mode: snippet -*-
+# name: cljmigration
+# key: migrate
+# --
+(ns $1.m${2:`(format-time-string "%Y%m%d%H%M%S")`}-$3
+  (:require [integrant.core :as ig]
+            [mandala.lib.migrations :as m]))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Helpers
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Up
+
+(defn up! [db]
+  ;; FIXME
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Down
+
+(defn down! [db]
+  ;; FIXME
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Migration
+
+(defmethod ig/init-key ::migration [k _]
+  (let [index "0001"]
+    (m/migration k index up! down!)))

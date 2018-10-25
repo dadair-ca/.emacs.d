@@ -254,8 +254,7 @@
 
 (use-package prettier-js
   :ensure t
-  :config
-  (add-hook 'web-mode-hook #'prettier-js-mode))
+  :hook (typescript-mode . prettier-js-mode))
 
 (use-package projectile
   :ensure t
@@ -268,16 +267,14 @@
   :mode ("\\.https?\\'" . restclient-mode))
 
 (use-package typescript-mode
-  :ensure t
-  :mode "\\.tsx?\\'")
+  :mode ("\\.ts\\'" "\\.tsx\\'")
+  :config
+  (flycheck-add-mode 'typescript-tslint 'typescript-mode)
+  (setq flycheck-check-syntax-automatically '(save idle-change new-line mode-enabled)))
 
 (use-package tide
-  :ensure t
-  :after (typescript-mode)
   :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode))
-  :config
-  (setq flycheck-check-syntax-automatically '(save idle-change new-line mode-enabled)))
+         (typescript-mode . tide-hl-identifier-mode)))
 
 (use-package yasnippet
   :ensure t
@@ -292,12 +289,11 @@
   :mode "\\.ya?ml\\'")
 
 (use-package web-mode
+  :disabled
   :config
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-auto-indentation nil)
-  (setq web-mode-enable-auto-quoting nil)
-  (flycheck-add-mode 'typescript-tslint 'web-mode)
-  (add-hook 'typescript-mode-hook #'web-mode))
+  (setq web-mode-enable-auto-quoting nil))
 
 (use-package which-key
   :defer 5
