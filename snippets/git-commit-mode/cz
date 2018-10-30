@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: cz
+# key: cz
+# --
+${1:type}(${2:scopes}): ${3:shortdesc}
+
+${4:body}
+
+${5:ticket}

@@ -1,0 +1,73 @@
+# -*- mode: snippet -*-
+# name: component
+# key: cmp
+# --
+////////////////////////////////////////////////////////////////////////////////
+// Libs & Utils
+import * as React from 'react'
+import { connect, Dispatch } from 'react-redux'
+
+// Shared Components
+
+// Application Components
+import styled from 'acuity/components/styling'
+
+// State
+import { AppState } from 'acuity/state'
+
+// Models
+
+// Utils
+
+// Module Locals
+////////////////////////////////////////////////////////////////////////////////
+
+interface MainProps {
+  className?: string
+}
+
+interface DefaultProps {}
+
+interface DispatchProps {}
+
+interface StateProps {}
+
+interface Props extends MainProps, DefaultProps, DispatchProps, StateProps {}
+
+interface State {}
+
+class $1 extends React.PureComponent<Props, State> {
+  constructor(props: Props) {
+    super(props)
+  }
+
+  componentDidMount() {}
+
+  componentWillUnmount() {}
+
+  componentWillReceiveProps(nextProps: Props) {}
+
+  componentDidUpdate(prevProps: Props) {}
+
+  render() {
+    return $2
+  }
+}
+
+function mapStateToProps(appState: AppState, props: Props): StateProps {
+  return {}
+}
+
+function mapDispatchToProps(
+  dispatch: Dispatch<AppState>,
+  props: Props,
+): DispatchProps {
+  return {}
+}
+
+const Connected$1 = connect<StateProps, DispatchProps, MainProps>(
+  mapStateToProps,
+  mapDispatchToProps,
+)($1)
+
+export default styled(Connected$1)\`\`
