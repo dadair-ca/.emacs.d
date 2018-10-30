@@ -25,6 +25,8 @@
 
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c b") 'org-switchb)
 
 (setq org-capture-templates
       (quote (("t" "todo" entry (file "~/Dropbox/org/refile.org")
@@ -43,14 +45,14 @@
 (setq org-outline-path-complete-in-steps nil)
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
 
-(setq org-startup-indented t)
+(setq org-startup-indented nil)
 
 (setq org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-skip-deadline-if-done t)
 (setq org-agenda-start-on-weekday nil)
 (setq org-agenda-span 7)
 (setq org-reverse-note-order t)
-(setq org-deadline-warning-days 30)
+(setq org-deadline-warning-days 21)
 (setq org-agenda-show-all-dates t)
 
 (org-babel-do-load-languages
