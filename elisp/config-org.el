@@ -1,12 +1,16 @@
+(setq org-directory "~/Dropbox/org")
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+(setq org-mobile-inbox-for-pull "~/Dropbox/org/refile-mobileorg.org")
+(setq org-default-notes-file "~/Dropbox/org/notes.org")
+(setq org-agenda-files '("~/Dropbox/org/gtd.org"
+                         "~/Dropbox/org/refile.org"
+                         "~/Dropbox/org/refile-mobileorg.org"
+                         "~/Dropbox/org/someday.org"))
+
 (setq org-habit-graph-column 70)
 
-(setq org-agenda-files (quote ("~/Dropbox/org/gtd.org"
-                               "~/Dropbox/org/cohesic.org"
-                               "~/Dropbox/org/refile.org"
-                               "~/Dropbox/org/refile-beorg.org")))
-
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
 
 (setq org-todo-keyword-faces
@@ -19,9 +23,6 @@
 
 (setq org-use-fast-todo-selection t)
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
-
-(setq org-directory "~/Dropbox/org")
-(setq org-default-notes-file "~/Dropbox/org/notes.org")
 
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -45,7 +46,7 @@
 (setq org-outline-path-complete-in-steps nil)
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
 
-(setq org-startup-indented nil)
+(setq org-startup-indented t)
 
 (setq org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-skip-deadline-if-done t)
