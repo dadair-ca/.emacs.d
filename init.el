@@ -40,6 +40,7 @@
 (load-library "backups")
 (load-library "keys")
 (load-library "editing")
+(load-library "config-org")
 
 ;; SQL config only exists on work laptop
 (let ((cohesic-sql-config "config-sql"))
@@ -51,21 +52,6 @@
 (load custom-file)
 
 (setq use-package-always-ensure t)
-
-(defvar saved-window-configuration nil)
-
-(defun push-window-configuration ()
-  (interactive)
-  (push (current-window-configuration) saved-window-configuration))
-
-(defun pop-window-configuration ()
-  (interactive)
-  (let ((config (pop saved-window-configuration)))
-    (if config
-        (set-window-configuration config)
-      (if (> (length (window-list)) 1)
-          (delete-window)
-        (bury-buffer)))))
 
 ;; ---------- Libraries
 
@@ -164,16 +150,6 @@
   (doom-themes-visual-bell-config)
   (doom-themes-neotree-config)
   (doom-themes-org-config))
-
-(use-package dot-org
-  :load-path "dot-org.el"
-  :commands my-org-startup
-  :bind* (("C-c a" . org-agenda)
-          ("C-c b" . org-switchb)
-          ("C-c l" . org-store-link)
-          ("C-c c" . org-capture))
-  :config
-  (run-with-idle-timer 300 t 'jump-to-org-agenda))
 
 (use-package ensime
   :mode "\\.scala\\'"

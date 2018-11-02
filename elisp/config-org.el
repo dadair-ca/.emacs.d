@@ -7,8 +7,7 @@
                          "~/Dropbox/org/refile-mobileorg.org"
                          "~/Dropbox/org/someday.org"))
 
-(setq org-habit-preceding-days 42)
-(setq org-habit-today-glyph 45)
+(setq org-habit-graph-column 70)
 
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
@@ -24,6 +23,11 @@
 
 (setq org-use-fast-todo-selection t)
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
+
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c b") 'org-switchb)
 
 (setq org-capture-templates
       (quote (("t" "todo" entry (file "~/Dropbox/org/refile.org")
@@ -79,34 +83,4 @@
 
 (setq org-confirm-babel-evaluate nil)
 
-(defun org-fit-agenda-window ()
-  (and (memq org-agenda-window-setup '(reorganize-frame))
-       (fboundp 'fit-window-to-buffer)
-       (fit-window-to-buffer)))
-
-(defun my-org-startup ()
-  (org-agenda-list)
-  (org-fit-agenda-window)
-  (org-agenda-to-appt)
-  (call-interactively #'org-resolve-clocks))
-
-(defun jump-to-org-agenda ()
-  (interactive)
-  (push-window-configuration)
-
-  (let ((buf (get-buffer "*Org Agenda(a)*")))
-    (if buf
-        (let ((wind (get-buffer-window buf)))
-          (if wind
-              (when (called-interactively-p 'any)
-                (select-window wind)
-                (org-fit-window-to-buffer))
-            (if (called-interactively-p 'any)
-                (progn
-                  (select-window (display-buffer buf t t))
-                  (org-fit-window-to-buffer))
-              (with-selected-window (display-buffer buf)
-                (org-fit-window-to-buffer)))))
-      (call-interactively 'org-agenda-list))))
-
-;;; dot-org.el ends here
+(provide 'config-org)
