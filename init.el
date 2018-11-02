@@ -59,6 +59,14 @@
 
 ;; ---------- Packages
 
+(use-package abbrev
+  :defer 5
+  :diminish
+  :hook ((text-mode prog-mode erc-mode) . abbrev-mode)
+  :config
+  (if (file-exists-p abbrev-file-name)
+      (quietly-read-abbrev-file)))
+
 (use-package all-the-icons
   :ensure t)
 
