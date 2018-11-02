@@ -108,6 +108,11 @@
         auto-package-update-hide-results t)
   (auto-package-update-maybe))
 
+(use-package bbdb
+  :config
+  (bbdb-initialize 'gnus 'message)
+  (setq bbdb-file "~/Dropbox/Documents/Relationships/bbdb"))
+
 (use-package clojure-mode
   :mode ("\\.clj[scx]?\\'" "\\.edn\\'"))
 
