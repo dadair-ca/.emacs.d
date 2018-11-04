@@ -53,19 +53,38 @@
 
 (setq use-package-always-ensure t)
 
-;; ---------- Libraries
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Functions
+
+(eval-and-compile
+  (defun lookup-password (host user port)
+    (require 'auth-source)
+    (require 'auth-source-pass)
+    (let ((auth (auth-source-search :host host :user user :port port)))
+      (if auth
+          (let ((secretf (plist-get (car auth) :secret)))
+            (if secretf
+                (funcall secretf)
+              (error "Auth entry for %s@%s:%s has no secret!"
+                     user host port)))
+        (error "No auth entry found for %s@%s:%s" user host port)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Libraries
 
 (use-package diminish)
 
-;; ---------- Packages
-
 (use-package abbrev
+  :ensure f
   :defer 5
   :diminish
   :hook ((text-mode prog-mode erc-mode) . abbrev-mode)
   :config
   (if (file-exists-p abbrev-file-name)
       (quietly-read-abbrev-file)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Packages
 
 (use-package all-the-icons
   :ensure t)
