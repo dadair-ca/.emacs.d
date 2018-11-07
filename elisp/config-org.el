@@ -33,13 +33,17 @@
 
 (setq org-capture-templates
       (quote (("t" "Todo" entry (file "~/Dropbox/org/refile.org")
-               "* TODO %?\n%U\n%a\n")
+               "* TODO %?\n%U\n%a\n"
+               :empty-lines 1)
               ("n" "Note" entry (file "~/Dropbox/org/notes.org")
-               "* %? :NOTE:\n%U\n%a\n")
+               "* %? :NOTE:\n%U\n%a\n"
+               :empty-lines 1)
               ("h" "Habit" entry (file "~/Dropbox/org/refile.org")
-               "* TODO %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:END:\n%U\n%a\n")
+               "* TODO %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:END:\n%U\n%a\n"
+               :empty-lines 1)
               ("p" "Project" entry (file "~/Dropbox/org/refile.org")
-               "\n* TODO %? :PROJECT:\n%U\n\n** Outcome\n\n** NEXT\n"))))
+               "\n* TODO %? :PROJECT:\n%U\n\n** Outcome\n\n** NEXT\n"
+               :empty-lines 1))))
 
 (setq org-refile-targets (quote (;("~/Dropbox/org/gtd.org" :maxlevel . 3)
                                  ("~/Dropbox/org/gtd2.org" :maxlevel . 3)
@@ -96,7 +100,7 @@
                 ((org-agenda-overriding-header "Waiting On")))))
 
         ("F" "Focus"
-         ((tags "PRIORITY=\"A\""
+         ((tags-todo "PRIORITY=\"A\"/-WAITING"
                 ((org-agenda-overriding-header "High-priority incomplete tasks:")
                  (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
           (agenda ""
@@ -108,18 +112,18 @@
                  (org-agenda-skip-function '(da/org-skip-subtree-if-priority ?A))))))
 
         ("W" "Weekly Review"
-         ((tags "PRIORITY=\"A\""
-                ((org-agenda-overriding-header "High-priority incomplete tasks:")
-                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
+         ((tags-todo "PRIORITY=\"A\"/-WAITING"
+                     ((org-agenda-overriding-header "High-priority incomplete tasks:")
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
           (agenda "" ((org-agenda-span 7)))
           (tags "REFILE"
                 ((org-agenda-overriding-header "Inbox:")
                  (org-tags-match-list-sublevels nil)))
+          (todo "WAITING"
+                ((org-agenda-overriding-header "Waiting on:")))
           (tags-todo "+PROJECT/-DONE-CANCELLED"
                      ((org-agenda-overriding-header "Active projects:")
                       (org-tags-match-list-sublevels nil)))
-          (todo "WAITING"
-                ((org-agenda-overriding-header "Waiting on:")))
           (todo "NEXT"
                 ((org-agenda-overriding-header "Next actions:")
                  (org-agenda-skip-function '(da/org-skip-subtree-if-priority ?A))))))))
