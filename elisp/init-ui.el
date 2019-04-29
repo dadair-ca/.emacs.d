@@ -30,9 +30,16 @@
 
 ;;; Code:
 
-(global-hl-line-mode t)
-(show-paren-mode t)
+(use-package hl-line
+  :ensure nil
+  :hook (after-init . global-hl-line-mode))
+
+(use-package show-paren
+  :ensure nil
+  :hook (after-init . show-paren-mode))
+
 (fset 'yes-or-no-p 'y-or-n-p)
+
 (column-number-mode t)
 
 (menu-bar-mode -1)

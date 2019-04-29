@@ -45,6 +45,8 @@
   :config
   (global-company-mode 1))
 
+(use-package dockerfile-mode)
+
 (use-package editorconfig
   :config (editorconfig-mode 1))
 

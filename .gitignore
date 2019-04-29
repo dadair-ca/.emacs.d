@@ -22,7 +22,7 @@ ede-projects.el
 el-get
 elpa
 eshell
-flycheck_init.el
+flycheck_init*.el
 places
 projectile-bookmarks.eld
 recentf
