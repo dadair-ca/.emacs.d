@@ -31,7 +31,9 @@
 ;;; Code:
 
 (use-package ensime
-  :mode "\\.scala\\'")
+  :mode "\\.scala\\'"
+  :config
+  (setq ensime-startup-notification nil))
 
 (use-package scala-mode
   :mode "\\.scala\\'")
