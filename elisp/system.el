@@ -54,5 +54,7 @@
 
 (setq column-number-mode t)
 
+(setenv "GPG_AGENT_INFO" nil)
+
 (provide 'system)
 ;;; system.el ends here

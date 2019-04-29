@@ -2,27 +2,10 @@
 # name: component
 # key: cmp
 # --
-////////////////////////////////////////////////////////////////////////////////
-// Libs & Utils
+import styled from '@acuity/client-web/components/styling'
 import * as React from 'react'
-import { connect, Dispatch } from 'react-redux'
 
-// Shared Components
-
-// Application Components
-import styled from 'acuity/components/styling'
-
-// State
-import { AppState } from 'acuity/state'
-
-// Models
-
-// Utils
-
-// Module Locals
-////////////////////////////////////////////////////////////////////////////////
-
-interface MainProps {
+interface ComponentProps {
   className?: string
 }
 
@@ -32,13 +15,20 @@ interface DispatchProps {}
 
 interface StateProps {}
 
-interface Props extends MainProps, DefaultProps, DispatchProps, StateProps {}
+interface Props
+  extends ComponentProps,
+    DefaultProps,
+    DispatchProps,
+    StateProps {}
 
 interface State {}
+
+const defaultState: State = {}
 
 class $1 extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
+    this.state = { ...defaultState }
   }
 
   componentDidMount() {}
@@ -50,24 +40,9 @@ class $1 extends React.PureComponent<Props, State> {
   componentDidUpdate(prevProps: Props) {}
 
   render() {
-    return $2
+    const { className } = this.props
+    return <div className={className}>Hello World!</div>
   }
 }
 
-function mapStateToProps(appState: AppState, props: Props): StateProps {
-  return {}
-}
-
-function mapDispatchToProps(
-  dispatch: Dispatch<AppState>,
-  props: Props,
-): DispatchProps {
-  return {}
-}
-
-const Connected$1 = connect<StateProps, DispatchProps, MainProps>(
-  mapStateToProps,
-  mapDispatchToProps,
-)($1)
-
-export default styled(Connected$1)\`\`
+export default styled($1)\`\`

@@ -22,6 +22,8 @@
              '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives
              '("marmalade" . "https://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("org" . "http://orgmode.org/elpa/"))
 (package-initialize)
 
 ;; Bootstrap `use-package`
@@ -37,7 +39,6 @@
 
 ;; Load custom libraries
 (load-library "style")
-(load-library "backups")
 (load-library "keys")
 (load-library "editing")
 (load-library "config-org")
@@ -52,6 +53,14 @@
 (load custom-file)
 
 (setq use-package-always-ensure t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Misc
+
+(setq user-full-name "David Adair"
+      user-mail-address "adair.david@gmail.com")
+
+(setq epa-pinentry-mode 'loopback)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Functions
@@ -105,7 +114,6 @@
   :bind (("M-g o" . ace-link-org)))
 
 (use-package auto-package-update
-  :disabled
   :ensure t
   :config
   (setq auto-package-update-delete-old-versions t
@@ -115,8 +123,13 @@
 
 (use-package bbdb
   :config
-  (bbdb-initialize 'gnus 'message)
-  (setq bbdb-file "~/Dropbox/Documents/Relationships/bbdb"))
+  (setq bbdb-file "~/Dropbox/Documents/Relationships/bbdb")
+  :init
+  (calendar-set-date-style 'iso)
+  (bbdb-initialize 'gnus 'message 'anniv)
+  (bbdb-mua-auto-update-init 'message)
+  (setq bbdb-mua-auto-update-p 'query)
+  (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus))
 
 (use-package clojure-mode
   :mode ("\\.clj[scx]?\\'" "\\.edn\\'"))
@@ -195,6 +208,30 @@
 (use-package flycheck-joker
   :ensure t)
 
+(use-package gnus
+  :config
+  (global-set-key (kbd "<f6>") 'gnus)
+  (setq gnus-select-method '(nnml ""))
+  (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+  (setq gnus-always-read-dribble-file t)
+  (setq gnus-asynchronous t)
+  (setq gnus-use-cache t)
+  (setq gnus-secondary-select-methods '((nntp "news.gmane.org")
+                                        (nntp "news.gwene.org")))
+  (add-to-list 'gnus-secondary-select-methods
+               '(nnimap "personal"
+                        (nnimap-address "imap.gmail.com")
+                        (nnimap-server-port "imaps")
+                        (nnimap-stream ssl)
+                        (nnmail-expiry-target "nnimap+gmail:[Gmail]/Trash")
+                        (nnmail-expiry-wait immediate)))
+  (setq gnus-posting-styles '((".*" (signature (string-join '("David Adair" "adair.david@gmail.com") "\n")))))
+  (setq gnus-message-archive-group nil)
+  (setq smtpmail-smtp-service 587
+        smtpmail-smtp-user "adair.david@gmail.com"
+        smtpmail-smtp-server "smtp.gmail.com"
+        send-mail-function 'smtpmail-send-it))
+
 (use-package guru-mode
   :ensure t
   :diminish guru-mode
@@ -256,12 +293,19 @@
          ("C-c C->" . mc/mark-all-like-this)))
 
 (use-package neotree
-  :disabled
   :ensure t
   :config
   (global-set-key [f8] 'neotree-toggle)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
   (setq neo-smart-open t))
+
+(use-package org
+  :ensure org-plus-contrib)
+
+(use-package org-contacts
+  :ensure nil
+  :after org
+  :custom (org-contacts-files '("~/Dropbox/org/contacts.org")))
 
 (use-package org-noter
   :after (org-mode))
@@ -321,7 +365,7 @@
   :mode "\\.ya?ml\\'")
 
 (use-package web-mode
-  :disabled
+  :ensure t
   :config
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-auto-indentation nil)
@@ -346,3 +390,4 @@
 
 (provide 'init.el)
 ;;; init.el ends here
+(put 'narrow-to-region 'disabled nil)

@@ -9,6 +9,9 @@
                          "~/Dropbox/org/refile-mobileorg.org"
                          "~/Dropbox/org/someday.org"))
 
+(setq org-log-into-drawer t)
+(setq org-clock-into-drawer t)
+
 (setq org-habit-graph-column 70)
 
 (setq org-todo-keywords
@@ -43,6 +46,9 @@
                :empty-lines 1)
               ("p" "Project" entry (file "~/Dropbox/org/refile.org")
                "\n* TODO %? :PROJECT:\n%U\n\n** Outcome\n\n** NEXT\n"
+               :empty-lines 1)
+              ("c" "Contact" entry (file+headline "~/Dropbox/org/contacts.org" "Uncategorized")
+               "\n* %(org-contacts-template-name)\n:PROPERTIES:\n:EMAIL: %(org-contacts-template-email)\n:PHONE:\n:ALIAS:\n:NOTE:\n:ADDRESS:\n:END:"
                :empty-lines 1))))
 
 (setq org-refile-targets (quote (;("~/Dropbox/org/gtd.org" :maxlevel . 3)
@@ -87,6 +93,30 @@
         subtree-end
       nil)))
 
+(defun da/is-project-p ()
+  "Action if the :PROJECT: tag."
+  (save-restriction
+    (widen)
+    (member "PROJECT" (org-get-tags-at))))
+
+(defun da/skip-non-stuck-projects ()
+  "Skip trees that are not stuck projects."
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (if (da/is-project-p)
+          (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                 (has-next ))
+            (save-excursion
+              (forward-line 1)
+              (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                (unless (member "WAITING" (org-get-tags-at))
+                  (setq has-next t))))
+            (if has-next
+                next-headline
+              nil))
+        next-headline))))
+
 (setq org-agenda-custom-commands
       '((" " "Agenda"
          ((agenda "" nil)
@@ -124,6 +154,11 @@
           (tags-todo "+PROJECT/-DONE-CANCELLED"
                      ((org-agenda-overriding-header "Active projects:")
                       (org-tags-match-list-sublevels nil)))
+          (tags-todo "+PROJECT/-DONE-CANCELLED"
+                     ((org-agenda-overriding-header "Stuck projects:")
+                      (org-tags-match-list-sublevels nil)
+                      (org-agenda-skip-function 'da/skip-non-stuck-projects)
+                      (org-agenda-sorting-strategy '(category-keep))))
           (todo "NEXT"
                 ((org-agenda-overriding-header "Next actions:")
                  (org-agenda-skip-function '(da/org-skip-subtree-if-priority ?A))))))))
