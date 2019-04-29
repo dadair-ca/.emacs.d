@@ -1,6 +1,7 @@
 *.elc
 *~
 .DS_Store
+.cache
 .cask
 .emacs.desktop
 .smex-items
