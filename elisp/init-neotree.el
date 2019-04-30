@@ -35,7 +35,7 @@
 (use-package neotree
   :config
   (global-set-key [f8] 'neotree-toggle)
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  (setq neo-theme 'icons)
   (setq neo-smart-open t))
 
 (provide 'init-neotree)

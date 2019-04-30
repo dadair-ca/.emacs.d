@@ -30,6 +30,10 @@
 
 ;;; Code:
 
+(use-package emmet-mode
+  :bind (("C-c x" . emmet-expand-line))
+  :hook ((typescript-mode . emmet-mode)))
+
 (use-package prettier-js
   :hook (typescript-mode . prettier-js-mode))
 
@@ -56,7 +60,6 @@
 
         web-mode-enable-current-column-highlight t
         web-mode-enable-auto-quoting nil
-        web-mode-enable-auto-expanding t
         web-mode-enable-css-colorization t
         web-mode-enable-auto-pairing t
         web-mode-enable-comment-keywords t

@@ -1,4 +1,4 @@
-;;; init-ui.el --- UI configuration.	-*- lexical-binding: t -*-
+;;; init-devops.el --- DevOps-related configuration.	-*- lexical-binding: t -*-
 
 ;; Copyright (C) 2019 David Adair
 
@@ -25,49 +25,18 @@
 
 ;;; Commentary:
 ;;
-;; UI configuration.
+;; DevOps-related configuration.
 ;;
 
 ;;; Code:
 
-(use-package hl-line
-  :ensure nil
-  :hook (after-init . global-hl-line-mode))
+(use-package docker
+  :bind ("C-c d" . docker))
 
-(use-package show-paren
-  :ensure nil
-  :hook (after-init . show-paren-mode))
+(use-package terraform-mode)
 
-(fset 'yes-or-no-p 'y-or-n-p)
+(use-package vagrant-tramp)
 
-(column-number-mode t)
+(provide 'init-devops)
 
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-
-(use-package doom-themes
-  :ensure t
-  :config
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
-  (load-theme 'doom-one t)
-  (doom-themes-visual-bell-config)
-  (doom-themes-neotree-config)
-  (doom-themes-org-config))
-
-(use-package doom-modeline
-  :hook (after-init . doom-modeline-mode)
-  :config
-  (setq doom-modeline-buffer-file-name-style 'truncate-all))
-
-(use-package which-key
-  :defer 5
-  :diminish
-  :commands (which-key-mode)
-  :config
-  (which-key-mode))
-
-(provide 'init-ui)
-
-;;; init-ui.el ends here
+;;; init-devops.el ends here
