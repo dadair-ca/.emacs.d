@@ -91,6 +91,7 @@
 (require 'init-neotree)
 (require 'init-org)
 (require 'init-prog)
+(require 'init-scala)
 (require 'init-sql)
 (require 'init-ui)
 (require 'init-vcs)
