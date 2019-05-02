@@ -50,6 +50,10 @@
 (use-package editorconfig
   :config (editorconfig-mode 1))
 
+(use-package eldoc
+  :ensure nil
+  :hook (prog-mode-hook . eldoc-mode))
+
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 
