@@ -45,6 +45,7 @@
   (setq flycheck-check-syntax-automatically '(save idle-change new-line mode-enabled)))
 
 (use-package tide
+  :bind (("C-c o" . tide-organize-imports))
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)))
 

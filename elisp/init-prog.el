@@ -57,6 +57,9 @@
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 
+(use-package feature-mode
+  :mode "\\.feature\\'")
+
 (use-package flycheck
   :config (global-flycheck-mode))
 

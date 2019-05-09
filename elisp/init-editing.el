@@ -30,7 +30,7 @@
 
 ;;; Code:
 
-(setq my-column-limit 80)
+(setq my-column-limit 98)
 
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
@@ -40,7 +40,7 @@
 
 (setq tab-always-indent 'complete)
 
-(setq-default fill-column my-column-limit)
+(set-fill-column my-column-limit)
 (auto-fill-mode t)
 
 (autoload 'zap-up-to-char "misc"

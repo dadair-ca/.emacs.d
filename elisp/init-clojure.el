@@ -31,9 +31,9 @@
 ;;; Code:
 
 (defun my-clojure-mode-hook ()
-    (clj-refactor-mode 1)
-    (yas-minor-mode 1) ; for adding require/use/import
-    (cljr-add-keybindings-with-prefix "C-c C-m"))
+  (clj-refactor-mode 1)
+  (yas-minor-mode 1) ; for adding require/use/import
+  (cljr-add-keybindings-with-prefix "C-c C-m"))
 
 (use-package clojure-mode
   :mode ("\\.clj[scx]?\\'" "\\.edn\\'"))
@@ -49,6 +49,7 @@
 
 (use-package clj-refactor
   :after (clojure-mode)
+  :bind (("C-c o" . cljr-clean-ns))
   :hook (clojure-mode . my-clojure-mode-hook)
   :config
   (setq cljr-favor-prefix-notation nil))

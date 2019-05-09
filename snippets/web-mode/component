@@ -3,7 +3,9 @@
 # key: cmp
 # --
 import styled from '@acuity/client-web/components/styling'
+import { AppState } from '@acuity/client-web/state'
 import * as React from 'react'
+import { connect, Dispatch } from 'react-redux'
 
 interface ComponentProps {
   className?: string
@@ -31,18 +33,27 @@ class $1 extends React.PureComponent<Props, State> {
     this.state = { ...defaultState }
   }
 
-  componentDidMount() {}
-
-  componentWillUnmount() {}
-
-  componentWillReceiveProps(nextProps: Props) {}
-
-  componentDidUpdate(prevProps: Props) {}
-
   render() {
     const { className } = this.props
     return <div className={className}>Hello World!</div>
   }
 }
 
-export default styled($1)\`\`
+function mapStateToProps(appState: AppState): StateProps {
+  return {}
+}
+
+function mapDispatchToProps(dispatch: Dispatch<AppState>): DispatchProps {
+  return {}
+}
+
+const Connected$1 = connect<
+  StateProps,
+  DispatchProps,
+  DefaultProps
+>(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DebugFeatureFlags)
+
+export default styled(Connected$1)``
