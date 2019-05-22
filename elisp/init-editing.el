@@ -30,7 +30,7 @@
 
 ;;; Code:
 
-(setq my-column-limit 98)
+(setq my-column-limit 80)
 
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)

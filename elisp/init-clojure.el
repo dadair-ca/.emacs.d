@@ -49,7 +49,8 @@
 
 (use-package clj-refactor
   :after (clojure-mode)
-  :bind (("C-c o" . cljr-clean-ns))
+  :bind (:map clojure-mode-map
+              ("C-c o" . cljr-clean-ns))
   :hook (clojure-mode . my-clojure-mode-hook)
   :config
   (setq cljr-favor-prefix-notation nil))
