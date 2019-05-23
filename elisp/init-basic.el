@@ -123,6 +123,10 @@
 (use-package ledger-mode
   :mode "\\.ledger\\'")
 
+(setq create-lockfiles nil)
+
+(setq sentence-end-double-space nil)
+
 (provide 'init-basic)
 
 ;;; init-basic.el ends here

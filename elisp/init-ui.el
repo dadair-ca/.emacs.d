@@ -30,6 +30,10 @@
 
 ;;; Code:
 
+(use-package fireplace
+  :config
+  (run-with-idle-timer 300 nil #'fireplace))
+
 (use-package hl-line
   :ensure nil
   :hook (after-init . global-hl-line-mode))
