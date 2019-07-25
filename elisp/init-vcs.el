@@ -33,7 +33,7 @@
 (defvar ediff-window-setup-functin 'ediff-setup-windows-plain)
 
 (use-package magit
-  :bind ("s-m m" . magit-status))
+  :bind ("<f2>" . magit-status))
 
 (provide 'init-vcs)
 

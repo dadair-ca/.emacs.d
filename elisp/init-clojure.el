@@ -55,7 +55,8 @@
   :config
   (setq cljr-favor-prefix-notation nil))
 
-(use-package flycheck-joker)
+(use-package flycheck-clj-kondo
+  :mode ("\\.clj[scx]?\\'"))
 
 (provide 'init-clojure)
 

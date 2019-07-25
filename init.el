@@ -86,7 +86,7 @@
 (require 'init-devops)
 (require 'init-dired)
 (require 'init-editing)
-(require 'init-gnus)
+;;(require 'init-gnus)
 (require 'init-helm)
 (require 'init-neotree)
 (require 'init-org)
