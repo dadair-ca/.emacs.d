@@ -63,6 +63,11 @@
 (use-package flycheck
   :config (global-flycheck-mode))
 
+(use-package multi-term
+  :bind (("C-c t t" . multi-term)
+         ("C-c t n" . multi-term-next)
+         ("C-c t p" . multi-term-prev)))
+
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
