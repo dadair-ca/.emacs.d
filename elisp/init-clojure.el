@@ -36,7 +36,9 @@
   (cljr-add-keybindings-with-prefix "C-c C-m"))
 
 (use-package clojure-mode
-  :mode ("\\.clj[scx]?\\'" "\\.edn\\'"))
+  :mode ("\\.clj[scx]?\\'" "\\.edn\\'")
+  :config
+  (require 'flycheck-clj-kondo))
 
 (use-package cider
   :after (clojure-mode)
@@ -55,8 +57,7 @@
   :config
   (setq cljr-favor-prefix-notation nil))
 
-(use-package flycheck-clj-kondo
-  :mode ("\\.clj[scx]?\\'"))
+(use-package flycheck-clj-kondo)
 
 (provide 'init-clojure)
 

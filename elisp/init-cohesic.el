@@ -36,6 +36,38 @@
     (server :default "localhost")
     (port :default 5432)))
 
+(defun acuity-workspace ()
+  "Load the Acuity workspace, with preconfigured windows and terminals."
+  (delete-other-windows)
+  (find-file "~/git/cohesic/acuity")
+  (split-window-horizontally)
+  (split-window-below)
+  (other-window 2)
+  (split-window-below)
+  (other-window 2)
+
+  ;; SQL
+  (multi-term)
+  (rename-buffer "*term-sql*")
+  (comint-send-string "*term-sql*" "./scripts/start-services.sh sql\n")
+
+  ;; WEB
+  (other-window 1)
+  (multi-term)
+  (rename-buffer "*term-web*")
+  (comint-send-string "*term-web*" "./scripts/start-services.sh web\n")
+
+  ;; API
+  (other-window 1)
+  (multi-term)
+  (rename-buffer "*term-api*")
+  (comint-send-string "*term-api*" "./scripts/start-services.sh api\n")
+
+  ;; Appserver
+  (other-window 1)
+  (find-file "~/git/cohesic/acuity/appserver/resources/appserver/config.edn")
+  (cider-jack-in '(:project-dir "~/git/cohesic/acuity/appserver")))
+
 (provide 'init-cohesic)
 
 ;;; init-cohesic.el ends here

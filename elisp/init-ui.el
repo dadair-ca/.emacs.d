@@ -34,9 +34,9 @@
   :config
   (run-with-idle-timer 300 nil #'fireplace))
 
-(use-package hl-line
-  :ensure nil
-  :hook (after-init . global-hl-line-mode))
+;; (use-package hl-line
+;;   :ensure nil
+;;   :hook (after-init . global-hl-line-mode))
 
 (use-package show-paren
   :ensure nil
@@ -51,6 +51,7 @@
 (scroll-bar-mode -1)
 
 (use-package doom-themes
+  :disabled
   :ensure t
   :config
   (setq doom-themes-enable-bold t
@@ -71,6 +72,8 @@
   :commands (which-key-mode)
   :config
   (which-key-mode))
+
+(load-theme 'tango)
 
 (provide 'init-ui)
 
