@@ -32,12 +32,13 @@
 
 (defvar sql-postgres-login-params
   '((user :default "acuity_user")
-    (database :default "bypass")
+    (database :default "appserver")
     (server :default "localhost")
     (port :default 5432)))
 
 (defun acuity-workspace ()
   "Load the Acuity workspace, with preconfigured windows and terminals."
+  (interactive)
   (delete-other-windows)
   (find-file "~/git/cohesic/acuity")
   (split-window-horizontally)
