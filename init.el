@@ -76,10 +76,6 @@
 (require 'init-custom)
 (require 'init-basic)
 
-(when (locate-library "init-cohesic")
-  (message "Loading Cohesic configuration...")
-  (require 'init-cohesic))
-
 (require 'init-ace)
 (require 'init-clojure)
 (require 'init-dashboard)
@@ -96,5 +92,13 @@
 (require 'init-ui)
 (require 'init-vcs)
 (require 'init-web)
+
+(when (locate-library "init-cohesic")
+  (message "Loading Cohesic configuration...")
+  (require 'init-cohesic))
+
+(when (locate-library "init-leftovers")
+  (message "Loading MAD:LO configuration...")
+  (require 'init-leftovers))
 
 ;;; init.el ends here
