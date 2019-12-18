@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: defnw
+# key: defnw
+# --
+
+(defn $1
+  "
+  TODO: Docstring
+  "
+  [$2]
+  {:pre []
+   :post []}
+  (-$1 $2))

@@ -31,7 +31,8 @@
 ;;; Code:
 
 (use-package org
-  :ensure org-plus-contrib)
+  :ensure org-plus-contrib
+  :config (add-to-list 'org-modules 'org-habit t))
 
 (use-package org-contacts
   :ensure nil
@@ -99,6 +100,9 @@
                :empty-lines 1)
               ("c" "Contact" entry (file+headline "~/Dropbox/org/contacts.org" "Uncategorized")
                "\n* %(org-contacts-template-name)\n:PROPERTIES:\n:EMAIL: %(org-contacts-template-email)\n:PHONE:\n:ALIAS:\n:NOTE:\n:ADDRESS:\n:END:"
+               :empty-lines 1)
+              ("b" "Beans Log" entry (file+datetree "~/Dropbox/org/beans.org")
+               "* %?\n%U\n"
                :empty-lines 1))))
 
 (setq org-refile-targets (quote (;("~/Dropbox/org/gtd.org" :maxlevel . 3)

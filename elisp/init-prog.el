@@ -63,6 +63,8 @@
 (use-package flycheck
   :config (global-flycheck-mode))
 
+(use-package markdown-mode)
+
 (use-package multi-term
   :bind (("C-c t t" . multi-term)
          ("C-c t n" . multi-term-next)

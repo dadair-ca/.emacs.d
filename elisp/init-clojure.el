@@ -42,6 +42,7 @@
 
 (use-package cider
   :after (clojure-mode)
+  :bind (("C-c C-k" . cider-repl-clear-buffer))
   :config
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)

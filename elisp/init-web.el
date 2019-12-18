@@ -65,7 +65,8 @@
         web-mode-enable-css-colorization t
         web-mode-enable-auto-pairing t
         web-mode-enable-comment-keywords t
-        web-mode-enable-current-element-highlight t))
+        web-mode-enable-current-element-highlight t)
+  (eldoc-mode t))
 
 (provide 'init-web)
 

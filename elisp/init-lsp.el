@@ -1,4 +1,4 @@
-;;; init-scala.el --- Scala configuration.	-*- lexical-binding: t -*-
+;;; init-lsp.el --- Initialize LSP package and features.	-*- lexical-binding: t -*-
 
 ;; Copyright (C) 2019 David Adair
 
@@ -25,26 +25,19 @@
 
 ;;; Commentary:
 ;;
-;; Scala configuration.
+;; Initialize LSP package and features.
 ;;
 
 ;;; Code:
 
-(use-package scala-mode
-  :mode "\\.s\\(cala\\|bt\\)$")
+(use-package lsp-mode
+  :hook (scala-mode . lsp)
+  :config (setq lsp-prefer-flymake nil))
 
-(use-package sbt-mode
-  :commands sbt-start sbt-command
-  :config
-  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
-  ;; allows using SPACE when in the minibuffer
-  (substitute-key-definition
-   'minibuffer-complete-word
-   'self-insert-command
-   minibuffer-local-completion-map)
-  ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
-  (setq sbt:program-options '("-Dsbt.supershell=false")))
+(use-package lsp-ui)
 
-(provide 'init-scala)
+(use-package company-lsp)
 
-;;; init-scala.el ends here
+(provide 'init-lsp)
+
+;;; init-lsp.el ends here

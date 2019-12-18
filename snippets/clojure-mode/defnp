@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: defnp
+# key: defnp
+# --
+
+(defn $1?
+  "
+  TODO: Docstring
+  "
+  [$2]
+  {:pre []
+   :post [(boolean? %)]}
+  $0)

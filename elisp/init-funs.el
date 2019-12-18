@@ -1,4 +1,4 @@
-;;; init-scala.el --- Scala configuration.	-*- lexical-binding: t -*-
+;;; init-funs.el --- Initialize custom functions.	-*- lexical-binding: t -*-
 
 ;; Copyright (C) 2019 David Adair
 
@@ -25,26 +25,17 @@
 
 ;;; Commentary:
 ;;
-;; Scala configuration.
+;; Initialize custom functions.
 ;;
 
 ;;; Code:
 
-(use-package scala-mode
-  :mode "\\.s\\(cala\\|bt\\)$")
+(defun da/show-file-name ()
+  "Show the full path file name in the minibuffer and copy to killring."
+  (interactive)
+  (kill-new (buffer-file-name))
+  (message (buffer-file-name)))
 
-(use-package sbt-mode
-  :commands sbt-start sbt-command
-  :config
-  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
-  ;; allows using SPACE when in the minibuffer
-  (substitute-key-definition
-   'minibuffer-complete-word
-   'self-insert-command
-   minibuffer-local-completion-map)
-  ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
-  (setq sbt:program-options '("-Dsbt.supershell=false")))
+(provide 'init-funs)
 
-(provide 'init-scala)
-
-;;; init-scala.el ends here
+;;; init-funs.el ends here

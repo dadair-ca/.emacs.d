@@ -75,6 +75,8 @@
 
 (load-theme 'tango)
 
+(global-display-fill-column-indicator-mode)
+
 (provide 'init-ui)
 
 ;;; init-ui.el ends here
