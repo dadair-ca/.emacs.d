@@ -30,9 +30,9 @@
 
 ;;; Code:
 
-(use-package fireplace
-  :config
-  (run-with-idle-timer 300 nil #'fireplace))
+;; (use-package fireplace
+;;   :config
+;;   (run-with-idle-timer 300 nil #'fireplace))
 
 ;; (use-package hl-line
 ;;   :ensure nil
@@ -75,7 +75,7 @@
 
 (load-theme 'tango)
 
-(global-display-fill-column-indicator-mode)
+;; (global-display-fill-column-indicator-mode)
 
 (provide 'init-ui)
 

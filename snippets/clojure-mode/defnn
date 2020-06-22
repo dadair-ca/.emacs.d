@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: defnn
+# key: defnn
+# --
+
+(defn $1
+  [$2]
+  {:pre []
+   :post []}
+  ${3:(throw (UnsupportedOperationException. "FIXME"))})
