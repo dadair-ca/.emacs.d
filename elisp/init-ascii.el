@@ -1,4 +1,4 @@
-;;; init-org.el --- Orgmode configuration.	-*- lexical-binding: t -*-
+;;; init-ascii.el --- Ascii-mode support.	-*- lexical-binding: t -*-
 
 ;; Copyright (C) 2019 David Adair
 
@@ -25,22 +25,13 @@
 
 ;;; Commentary:
 ;;
-;; Orgmode configuration.
+;; Ascii-mode support.
 ;;
 
 ;;; Code:
 
-(use-package org
-  :ensure org-plus-contrib
-  :bind ("<f5>" . org-agenda)
-  :config
-  (add-to-list 'org-modules 'org-habit t)
-  (add-to-list 'org-modules 'org-checklist t)
-  (setq org-directory "~/Dropbox/org")
-  (setq org-agenda-files '("~/Dropbox/org/life.org"))
-  (setq org-refile-targets org-agenda-files)
-  (setq org-log-into-drawer t))
+(use-package adoc-mode)
 
-(provide 'init-org)
+(provide 'init-ascii)
 
-;;; init-org.el ends here
+;;; init-ascii.el ends here

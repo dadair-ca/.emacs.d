@@ -76,6 +76,7 @@
 (require 'init-custom)
 (require 'init-basic)
 
+(require 'init-ascii)
 (require 'init-ace)
 (require 'init-clojure)
 (require 'init-dashboard)
