@@ -51,7 +51,6 @@
 (scroll-bar-mode -1)
 
 (use-package doom-themes
-  :disabled
   :ensure t
   :config
   (setq doom-themes-enable-bold t
@@ -73,9 +72,12 @@
   :config
   (which-key-mode))
 
-(load-theme 'tango)
+;; (load-theme 'tango)
 
 ;; (global-display-fill-column-indicator-mode)
+
+(setq default-frame-alist '((undecorated . t)
+                            (font . "Source Code Pro-12")))
 
 (provide 'init-ui)
 
