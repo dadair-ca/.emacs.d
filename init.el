@@ -101,10 +101,6 @@
   (message "Loading Cohesic configuration...")
   (require 'init-cohesic))
 
-(when (locate-library "init-leftovers")
-  (message "Loading MAD:LO configuration...")
-  (require 'init-leftovers))
-
 (when (locate-library "init-neo")
   (message "Loading Neo configuration...")
   (require 'init-neo))
