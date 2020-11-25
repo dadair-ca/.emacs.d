@@ -90,6 +90,7 @@
 (require 'init-path)
 (require 'init-prog)
 (require 'init-scala)
+(require 'init-search)
 (require 'init-sql)
 (require 'init-ui)
 (require 'init-vcs)

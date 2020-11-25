@@ -1,4 +1,4 @@
-;;; init-lsp.el --- Initialize LSP package and features.	-*- lexical-binding: t -*-
+;;; init-search.el --- Search configuration.	-*- lexical-binding: t -*-
 
 ;; Copyright (C) 2019 David Adair
 
@@ -25,23 +25,13 @@
 
 ;;; Commentary:
 ;;
-;; Initialize LSP package and features.
+;; Search configuration.
 ;;
 
 ;;; Code:
 
-(use-package lsp-mode
-  :hook ((typescript-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp
-  :custom (lsp-clients-typescript-server-args '("--stdio" "--tsserver-log-file" "/dev/stderr")))
+(use-package rg)
 
-(use-package lsp-ui
-  :commands lsp-ui-mode)
+(provide 'init-search)
 
-(use-package helm-lsp
-  :commands helm-lsp-workspace-symbol)
-
-(provide 'init-lsp)
-
-;;; init-lsp.el ends here
+;;; init-search.el ends here
