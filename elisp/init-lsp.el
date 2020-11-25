@@ -31,12 +31,15 @@
 ;;; Code:
 
 (use-package lsp-mode
-  :hook (scala-mode . lsp)
-  :config (setq lsp-prefer-flymake nil))
+  :hook ((typescript-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
 
-(use-package lsp-ui)
+(use-package lsp-ui
+  :commands lsp-ui-mode)
 
-(use-package company-lsp)
+(use-package helm-lsp
+  :commands helm-lsp-workspace-symbol)
 
 (provide 'init-lsp)
 

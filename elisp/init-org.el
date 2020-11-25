@@ -37,7 +37,7 @@
   (add-to-list 'org-modules 'org-habit t)
   (add-to-list 'org-modules 'org-checklist t)
   (setq org-directory "~/Dropbox/org")
-  (setq org-agenda-files '("~/Dropbox/org/life.org"))
+  (setq org-agenda-files '("~/Dropbox/org/life.org" "~/Dropbox/org/neo.org"))
   (setq org-refile-targets org-agenda-files)
   (setq org-log-into-drawer t))
 

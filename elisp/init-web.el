@@ -34,8 +34,8 @@
   :bind (("C-c x" . emmet-expand-line))
   :hook ((typescript-mode . emmet-mode)))
 
-(use-package prettier-js
-  :hook (typescript-mode . prettier-js-mode))
+(use-package prettier
+  :hook (typescript-mode . prettier-mode))
 
 (use-package typescript-mode
   :mode ("\\.ts\\'" "\\.tsx\\'")
@@ -47,6 +47,7 @@
 (use-package tide
   :bind (:map tide-mode-map
               ("C-c o" . tide-organize-imports))
+  :after (typescript-mode company flycheck)
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)))
 
