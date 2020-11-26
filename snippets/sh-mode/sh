@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: sh
+# key: sh
+# --
+#!/usr/bin/env bash
+set -eu
+
