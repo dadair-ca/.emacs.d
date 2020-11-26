@@ -3,5 +3,23 @@
 # key: sh
 # --
 #!/usr/bin/env bash
-set -eu
+set -e
+
+progname=$0
+
+function usage {
+    echo "USAGE:"
+    echo "    $progname [OPTIONS]"
+    echo ""
+    echo "ARGS:"
+    echo "  -h, --help"
+    echo "          Prints help information. Use --help for more details."
+    exit 1
+}
+
+case $1 in
+    '-h' | '--help' )
+        usage
+        ;;
+esac
 
