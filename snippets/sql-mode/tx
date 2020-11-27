@@ -2,11 +2,9 @@
 # name: tx
 # key: tx
 # --
-BEGIN;
-  DO $$
-  DECLARE
-    ${1:FOO := 'bar'}
-  BEGIN
-    $0
-  END $$;
-COMMIT;
+DO $$
+DECLARE
+  ${1:FOO TEXT := 'bar'}
+BEGIN
+  $0
+END $$;
