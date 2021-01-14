@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: test
+# key: test
+# --
+test('$1', () => {
+  ${2:expect(true).toEqual(false);}$0
+});

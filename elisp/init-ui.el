@@ -58,7 +58,8 @@
   (load-theme 'doom-one t)
   (doom-themes-visual-bell-config)
   (doom-themes-neotree-config)
-  (doom-themes-org-config))
+  ;(doom-themes-org-config)
+  )
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
@@ -76,7 +77,7 @@
 
 ;; (global-display-fill-column-indicator-mode)
 
-(setq default-frame-alist '((undecorated . t)
+(setq default-frame-alist '(;(undecorated . t)
                             (font . "Source Code Pro-10")))
 
 (provide 'init-ui)

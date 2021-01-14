@@ -1,8 +1,4 @@
-# -*- mode: snippet -*-
-# name: header
-# key: hdr
-# --
-;;; $1.el --- $2.	-*- lexical-binding: t -*-
+;;; init-ivy.el --- Ivy config.	-*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021 David Adair
 
@@ -29,13 +25,21 @@
 
 ;;; Commentary:
 ;;
-;; $2.
+;; Ivy config.
 ;;
 
 ;;; Code:
 
-$0
+(use-package counsel :ensure t)
 
-(provide '$1)
+(use-package ivy
+  :ensure t
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file))
 
-;;; $1.el ends here
+(provide 'init-ivy)
+
+;;; init-ivy.el ends here

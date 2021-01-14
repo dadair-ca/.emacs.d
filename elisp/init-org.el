@@ -37,9 +37,15 @@
   (add-to-list 'org-modules 'org-habit t)
   (add-to-list 'org-modules 'org-checklist t)
   (setq org-directory "~/Dropbox/org")
-  (setq org-agenda-files '("~/Dropbox/org/life.org" "~/Dropbox/org/neo.org"))
+  (setq org-agenda-files '("~/Dropbox/org/gtd.org"))
   (setq org-refile-targets org-agenda-files)
-  (setq org-log-into-drawer t))
+  (setq org-log-into-drawer t)
+  (setq org-adapt-indentation nil
+        org-hide-leading-starts nil
+        org-odd-levels-only nil)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t))))
 
 (provide 'init-org)
 
