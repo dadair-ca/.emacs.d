@@ -37,3 +37,5 @@ transient/
 url
 /elisp/init-cohesic.el
 /elisp/init-leftovers.el
+/.lsp-session-v1
+/eln-cache/
