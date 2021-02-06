@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: fnn
+# key: fnn
+# --
+function ${1:foo}${3:<T>}(${2:impl}: ${4:any}, args: ${5:any}): ${6:any} {
+  return $2.$1(args);
+}

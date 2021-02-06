@@ -72,21 +72,23 @@
 
 (update-load-path)
 
+(setq comp-async-report-warnings-errors nil)
+
 (require 'init-package)
 (require 'init-custom)
 (require 'init-basic)
 
 (require 'init-ace)
-;; (require 'init-clojure)
+(require 'init-clojure)
+;; (require 'init-completion)
 (require 'init-dashboard)
 (require 'init-devops)
 (require 'init-dired)
 (require 'init-editing)
 (require 'init-funs)
-(require 'init-ivy)
-;; (require 'init-helm)
+;; (require 'init-ivy)
+(require 'init-helm)
 (require 'init-lsp)
-(require 'init-neotree)
 (require 'init-org)
 (require 'init-path)
 (require 'init-prog)

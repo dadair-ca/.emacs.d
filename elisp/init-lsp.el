@@ -34,7 +34,11 @@
   :hook ((typescript-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
-  :custom (lsp-clients-typescript-server-args '("--stdio" "--tsserver-log-file" "/dev/stderr")))
+  :custom
+  (lsp-clients-typescript-server-args '("--stdio" "--tsserver-log-file" "/dev/stderr"))
+  :config
+  (setq read-process-output-max (* 1024 1024))
+  (setq lsp-completion-provider :capf))
 
 (use-package lsp-ui
   :commands lsp-ui-mode)

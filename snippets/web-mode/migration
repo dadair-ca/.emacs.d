@@ -1,0 +1,84 @@
+# -*- mode: snippet -*-
+# name: migration
+# key: migration
+# --
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
+
+/* USAGE:
+ *     ts-node path/to/script/<filename>.ts <command>
+ *
+ * ARGS:
+ *     <command> One of: up, verify, down.
+ *         `up` will perform the forward migration.
+ *         `verify` will verify the expected outcome of `up`.
+ *         `down` will perform the reverse migration.
+ */
+
+import { connect } from '../manual-migration-client';
+
+const up = async (): Promise<void> => {
+  const db = await connect();
+
+  try {
+    await db.query(`
+      DO $$
+      BEGIN
+      END $$;
+    `);
+  } catch (e) {
+    console.log('Error while running manual migration:', e.message);
+  } finally {
+    await db.end();
+  }
+};
+
+const verify = async (): Promise<void> => {
+  const db = await connect();
+
+  try {
+    await db.query(`
+      DO $$
+      DECLARE
+      BEGIN
+      END $$;
+    `);
+  } catch (e) {
+    console.log('Error while running manual migration verify:', e.message);
+  } finally {
+    await db.end();
+  }
+};
+
+const down = async (): Promise<void> => {
+  const db = await connect();
+
+  try {
+    await db.query(`
+      DO $$
+      BEGIN
+      END $$;
+    `);
+  } catch (e) {
+    console.log('Error while running manual migration rollback:', e.message);
+  } finally {
+    await db.end();
+  }
+};
+
+const commandArg = process.argv[2];
+
+switch (commandArg) {
+  case 'up':
+    up();
+    break;
+  case 'down':
+    down();
+    break;
+  case 'verify':
+    verify();
+    break;
+  default:
+    console.log('Unknown command:', commandArg);
+    console.log('Available commands: up, verify, down');
+}

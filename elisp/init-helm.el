@@ -53,18 +53,8 @@
 (use-package helm-ag
   :after (helm-mode))
 
-(use-package helm-bibtex
-  :after (helm-mode)
-  :config
-  (setq bibtex-completion-bibliography "~/Dropbox/Documents/Medical-School/Research/Bibliography/master.bib"
-        bibtex-completion-library-path "~/Dropbox/Documents/Medical-School/Research/Bibliography/PDFs"
-        bibtex-completion-notes-path "~/Dropbox/Documents/Medical-School/Research/Bibliography/notes.org"))
-
 (use-package helm-descbinds
   :after (helm-mode))
-
-(use-package helm-org-rifle
-  :after (org-mode))
 
 (use-package helm-projectile
   :ensure t
