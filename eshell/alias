@@ -1,0 +1,2 @@
+alias ll ls -l $*
+alias dcd docker-compose down -v --remove-orphans

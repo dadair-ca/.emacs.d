@@ -1,6 +1,6 @@
-;;; init-dashboard.el --- Dashboard configuration.	-*- lexical-binding: t -*-
+;;; init-ediff.el --- ediff config.	-*- lexical-binding: t -*-
 
-;; Copyright (C) 2019 David Adair
+;; Copyright (C) 2021 David Adair
 
 ;; Author: David Adair <adair.david@gmail.com>
 ;; URL: https://github.com/adairdavid/.emacs.d
@@ -25,18 +25,23 @@
 
 ;;; Commentary:
 ;;
-;; Dashboard configuration.
+;; ediff config.
 ;;
 
 ;;; Code:
 
-;; (use-package dashboard
-;;   :config
-;;   (dashboard-setup-startup-hook)
-;;   (setq dashboard-items '((recents . 5)
-;;                           (bookmarks . 5)
-;;                           (projects . 5))))
+(defmacro csetq (variable value)
+  `(funcall (or (get ',variable 'custom-set)
+                'set-default)
+            ',variable ,value))
 
-(provide 'init-dashboard)
+(use-package ediff
+  :config
+  (csetq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (csetq ediff-split-window-function 'split-window-horizontally)
+  ;(csetq ediff-show-ancestor +1)
+  )
 
-;;; init-dashboard.el ends here
+(provide 'init-ediff)
+
+;;; init-ediff.el ends here

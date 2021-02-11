@@ -34,9 +34,9 @@
 ;;   :config
 ;;   (run-with-idle-timer 300 nil #'fireplace))
 
-;; (use-package hl-line
-;;   :ensure nil
-;;   :hook (after-init . global-hl-line-mode))
+(use-package hl-line
+  :ensure nil
+  :hook (after-init . global-hl-line-mode))
 
 (use-package show-paren
   :ensure nil
@@ -50,21 +50,30 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-(use-package doom-themes
-  :ensure t
-  :config
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
-  (load-theme 'doom-one t)
-  (doom-themes-visual-bell-config)
-  (doom-themes-neotree-config)
-  ;(doom-themes-org-config)
-  )
+;; (use-package doom-themes
+;;   :ensure t
+;;   :config
+;;   (setq doom-themes-enable-bold t
+;;         doom-themes-enable-italic t)
+;;   (load-theme 'doom-one t)
+;;   (doom-themes-visual-bell-config)
+;;   (doom-themes-neotree-config)
+;;   ;(doom-themes-org-config)
+;;   )
 
-(use-package doom-modeline
-  :hook (after-init . doom-modeline-mode)
+(use-package modus-themes
+  :ensure
+  :init
+  (setq modus-themes-slanted-constructs t
+        modus-themes-bold-constructs nil)
+  (modus-themes-load-themes)
   :config
-  (setq doom-modeline-buffer-file-name-style 'truncate-all))
+  (modus-themes-load-vivendi))
+
+;; (use-package doom-modeline
+;;   :hook (after-init . doom-modeline-mode)
+;;   :config
+;;   (setq doom-modeline-buffer-file-name-style 'truncate-all))
 
 (use-package which-key
   :defer 5

@@ -85,6 +85,7 @@
 (require 'init-devops)
 (require 'init-dired)
 (require 'init-editing)
+(require 'init-ediff)
 (require 'init-funs)
 ;; (require 'init-ivy)
 (require 'init-helm)

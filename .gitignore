@@ -22,6 +22,7 @@ ede-projects.el
 el-get
 elpa
 eshell
+!eshell/alias
 flycheck_init*.el
 places
 projectile-bookmarks.eld
