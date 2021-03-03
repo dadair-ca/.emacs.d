@@ -56,6 +56,8 @@
 
 (global-set-key (kbd "C-c s") 'sort-lines)
 
+(global-set-key (kbd "C-;") 'copy-from-above-command)
+
 (global-auto-revert-mode t)
 
 (use-package guru-mode
