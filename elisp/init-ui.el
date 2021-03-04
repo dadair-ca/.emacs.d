@@ -34,9 +34,9 @@
 ;;   :config
 ;;   (run-with-idle-timer 300 nil #'fireplace))
 
-(use-package hl-line
-  :ensure nil
-  :hook (after-init . global-hl-line-mode))
+;; (use-package hl-line
+;;   :ensure nil
+;;   :hook (after-init . global-hl-line-mode))
 
 (use-package show-paren
   :ensure nil
@@ -61,14 +61,20 @@
 ;;   ;(doom-themes-org-config)
 ;;   )
 
-(use-package modus-themes
-  :ensure
-  :init
-  (setq modus-themes-slanted-constructs t
-        modus-themes-bold-constructs nil)
-  (modus-themes-load-themes)
-  :config
-  (modus-themes-load-vivendi))
+;; (use-package modus-vivendi :ensure)
+;; (use-package modus-operandi :ensure)
+
+;; (use-package modus-vivendi-theme :ensure)
+;; (use-package modus-operandi-theme :ensure)
+
+;; (use-package modus-themes
+;;   :ensure
+;;   :init
+;;   (setq modus-themes-slanted-constructs t
+;;         modus-themes-bold-constructs nil)
+;;   (modus-themes-load-themes)
+;;   :config
+;;   (modus-themes-load-vivendi))
 
 ;; (use-package doom-modeline
 ;;   :hook (after-init . doom-modeline-mode)
@@ -82,7 +88,7 @@
   :config
   (which-key-mode))
 
-;; (load-theme 'tango)
+(load-theme 'tango)
 
 ;; (global-display-fill-column-indicator-mode)
 

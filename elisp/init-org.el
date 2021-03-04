@@ -39,6 +39,7 @@
 (setq org-agenda-files (quote ("~/Dropbox/org/gtd.org" "~/Dropbox/org/refile.org" "~/Dropbox/org/neo.org" "~/Dropbox/org/cohesic.org")))
 (setq org-refile-targets '(("~/Dropbox/org/gtd.org" :maxlevel . 3)
                            ("~/Dropbox/org/neo.org" :maxlevel . 3)
+                           ("~/Dropbox/org/neo-journal.org" :maxlevel . 2)
                            ("~/Dropbox/org/cohesic.org" :maxlevel . 3)
                            ("~/Dropbox/org/refile.org" :level . 1)
                            ("~/Dropbox/org/notes.org" :maxlevel . 2)))
@@ -81,7 +82,13 @@
                :empty-lines 1)
               ("p" "Project" entry (file "~/Dropbox/org/refile.org")
                "\n* TODO %? :PROJECT:\n%U\n\n** Outcome\n\n** NEXT\n"
-               :empty-lines 1))))
+               :empty-lines 1)
+              ("N" "NEO Logbook Entry" entry (file+datetree "~/Dropbox/org/neo-journal.org")
+               "* %U\n\n%?\n"
+               :empty-lines 1)
+              ("I" "Interrupt" entry (file "~/Dropbox/org/refile.org")
+               "* %U :INTERRUPT:\n %?\n"
+               :empty-lines 1 :clock-in t :clock-resume t))))
 
 (setq org-refile-use-outline-path t)
 (setq org-outline-path-complete-in-steps nil)
