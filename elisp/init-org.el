@@ -88,6 +88,9 @@
                :empty-lines 1)
               ("I" "Interrupt" entry (file "~/Dropbox/org/refile.org")
                "* %? :INTERRUPT:\n"
+               :empty-lines 1 :clock-in t :clock-resume t)
+              ("M" "Meeting" entry (file "~/Dropbox/org/refile.org")
+               "* %? :MEETING:\n"
                :empty-lines 1 :clock-in t :clock-resume t))))
 
 (setq org-refile-use-outline-path t)
