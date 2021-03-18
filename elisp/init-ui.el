@@ -67,14 +67,14 @@
 ;; (use-package modus-vivendi-theme :ensure)
 ;; (use-package modus-operandi-theme :ensure)
 
-;; (use-package modus-themes
-;;   :ensure
-;;   :init
-;;   (setq modus-themes-slanted-constructs t
-;;         modus-themes-bold-constructs nil)
-;;   (modus-themes-load-themes)
-;;   :config
-;;   (modus-themes-load-vivendi))
+(use-package modus-themes
+  :ensure
+  :init
+  (setq modus-themes-slanted-constructs t
+        modus-themes-bold-constructs nil)
+  (modus-themes-load-themes)
+  :config
+  (modus-themes-load-vivendi))
 
 ;; (use-package doom-modeline
 ;;   :hook (after-init . doom-modeline-mode)
@@ -88,7 +88,7 @@
   :config
   (which-key-mode))
 
-(load-theme 'tango)
+;; (load-theme 'tango)
 
 ;; (global-display-fill-column-indicator-mode)
 

@@ -30,9 +30,9 @@
 
 ;;; Code:
 
-(use-package emmet-mode
-  :bind (("C-c x" . emmet-expand-line))
-  :hook ((typescript-mode . emmet-mode)))
+;; (use-package emmet-mode
+;;   :bind (("C-c x" . emmet-expand-line))
+;;   :hook ((typescript-mode . emmet-mode)))
 
 (use-package prettier
   :hook (typescript-mode . prettier-mode))
@@ -52,7 +52,8 @@
          (typescript-mode . tide-hl-identifier-mode)))
 
 (use-package web-mode
-  :hook ((typescript-mode . web-mode))
+  :hook ((typescript-mode . web-mode)
+         (typescript-mode . subword-mode))
   :config
   (setq web-mode-markup-indent-offset 2
         web-mode-css-indent-offset 2

@@ -113,15 +113,15 @@
   (if (file-exists-p abbrev-file-name)
       (quietly-read-abbrev-file)))
 
-(use-package ag)
+;; (use-package ag)
 
 (use-package avy
   :bind (("M-g g" . avy-goto-char)
          ("M-g l" . avy-goto-line)
          ("M-g w" . avy-goto-word-1)))
 
-(use-package ledger-mode
-  :mode "\\.ledger\\'")
+;; (use-package ledger-mode
+;;   :mode "\\.ledger\\'")
 
 (setq create-lockfiles nil)
 

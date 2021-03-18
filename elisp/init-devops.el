@@ -35,7 +35,7 @@
 
 (use-package terraform-mode)
 
-(use-package vagrant-tramp)
+;; (use-package vagrant-tramp)
 
 (provide 'init-devops)
 

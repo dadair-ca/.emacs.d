@@ -57,18 +57,18 @@
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 
-(use-package feature-mode
-  :mode "\\.feature\\'")
+;; (use-package feature-mode
+;;   :mode "\\.feature\\'")
 
 (use-package flycheck
   :config (global-flycheck-mode))
 
 (use-package markdown-mode)
 
-(use-package multi-term
-  :bind (("C-c t t" . multi-term)
-         ("C-c t n" . multi-term-next)
-         ("C-c t p" . multi-term-prev)))
+;; (use-package multi-term
+;;   :bind (("C-c t t" . multi-term)
+;;          ("C-c t n" . multi-term-next)
+;;          ("C-c t p" . multi-term-prev)))
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)

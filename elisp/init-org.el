@@ -164,11 +164,11 @@
                 ((org-agenda-overriding-header "Waiting On")))))
 
         ("F" "Focus"
-         ((tags-todo "PRIORITY=\"A\"/-WAITING"
+         ((agenda ""
+                  ((org-agenda-span 1)))
+          (tags-todo "PRIORITY=\"A\"/-WAITING"
                 ((org-agenda-overriding-header "High-priority incomplete tasks:")
                  (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
-          (agenda ""
-                  ((org-agenda-span 1)))
           (todo "WAITING"
                 ((org-agenda-overriding-header "Waiting on:")))
           (todo "NEXT"
@@ -176,10 +176,10 @@
                  (org-agenda-skip-function '(da/org-skip-subtree-if-priority ?A))))))
 
         ("W" "Weekly Review"
-         ((tags-todo "PRIORITY=\"A\"/-WAITING"
+         ((agenda "" ((org-agenda-span 7)))
+          (tags-todo "PRIORITY=\"A\"/-WAITING"
                      ((org-agenda-overriding-header "High-priority incomplete tasks:")
                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
-          (agenda "" ((org-agenda-span 7)))
           (tags "REFILE"
                 ((org-agenda-overriding-header "Inbox:")
                  (org-tags-match-list-sublevels nil)))
@@ -196,7 +196,6 @@
           (todo "NEXT"
                 ((org-agenda-overriding-header "Next actions:")
                  (org-agenda-skip-function '(da/org-skip-subtree-if-priority ?A))))))))
-
 
 (setq org-confirm-babel-evaluate nil)
 
