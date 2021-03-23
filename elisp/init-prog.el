@@ -86,12 +86,6 @@
   (eldoc-add-command 'paredit-backward-delete
                      'paredit-close-round))
 
-(use-package projectile
-  :diminish
-  :config
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (projectile-mode))
-
 (use-package restclient
   :mode ("\\.https?\\'" . restclient-mode))
 

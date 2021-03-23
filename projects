@@ -1,0 +1,8 @@
+;;; -*- lisp-data -*-
+(("~/.emacs.d/")
+ ("~/git/neo/ledger-service/")
+ ("~/git/neo/bank-service/")
+ ("~/git/neo/statement-service/")
+ ("~/git/neo/neo-serverless/")
+ ("~/git/neo/terraform-neo/")
+ ("~/git/neo/statement-generation-service/"))

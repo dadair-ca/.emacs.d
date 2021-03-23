@@ -56,11 +56,6 @@
 (use-package helm-descbinds
   :after (helm-mode))
 
-(use-package helm-projectile
-  :ensure t
-  :diminish
-  :config (helm-projectile-on))
-
 (provide 'init-helm)
 
 ;;; init-helm.el ends here
