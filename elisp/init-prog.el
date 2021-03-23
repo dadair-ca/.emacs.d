@@ -30,21 +30,6 @@
 
 ;;; Code:
 
-(use-package company
-  :defer 5
-  :diminish
-  :commands (company-mode company-indent-or-complete-common)
-  :init
-  (dolist (hook '(emacs-lisp-mode-hook
-                  clojure-mode-hook
-                  typescript-mode-hook))
-    (add-hook hook
-              #'(lambda ()
-                  (local-set-key (kbd "<tab>")
-                                 #'company-indent-or-complete-common))))
-  :config
-  (global-company-mode 1))
-
 (use-package dockerfile-mode)
 
 (use-package editorconfig
@@ -57,18 +42,10 @@
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 
-;; (use-package feature-mode
-;;   :mode "\\.feature\\'")
-
 (use-package flycheck
   :config (global-flycheck-mode))
 
 (use-package markdown-mode)
-
-;; (use-package multi-term
-;;   :bind (("C-c t t" . multi-term)
-;;          ("C-c t n" . multi-term-next)
-;;          ("C-c t p" . multi-term-prev)))
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
