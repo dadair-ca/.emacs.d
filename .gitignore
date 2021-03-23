@@ -40,6 +40,6 @@ url
 /elisp/init-leftovers.el
 /.lsp-session-v1
 /eln-cache/
-/projects
 /emojis/
 request/
+projects
