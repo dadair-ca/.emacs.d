@@ -76,6 +76,9 @@
 
 (require 'init-package)
 (require 'init-custom)
+(require 'init-pass)
+
+(require 'init-alert)
 (require 'init-basic)
 
 (require 'init-ace)
@@ -83,8 +86,8 @@
 (require 'init-dashboard)
 (require 'init-devops)
 (require 'init-dired)
-(require 'init-editing)
 (require 'init-ediff)
+(require 'init-editing)
 (require 'init-funs)
 (require 'init-lsp)
 (require 'init-org)
