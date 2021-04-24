@@ -81,6 +81,8 @@
 (require 'init-alert)
 (require 'init-basic)
 
+(use-package company :ensure t)
+
 (require 'init-ace)
 ;; (require 'init-clojure)
 ;; (require 'init-dashboard)
