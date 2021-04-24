@@ -115,14 +115,6 @@
 
 (define-abbrev-table 'grep-mode-abbrev-table '())
 
-(define-abbrev-table 'helm-ag-mode-abbrev-table '())
-
-(define-abbrev-table 'helm-grep-mode-abbrev-table '())
-
-(define-abbrev-table 'helm-major-mode-abbrev-table '())
-
-(define-abbrev-table 'helm-moccur-mode-abbrev-table '())
-
 (define-abbrev-table 'help-mode-abbrev-table '())
 
 (define-abbrev-table 'html-mode-abbrev-table '())

@@ -43,9 +43,6 @@
 (use-package lsp-ui
   :commands lsp-ui-mode)
 
-(use-package helm-lsp
-  :commands helm-lsp-workspace-symbol)
-
 (provide 'init-lsp)
 
 ;;; init-lsp.el ends here

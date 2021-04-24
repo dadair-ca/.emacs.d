@@ -82,8 +82,8 @@
 (require 'init-basic)
 
 (require 'init-ace)
-(require 'init-clojure)
-(require 'init-dashboard)
+;; (require 'init-clojure)
+;; (require 'init-dashboard)
 (require 'init-devops)
 (require 'init-dired)
 (require 'init-ediff)

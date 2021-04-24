@@ -35,27 +35,6 @@
 
 (defvar epa-pinentry-mode 'loopback)
 
-(eval-and-compile
-  (defun lookup-password (host user port)
-    (require 'auth-source)
-    (require 'auth-source-pass)
-    (let ((auth (auth-source-search :host host :user user :port port)))
-      (if auth
-          (let ((secretf (plist-get (car auth) :secret)))
-            (if secretf
-                (funcall secretf)
-              (error "Auth entry for %s@%s:%s has no secret!"
-                     user host port)))
-        (error "No auth entry found for %s@%s:%s" user host port)))))
-
-(when (memq window-system '(mac ns))
-  (use-package exec-path-from-shell
-    :init
-    (setq exec-path-from-shell-check-startup-files nil)
-    (setq exec-path-from-shell-variables '("PATH" "MANPATH"))
-    (setq exec-path (append exec-path '("/usr/local/bin")))
-    (exec-path-from-shell-initialize)))
-
 (use-package uniquify
   :ensure nil
   :init
@@ -124,8 +103,6 @@
 ;;   :mode "\\.ledger\\'")
 
 (setq create-lockfiles nil)
-
-(setq sentence-end-double-space nil)
 
 (provide 'init-basic)
 
