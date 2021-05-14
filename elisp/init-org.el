@@ -36,7 +36,7 @@
 
 (setq org-directory "~/Dropbox/org")
 (setq org-default-notes-file "~/Dropbox/org/notes.org")
-(setq org-agenda-files (quote ("~/Dropbox/org/gtd.org" "~/Dropbox/org/refile.org" "~/Dropbox/org/neo.org" "~/Dropbox/org/cohesic.org")))
+(setq org-agenda-files (quote ("~/Dropbox/org/gtd.org" "~/Dropbox/org/refile.org" "~/Dropbox/org/neo.org" "~/Dropbox/org/cohesic.org" "~/Dropbox/org/notes.org")))
 (setq org-refile-targets '(("~/Dropbox/org/gtd.org" :maxlevel . 3)
                            ("~/Dropbox/org/neo.org" :maxlevel . 3)
                            ("~/Dropbox/org/neo-journal.org" :maxlevel . 2)
