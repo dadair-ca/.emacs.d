@@ -54,7 +54,7 @@
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
-(global-set-key (kbd "C-c C-s") 'sort-lines)
+;; (global-set-key (kbd "C-c C-s") 'sort-lines)
 
 (global-set-key (kbd "C-;") 'copy-from-above-command)
 

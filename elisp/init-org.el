@@ -34,15 +34,15 @@
   :ensure org-plus-contrib
   :config (add-to-list 'org-modules 'org-habit t))
 
-(setq org-directory "~/Dropbox/org")
-(setq org-default-notes-file "~/Dropbox/org/notes.org")
-(setq org-agenda-files (quote ("~/Dropbox/org/gtd.org" "~/Dropbox/org/refile.org" "~/Dropbox/org/neo.org" "~/Dropbox/org/cohesic.org" "~/Dropbox/org/notes.org")))
-(setq org-refile-targets '(("~/Dropbox/org/gtd.org" :maxlevel . 3)
-                           ("~/Dropbox/org/neo.org" :maxlevel . 3)
-                           ("~/Dropbox/org/neo-journal.org" :maxlevel . 2)
-                           ("~/Dropbox/org/cohesic.org" :maxlevel . 3)
-                           ("~/Dropbox/org/refile.org" :level . 1)
-                           ("~/Dropbox/org/notes.org" :maxlevel . 2)))
+(setq org-directory "~/git/org")
+(setq org-default-notes-file "~/git/org/notes.org")
+(setq org-agenda-files
+      (quote ("~/git/org/gtd.org" "~/git/org/refile.org" "~/git/org/neo.org.gpg" "~/git/org/notes.org")))
+(setq org-refile-targets
+      '(("~/git/org/gtd.org" :maxlevel . 3)
+        ("~/git/org/neo.org.gpg" :maxlevel . 3)
+        ("~/git/org/refile.org" :level . 1)
+        ("~/git/org/notes.org" :maxlevel . 2)))
 
 (setq org-log-into-drawer t)
 (setq org-clock-into-drawer t)
@@ -71,27 +71,18 @@
 (global-set-key (kbd "C-c b") 'org-switchb)
 
 (setq org-capture-templates
-      (quote (("t" "Todo" entry (file "~/Dropbox/org/refile.org")
+      (quote (("t" "Todo" entry (file "~/git/org/refile.org")
                "* TODO %?\n%U\n%a\n"
                :empty-lines 1)
-              ("n" "Note" entry (file "~/Dropbox/org/notes.org")
+              ("n" "Note" entry (file "~/git/org/notes.org")
                "* %? :NOTE:\n%U\n%a\n"
                :empty-lines 1)
-              ("h" "Habit" entry (file "~/Dropbox/org/refile.org")
+              ("h" "Habit" entry (file "~/git/org/refile.org")
                "* TODO %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:END:\n%U\n%a\n"
                :empty-lines 1)
-              ("p" "Project" entry (file "~/Dropbox/org/refile.org")
+              ("p" "Project" entry (file "~/git/org/refile.org")
                "\n* TODO %? :PROJECT:\n%U\n\n** Outcome\n\n** NEXT\n"
-               :empty-lines 1)
-              ("N" "NEO Logbook Entry" entry (file+datetree "~/Dropbox/org/neo-journal.org")
-               "* %U\n\n%?\n"
-               :empty-lines 1)
-              ("I" "Interrupt" entry (file "~/Dropbox/org/refile.org")
-               "* %? :INTERRUPT:\n"
-               :empty-lines 1 :clock-in t :clock-resume t)
-              ("M" "Meeting" entry (file "~/Dropbox/org/refile.org")
-               "* %? :MEETING:\n"
-               :empty-lines 1 :clock-in t :clock-resume t))))
+               :empty-lines 1))))
 
 (setq org-refile-use-outline-path t)
 (setq org-outline-path-complete-in-steps nil)

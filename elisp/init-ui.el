@@ -74,7 +74,9 @@
         modus-themes-bold-constructs nil)
   (modus-themes-load-themes)
   :config
-  (modus-themes-load-operandi))
+  (modus-themes-load-operandi)
+  ;;(modus-themes-load-vivendi)
+  )
 
 ;; (use-package doom-modeline
 ;;   :hook (after-init . doom-modeline-mode)

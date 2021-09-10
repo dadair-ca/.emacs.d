@@ -83,6 +83,8 @@
 
 (use-package company :ensure t)
 
+;; (use-package treemacs :ensure t)
+
 (require 'init-ace)
 ;; (require 'init-clojure)
 ;; (require 'init-dashboard)
@@ -92,10 +94,12 @@
 (require 'init-editing)
 (require 'init-funs)
 (require 'init-lsp)
+(require 'init-mongo)
 (require 'init-org)
 (require 'init-path)
 (require 'init-prog)
 (require 'init-python)
+(require 'init-scala)
 (require 'init-search)
 (require 'init-sql)
 (require 'init-ui)
