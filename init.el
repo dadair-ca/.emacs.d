@@ -99,16 +99,11 @@
 (require 'init-path)
 (require 'init-prog)
 (require 'init-python)
-(require 'init-scala)
 (require 'init-search)
 (require 'init-sql)
 (require 'init-ui)
 (require 'init-vcs)
 (require 'init-web)
-
-(when (locate-library "init-cohesic")
-  (message "Loading Cohesic configuration...")
-  (require 'init-cohesic))
 
 (when (locate-library "init-neo")
   (message "Loading Neo configuration...")
