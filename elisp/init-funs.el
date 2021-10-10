@@ -30,11 +30,23 @@
 
 ;;; Code:
 
-(defun da/show-file-name ()
-  "Show the full path file name in the minibuffer and copy to killring."
+(defun da--kill-and-echo (X)
+  "Copy `X' into the `kill-ring' and echo to the minibuffer."
+  (kill-new X)
+  (message X))
+
+(defun da/path ()
+  "Echo file name to minibuffer and copy to kill ring.
+
+Will remove project prefix if inside a project."
   (interactive)
-  (kill-new (buffer-file-name))
-  (message (buffer-file-name)))
+  (let ((buf (buffer-file-name))
+        (proj (project-current nil)))
+    (if proj
+        (let* ((proj (expand-file-name (cdr proj)))
+               (splits (split-string buf proj)))
+          (da--kill-and-echo (car (cdr splits))))
+      (da--kill-and-echo (buffer-file-name)))))
 
 (provide 'init-funs)
 
