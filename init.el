@@ -98,7 +98,7 @@
 (require 'init-org)
 (require 'init-path)
 (require 'init-prog)
-(require 'init-python)
+;; (require 'init-python)
 (require 'init-search)
 (require 'init-sql)
 (require 'init-ui)
