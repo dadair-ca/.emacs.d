@@ -35,6 +35,8 @@
 (use-package magit
   :bind ("<f2>" . magit-status))
 
+(use-package forge :after magit)
+
 (provide 'init-vcs)
 
 ;;; init-vcs.el ends here

@@ -46,3 +46,5 @@ projects
 games/
 games/
 projects
+/forge-database.sqlite
+/.dap-breakpoints
