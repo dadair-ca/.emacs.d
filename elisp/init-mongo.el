@@ -30,77 +30,61 @@
 
 ;;; Code:
 
-;; (defvar mongosh-cli-file-path "/usr/bin/mongosh"
-;;   "Path to the program used by `run-mongosh`.")
+(defconst mongosh-keywords
+  '("help" "show" "use"))
 
-;; (defvar mongosh-cli-arguments '()
-;;   "Arguments to pass to `mongosh`.")
+(defconst mongosh-font-lock-keywords
+  (list
+   `(,(concat "\\_<" (regexp-opt mongosh-keywords) "\\_>") . font-lock-keyword-face))
+  "Additional expressions to highlint in `mongosh-mode'.")
 
-;; (defvar mongosh-mode-map
-;;   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
-;;     (define-key map "\t" 'completion-at-point)
-;;     map)
-;;   "Basic mode map for `run-mongosh`.")
+(defvar mongosh-file-path "/usr/bin/mongosh"
+  "File path for the `mongosh' executable.")
 
-;; (defvar mongosh-prompt-regexp "^\\(?:> \\)")
+(defvar mongosh-arguments '()
+  "Commandline arguments to pass to `mongosh'.")
 
-;; (defun run-mongosh ()
-;;   "Run an inferior instance of `mongosh` inside Emacs."
-;;   (interactive)
-;;   (let* ((mongosh-program mongosh-cli-file-path)
-;;          (buffer (comint-check-proc "Mongosh")))
-;;     (pop-to-buffer-same-window
-;;      (if (or buffer (not (derived-mode-p 'mongosh-mode))
-;;              (comint-check-proc (current-buffer)))
-;;          (get-buffer-create (or buffer "*Mongosh*"))
-;;        (current-buffer)))
-;;     (unless buffer
-;;       (apply 'make-comint-in-buffer "Mongosh" buffer mongosh-program mongosh-cli-arguments)
-;;       (mongosh-mode))))
+(defvar mongosh-mode-map
+  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
+    (define-key map "\t" 'completion-at-point)
+    map)
+  "Basic mode map for `run-mongosh'.")
 
-;; (defun mongosh--initialize ()
-;;   "Helper function to initialize Mongosh."
-;;   (setq comint-process-echoes t)
-;;   (setq comint-use-prompt-regexp t))
+(defvar mongosh-prompt-regexp "^> "
+  "Regexp matching the expected `mongosh' REPL prompt.")
 
-;; (define-derived-mode mongosh-mode comint-mode "Mongosh"
-;;   "Major mode for `run-mongosh`.
+(defun run-mongosh ()
+  "Run an inferior instance of `mongosh'."
+  (interactive)
+  (let* ((mongosh-program mongosh-file-path)
+         (buffer (comint-check-proc "Mongosh")))
+    (pop-to-buffer-same-window
+     (if (or buffer (not (derived-mode-p 'mongosh-mode))
+             (comint-check-proc (current-buffer)))
+         (get-buffer-create (or buffer "*Mongosh*"))
+       (current-buffer)))
+    (unless buffer
+      (apply 'make-comint-in-buffer "Mongosh" buffer
+             mongosh-program mongosh-arguments)
+      (mongosh-mode))))
 
-;; \\<mongosh-mode-map>"
-;;   nil "Mongosh"
-;;   (setq comint-prompt-regexp mongosh-prompt-regexp)
-;;   (setq comint-prompt-read-only t)
+(defun mongosh--initialize ()
+  "Helper function to initialize `mongosh'."
+  (setq comint-process-echoes t)
+  (setq comint-use-prompt-regrexp t))
 
-;;   (defconst mongosh-keywords
-;;     '("help" "show" "dbs" "tables" "use"))
+(define-derived-mode mongosh-mode comint-mode "Mongosh"
+  "Major mode for `run-mongosh'.
 
-;;   (defvar mongosh-font-lock-keywords
-;;     (list
-;;      `(,(concat "\\_<" (regexp-opt mongosh-keywords) "\\_>") . font-lock-keyword-face))
-;;     "Additional expressions to highlight in `mongosh-mode`.")
-  
-;;   (set (make-local-variable 'paragraph-separate) "\\'")
-;;   (set (make-local-variable 'font-lock-defaults) '(mongosh-font-lock-keywords t))
-;;   (set (make-local-variable 'paragraph-start) mongosh-prompt-regexp))
+\\<mongosh-mode-map>"
+  nil "Mongosh"
+  (setq comint-prompt-regexp mongosh-prompt-regexp)
+  (setq comint-prompt-read-only t)
+  (set (make-local-variable 'paragraph-separate) "\\'")
+  (set (make-local-variable 'font-lock-defaults) '(mongosh-font-lock-keywords t))
+  (set (make-local-variable 'paragraph-start) mongosh-prompt-regexp))
 
-;; (add-hook 'mongosh-mode-hook 'mongosh--initialize)
-
-(require 'auth-source-pass)
-
-;; (defun mongosh (pass)
-;;   "Spawn a new Mongosh comint process.
-;; PASS the `pass` entry name."
-;;   (interactive "spass:")
-;;   (let ((url (auth-source-pick-first-password :host pass)))
-;;     (message url)
-;;     (apply
-;;      'make-comint-in-buffer
-;;      "Mongosh"
-;;      (get-buffer-create "*Mongosh*")
-;;      "/usr/bin/mongosh"
-;;      nil
-;;      (list url))
-;;     (switch-to-buffer "*Mongosh*")))
+(add-hook 'mongosh-mode-hook 'mongosh--initialize)
 
 (provide 'init-mongo)
 
