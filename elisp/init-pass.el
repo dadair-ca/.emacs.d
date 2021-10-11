@@ -33,6 +33,8 @@
 (require 'auth-source-pass)
 (auth-source-pass-enable)
 
+(use-package password-store)
+
 (provide 'init-pass)
 
 ;;; init-pass.el ends here
