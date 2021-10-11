@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: find
+# key: find
+# --
+db.getSiblingDB("$1").getCollection("$2").find($3)${4:.sort($5).limit($6)}$0

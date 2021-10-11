@@ -1,4 +1,4 @@
-;;; init-mongo.el --- Configuration for mongodb.	-*- lexical-binding: t -*-
+;;; init-mongosh.el --- Configuration for mongosh.	-*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021 David Adair
 
@@ -25,13 +25,15 @@
 
 ;;; Commentary:
 ;;
-;; Configuration for mongodb.
+;; Configuration for mongosh.
 ;;
 
 ;;; Code:
 
+(require 'comint)
+
 (defconst mongosh-keywords
-  '("help" "show" "use"))
+  '("use" "show" "exit" "Mongo" "connect" "it" "version" "load"))
 
 (defconst mongosh-font-lock-keywords
   (list
@@ -41,21 +43,18 @@
 (defvar mongosh-file-path "/usr/bin/mongosh"
   "File path for the `mongosh' executable.")
 
-(defvar mongosh-arguments '()
-  "Commandline arguments to pass to `mongosh'.")
-
 (defvar mongosh-mode-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
     (define-key map "\t" 'completion-at-point)
     map)
-  "Basic mode map for `run-mongosh'.")
+  "Basic mode map for `mongosh'.")
 
 (defvar mongosh-prompt-regexp "^> "
   "Regexp matching the expected `mongosh' REPL prompt.")
 
-(defun run-mongosh ()
-  "Run an inferior instance of `mongosh'."
-  (interactive)
+(defun mongosh (SECRET)
+  "Run an inferior instance of `mongosh' against the connection url contained in `pass' SECRET."
+  (interactive "sSecret: ")
   (let* ((mongosh-program mongosh-file-path)
          (buffer (comint-check-proc "Mongosh")))
     (pop-to-buffer-same-window
@@ -64,8 +63,12 @@
          (get-buffer-create (or buffer "*Mongosh*"))
        (current-buffer)))
     (unless buffer
-      (apply 'make-comint-in-buffer "Mongosh" buffer
-             mongosh-program mongosh-arguments)
+      (apply 'make-comint-in-buffer
+             "Mongosh"
+             buffer
+             mongosh-program
+             nil
+             (list (car (split-string (shell-command-to-string (concat "pass" " " SECRET)) "\n"))))
       (mongosh-mode))))
 
 (defun mongosh--initialize ()
@@ -74,7 +77,7 @@
   (setq comint-use-prompt-regrexp t))
 
 (define-derived-mode mongosh-mode comint-mode "Mongosh"
-  "Major mode for `run-mongosh'.
+  "Major mode for `mongosh'.
 
 \\<mongosh-mode-map>"
   nil "Mongosh"
@@ -86,6 +89,6 @@
 
 (add-hook 'mongosh-mode-hook 'mongosh--initialize)
 
-(provide 'init-mongo)
+(provide 'init-mongosh)
 
-;;; init-mongo.el ends here
+;;; init-mongosh.el ends here

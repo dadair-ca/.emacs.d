@@ -94,7 +94,7 @@
 (require 'init-editing)
 (require 'init-funs)
 (require 'init-lsp)
-(require 'init-mongo)
+(require 'init-mongosh)
 (require 'init-org)
 (require 'init-path)
 (require 'init-prog)
