@@ -74,7 +74,7 @@
 (defun mongosh--initialize ()
   "Helper function to initialize `mongosh'."
   (setq comint-process-echoes t)
-  (setq comint-use-prompt-regrexp t))
+  (setq comint-use-prompt-regexp t))
 
 (define-derived-mode mongosh-mode comint-mode "Mongosh"
   "Major mode for `mongosh'.
