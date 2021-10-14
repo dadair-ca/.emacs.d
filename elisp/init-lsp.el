@@ -38,6 +38,14 @@
   (lsp-clients-typescript-server-args '("--stdio" "--tsserver-log-file" "/dev/stderr"))
   :config
   ;(setq read-process-output-max (* 1024 1024))
+  (global-unset-key (kbd "C-x l"))
+  (define-key global-map (kbd "C-x l r") 'lsp-find-references)
+  (define-key global-map (kbd "C-x l R") 'lsp-ui-peek-find-references)
+  (define-key global-map (kbd "C-x l d") 'lsp-find-definition)
+  (define-key global-map (kbd "C-x l D") 'lsp-ui-peek-find-definitions)
+  (define-key global-map (kbd "C-x l i") 'lsp-find-implementation)
+  (define-key global-map (kbd "C-x l I") 'lsp-ui-peek-find-implementation)
+  (define-key global-map (kbd "C-x l e") 'lsp-ui-flycheck-list)
   )
 
 (use-package lsp-ui
