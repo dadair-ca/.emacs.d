@@ -111,4 +111,6 @@
   (message "Loading Neo configuration...")
   (require 'init-neo))
 
+(require 'keycast)
+
 ;;; init.el ends here
