@@ -48,6 +48,15 @@ Will remove project prefix if inside a project."
           (da--kill-and-echo (car (cdr splits))))
       (da--kill-and-echo (buffer-file-name)))))
 
+(defun da/surround (BEGIN END OPEN CLOSE)
+  "Put OPEN at BEGIN and CLOSE at END of the selected region."
+  (interactive "r\nsStart: \nsEnd: ")
+  (save-excursion
+    (goto-char END)
+    (insert (if (string= CLOSE "") OPEN CLOSE))
+    (goto-char BEGIN)
+    (insert OPEN)))
+
 (provide 'init-funs)
 
 ;;; init-funs.el ends here
