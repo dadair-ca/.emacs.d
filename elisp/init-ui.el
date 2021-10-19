@@ -95,7 +95,7 @@
 ;; (global-display-fill-column-indicator-mode)
 
 (setq default-frame-alist '(;(undecorated . t)
-                            (font . "Source Code Pro-10")))
+                            (font . "Source Code Pro-11")))
 
 (provide 'init-ui)
 
