@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: id
+# key: id
+# --
+db.getSiblingDB("$1").getCollection("$2").find({_id:ObjectId("$3")})$0
