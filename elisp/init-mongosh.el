@@ -49,7 +49,7 @@
     map)
   "Basic mode map for `mongosh'.")
 
-(defvar mongosh-prompt-regexp "^> "
+(defvar mongosh-prompt-regexp "^\\(> \\)+"
   "Regexp matching the expected `mongosh' REPL prompt.")
 
 (defun mongosh (SECRET)
