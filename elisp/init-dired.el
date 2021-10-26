@@ -32,9 +32,15 @@
 
 (use-package dired
   :ensure nil
+  :hook (dired-mode . dired-hide-details-mode)
   :init
   (setq dired-recursive-deletes 'always)
   (setq dired-recursive-copies 'always))
+
+(use-package dired-git-info
+  :ensure t
+  :bind (:map dired-mode-map
+              (")" . dired-git-info-mode)))
 
 (provide 'init-dired)
 
