@@ -32,7 +32,7 @@
 
 (use-package exec-path-from-shell
   :config
-  (when (memq window-system'(mac ns x))
+  (when (memq system-type '(gnu/linux darwin x))
     (exec-path-from-shell-initialize)))
 
 (provide 'init-path)

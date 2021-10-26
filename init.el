@@ -82,7 +82,6 @@
 (require 'init-basic)
 
 (use-package company :ensure t)
-(use-package emacs-everywhere :ensure t)
 
 ;; (use-package treemacs :ensure t)
 
