@@ -93,6 +93,7 @@
 (require 'init-ediff)
 (require 'init-editing)
 (require 'init-funs)
+(require 'init-keycast)
 (require 'init-lsp)
 (require 'init-mongosh)
 (require 'init-org)
@@ -109,7 +110,5 @@
 (when (locate-library "init-neo")
   (message "Loading Neo configuration...")
   (require 'init-neo))
-
-(require 'keycast)
 
 ;;; init.el ends here
