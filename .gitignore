@@ -48,3 +48,5 @@ games/
 projects
 /forge-database.sqlite
 /.dap-breakpoints
+/site-lisp/mct/
+/snippets/web-mode/script
