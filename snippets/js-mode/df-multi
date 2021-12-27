@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: df-multi
+# key: df-multi
+# --
+{
+  const now = new ISODate();
+  const amountCents = $1;
+  const update = { amountCents, originalAmountCents: amountCents, updatedAt: now };
+  
+  db.getSiblingDB("bankService").getCollection("creditaccounttransactions").updateOne({
+    _id: ObjectId("$2")
+  }, {
+    \$set: update,
+    \$push: { changelog: { log: update, method: "manual", createdAt: now } }
+  });
+}
+
+MONGO_CONNECTION_STRING="\$(pass Neo/mongo/core-production-write)" TZ=UTC APP_ENV=production NODE_ENV=production yarn publish:credit-account-transaction-upserted-event $2$0

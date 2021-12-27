@@ -89,6 +89,7 @@
 ;; (require 'init-clojure)
 ;; (require 'init-dashboard)
 (require 'init-devops)
+;; (require 'init-diary)
 (require 'init-dired)
 (require 'init-ediff)
 (require 'init-editing)
@@ -111,5 +112,7 @@
 (when (locate-library "init-neo")
   (message "Loading Neo configuration...")
   (require 'init-neo))
+
+;; (my-org-startup)
 
 ;;; init.el ends here

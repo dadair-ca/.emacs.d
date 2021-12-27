@@ -1,4 +1,4 @@
-;;; init-org.el --- Orgmode configuration.	-*- lexical-binding: t -*-
+2;;; init-org.el --- Orgmode configuration.	-*- lexical-binding: t -*-
 
 ;; Copyright (C) 2019 David Adair
 
@@ -31,24 +31,23 @@
 ;;; Code:
 
 (use-package org
-  :ensure org-plus-contrib
-  :config (add-to-list 'org-modules 'org-habit t))
+  :ensure t
+  :config
+  (add-to-list 'org-modules 'org-habit t)
+  (load "org-settings"))
 
-(setq org-directory "~/git/org")
-(setq org-default-notes-file "~/git/org/notes.org")
+(setq org-directory "~/Dropbox/org")
+(setq org-default-notes-file "~/Dropbox/org/notes.org")
 (setq org-agenda-files
-      (quote ("~/git/org/gtd.org" "~/git/org/refile.org" "~/git/org/neo.org.gpg" "~/git/org/notes.org")))
+      (quote ("~/Dropbox/org/gtd.org"
+              "~/Dropbox/org/refile.org"
+              "~/Dropbox/org/neo.org.gpg"
+              "~/Dropbox/org/notes.org")))
 (setq org-refile-targets
-      '(("~/git/org/gtd.org" :maxlevel . 3)
-        ("~/git/org/neo.org.gpg" :maxlevel . 3)
-        ("~/git/org/refile.org" :level . 1)
-        ("~/git/org/notes.org" :maxlevel . 2)))
-
-(setq org-log-into-drawer t)
-(setq org-clock-into-drawer t)
-
-(setq org-habit-graph-column 70)
-(setq org-habit-show-habits-only-for-today nil)
+      '(("~/Dropbox/org/gtd.org" :maxlevel . 3)
+        ("~/Dropbox/org/neo.org.gpg" :maxlevel . 3)
+        ("~/Dropbox/org/refile.org" :level . 1)
+        ("~/Dropbox/org/notes.org" :maxlevel . 2)))
 
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
@@ -70,33 +69,9 @@
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c b") 'org-switchb)
 
-(setq org-capture-templates
-      (quote (("t" "Todo" entry (file "~/git/org/refile.org")
-               "* TODO %?\n%U\n%a\n"
-               :empty-lines 1)
-              ("n" "Note" entry (file "~/git/org/notes.org")
-               "* %? :NOTE:\n%U\n%a\n"
-               :empty-lines 1)
-              ("h" "Habit" entry (file "~/git/org/refile.org")
-               "* TODO %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:END:\n%U\n%a\n"
-               :empty-lines 1)
-              ("p" "Project" entry (file "~/git/org/refile.org")
-               "\n* TODO %? :PROJECT:\n%U\n\n** Outcome\n\n** NEXT\n"
-               :empty-lines 1))))
-
 (setq org-refile-use-outline-path t)
 (setq org-outline-path-complete-in-steps nil)
-(setq org-refile-allow-creating-parent-nodes (quote confirm))
-
-(setq org-startup-indented t)
-
-(setq org-agenda-skip-scheduled-if-done t)
-(setq org-agenda-skip-deadline-if-done t)
-(setq org-agenda-start-on-weekday nil)
-(setq org-agenda-span 7)
-(setq org-reverse-note-order t)
-(setq org-deadline-warning-days 21)
-(setq org-agenda-show-all-dates t)
+(setq org-refile-allow-creating-parent-nodes 'confirm)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -109,6 +84,25 @@
    (shell . t)))
 
 (setq org-tags-exclude-from-inheritance '("PROJECT"))
+
+(defun my-org-startup ()
+  (org-agenda-list))
+
+(defun org-todo-age-time (&optional pos)
+  (let ((stamp (org-entry-get (or pos (point)) "CREATED" t)))
+    (when stamp
+      (time-subtract (current-time)
+                     (org-time-string-to-time
+                      (org-entry-get (or pos (point)) "CREATED" t))))))
+
+(defun org-todo-age (&optional pos)
+  (let ((days (time-to-number-of-days (org-todo-age-time pos))))
+    (cond
+     ((< days 1)   "today")
+     ((< days 7)   (format "%dd" days))
+     ((< days 30)  (format "%.1fw" (/ days 7.0)))
+     ((< days 358) (format "%.1fM" (/ days 30.0)))
+     (t            (format "%.1fY" (/ days 365.0))))))
 
 (defun da/org-skip-subtree-if-priority (priority)
   (let ((subtree-end (save-excursion (org-end-of-subtree t)))
@@ -158,8 +152,8 @@
          ((agenda ""
                   ((org-agenda-span 1)))
           (tags-todo "PRIORITY=\"A\"/-WAITING"
-                ((org-agenda-overriding-header "High-priority incomplete tasks:")
-                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
+                     ((org-agenda-overriding-header "High-priority incomplete tasks:")
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
           (todo "WAITING"
                 ((org-agenda-overriding-header "Waiting on:")))
           (todo "NEXT"
@@ -194,6 +188,61 @@
   (interactive)
   (org-save-all-org-buffers)
   (org-agenda-quit))
+
+(defadvice org-agenda (around fit-windows-for-agenda activate)
+  "Fit the Org Agenda to its buffer."
+  (let ((notes
+         (ignore-errors
+           (directory-files
+            "~/Dropbox"
+            t "[0-9].*\\.txt\\'" nil))))
+    (when notes
+      (with-current-buffer (find-file-noselect "~/Dropbox/org/refile.org")
+        (save-excursion
+          (goto-char (point-min))
+          (forward-line 2)
+          (dolist (note notes)
+            (insert
+             "* TODO "
+             (with-temp-buffer
+               (insert-file-contents note)
+               (goto-char (point-min))
+               (forward-line)
+               (unless (bolp))
+               (insert ?\n)
+               (goto-char (point-max))
+               (unless (bolp)
+                 (insert ?\n))
+               (let ((uuid (substring (shell-command-to-string "uuidgen") 0 -1))
+                     (file (file-name-nondirectory note)))
+                 (string-match
+                  (concat "\\`\\([0-9]\\{4\\}\\)"
+                          "-\\([0-9]\\{2\\}\\)"
+                          "-\\([0-9]\\{2\\}\\)"
+                          "-\\([0-9]\\{2\\}\\)"
+                          "-\\([0-9]\\{2\\}\\)"
+                          "-\\([0-9]\\{2\\}\\)"
+                          "\\.txt\\'") file)
+                 (let* ((year (string-to-number (match-string 1 file)))
+                        (mon (string-to-number (match-string 2 file)))
+                        (day (string-to-number (match-string 3 file)))
+                        (hour (string-to-number (match-string 4 file)))
+                        (min (string-to-number (match-string 5 file)))
+                        (sec (string-to-number (match-string 6 file)))
+                        (date (format "%04d-%02d-%02d %s"
+                                      year mon day
+                                      (calendar-day-name (list mon day year) t))))
+                   (insert (format (concat "SCHEDULED: <%s>\n"
+                                           ":PROPERTIES:\n"
+                                           ":ID:       %s\n"
+                                           ":CREATED:  ")
+                                   date uuid))
+                   (insert (format "[%s %02d:%02d]\n:END:\n" date hour min))))
+               (buffer-string)))
+            (delete-file note t)))
+        (when (buffer-modified-p)
+          (save-buffer)))))
+  ad-do-it)
 
 (eval-after-load 'org-agenda
   '(define-key org-agenda-mode-map (kbd "q") 'da/org-agenda-save-on-quit))

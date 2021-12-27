@@ -57,6 +57,14 @@ Will remove project prefix if inside a project."
     (goto-char BEGIN)
     (insert OPEN)))
 
+(defun da/emacs-somewhere ()
+  "Open a new buffer and paste clipboard contents."
+  (interactive)
+  (scroll-bar-mode -1)
+  (pop-to-buffer-same-window (get-buffer-create "*emacs-somewhere*"))
+  (yank))
+
 (provide 'init-funs)
 
 ;;; init-funs.el ends here
+
