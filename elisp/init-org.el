@@ -244,6 +244,18 @@
           (save-buffer)))))
   ad-do-it)
 
+(defun my-org-reset-checkbox-state-maybe ()
+  "Reset all checkboxes in an entry if the `RESET_CHECK_BOXES' property is set"
+  (interactive "*")
+  (if (org-entry-get (point) "RESET_CHECK_BOXES")
+      (org-reset-checkbox-state-subtree)))
+
+(defun my-org-reset-checkbox-when-done ()
+  (when (member org-state org-done-keywords) ;; org-state dynamically bound in org.el/org-todo
+    (my-org-reset-checkbox-state-maybe)))
+
+(add-hook 'org-after-todo-state-change-hook 'my-org-reset-checkbox-when-done)
+
 (eval-after-load 'org-agenda
   '(define-key org-agenda-mode-map (kbd "q") 'da/org-agenda-save-on-quit))
 
