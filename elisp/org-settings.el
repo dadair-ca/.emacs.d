@@ -3,6 +3,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-hide-emphasis-markers t)
+ '(org-hide-leading-stars t)
  '(org-M-RET-may-split-line '((headline . nil) (default . t)))
  '(org-agenda-deadline-leaders '("!D!: " "D%02d: " "-D%02d: "))
  '(org-agenda-scheduled-leaders '("" "S%d: "))
@@ -51,4 +53,5 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
  '(org-reverse-note-order t)
  '(org-deadline-warning-days 14)
  '(org-agenda-ndays 1)
- '(org-agenda-show-all-dates t))
+ '(org-agenda-show-all-dates t)
+ '(org-agenda-block-separator ?-))
