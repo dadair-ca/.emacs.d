@@ -36,42 +36,10 @@
   (add-to-list 'org-modules 'org-habit t)
   (load "org-settings"))
 
-(setq org-directory "~/Dropbox/org")
-(setq org-default-notes-file "~/Dropbox/org/notes.org")
-(setq org-agenda-files
-      (quote ("~/Dropbox/org/gtd.org"
-              "~/Dropbox/org/refile.org"
-              "~/Dropbox/org/neo.org.gpg"
-              "~/Dropbox/org/notes.org")))
-(setq org-refile-targets
-      '(("~/Dropbox/org/gtd.org" :maxlevel . 3)
-        ("~/Dropbox/org/neo.org.gpg" :maxlevel . 3)
-        ("~/Dropbox/org/refile.org" :level . 1)
-        ("~/Dropbox/org/notes.org" :maxlevel . 2)))
-
-(setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
-
-(setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "firebrick1" :weight normal)
-              ("NEXT" :foreground "deep sky blue" :weight normal)
-              ("DONE" :foreground "spring green" :weight normal)
-              ("WAITING" :foreground "tomato" :weight normal)
-              ("HOLD" :foreground "burlywood" :weight normal)
-              ("CANCELLED" :foreground "spring green" :weight normal))))
-
-(setq org-use-fast-todo-selection t)
-(setq org-treat-S-cursor-todo-selection-as-state-change nil)
-
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c b") 'org-switchb)
-
-(setq org-refile-use-outline-path t)
-(setq org-outline-path-complete-in-steps nil)
-(setq org-refile-allow-creating-parent-nodes 'confirm)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -82,8 +50,6 @@
    (ledger . t)
    (python . t)
    (shell . t)))
-
-(setq org-tags-exclude-from-inheritance '("PROJECT"))
 
 (defun my-org-startup ()
   (org-agenda-list))
@@ -135,54 +101,6 @@
                 next-headline
               nil))
         next-headline))))
-
-(setq org-agenda-custom-commands
-      '((" " "Agenda"
-         ((agenda "" nil)
-          (tags "REFILE"
-                ((org-agenda-overriding-header "Tasks to Refile")
-                 (org-tags-match-list-sublevels nil)))
-          (tags-todo "-CANCELLED/!NEXT"
-                     ((org-agenda-overriding-header "Next Tasks")
-                      (org-tags-match-list-sublevels t)))
-          (todo "WAITING"
-                ((org-agenda-overriding-header "Waiting On")))))
-
-        ("F" "Focus"
-         ((agenda ""
-                  ((org-agenda-span 1)))
-          (tags-todo "PRIORITY=\"A\"/-WAITING"
-                     ((org-agenda-overriding-header "High-priority incomplete tasks:")
-                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
-          (todo "WAITING"
-                ((org-agenda-overriding-header "Waiting on:")))
-          (todo "NEXT"
-                ((org-agenda-overriding-header "Next actions:")
-                 (org-agenda-skip-function '(da/org-skip-subtree-if-priority ?A))))))
-
-        ("W" "Weekly Review"
-         ((agenda "" ((org-agenda-span 7)))
-          (tags-todo "PRIORITY=\"A\"/-WAITING"
-                     ((org-agenda-overriding-header "High-priority incomplete tasks:")
-                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
-          (tags "REFILE"
-                ((org-agenda-overriding-header "Inbox:")
-                 (org-tags-match-list-sublevels nil)))
-          (todo "WAITING"
-                ((org-agenda-overriding-header "Waiting on:")))
-          (tags-todo "+PROJECT/-DONE-CANCELLED"
-                     ((org-agenda-overriding-header "Active projects:")
-                      (org-tags-match-list-sublevels nil)))
-          (tags-todo "+PROJECT/-DONE-CANCELLED"
-                     ((org-agenda-overriding-header "Stuck projects:")
-                      (org-tags-match-list-sublevels nil)
-                      (org-agenda-skip-function 'da/skip-non-stuck-projects)
-                      (org-agenda-sorting-strategy '(category-keep))))
-          (todo "NEXT"
-                ((org-agenda-overriding-header "Next actions:")
-                 (org-agenda-skip-function '(da/org-skip-subtree-if-priority ?A))))))))
-
-(setq org-confirm-babel-evaluate nil)
 
 (defun da/org-agenda-save-on-quit ()
   (interactive)
