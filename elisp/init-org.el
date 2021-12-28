@@ -234,8 +234,8 @@
                                       (calendar-day-name (list mon day year) t))))
                    (insert (format (concat "SCHEDULED: <%s>\n"
                                            ":PROPERTIES:\n"
-                                           ":ID:       %s\n"
-                                           ":CREATED:  ")
+                                           ":ID: %s\n"
+                                           ":CREATED: ")
                                    date uuid))
                    (insert (format "[%s %02d:%02d]\n:END:\n" date hour min))))
                (buffer-string)))
