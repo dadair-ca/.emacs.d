@@ -50,3 +50,4 @@ projects
 /.dap-breakpoints
 /site-lisp/mct/
 /snippets/web-mode/script
+/org-roam.db

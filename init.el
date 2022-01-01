@@ -99,6 +99,7 @@
 (require 'init-mct)
 (require 'init-mongosh)
 (require 'init-org)
+(require 'init-org-roam)
 (require 'init-path)
 (require 'init-prog)
 (require 'init-project)
