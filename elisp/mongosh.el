@@ -47,9 +47,8 @@
   :group 'mongosh)
 
 (defcustom mongosh-secret-command
-  ;; TODO: Change to `nil' and define in `init-neo'.
-  "pass"
-  "Shell command to call with secret passed to `mongosh-connect' to return connection URL."
+  nil
+  "Shell command that returns the connection given the secret selected."
   :type '(string)
   :group 'mongosh)
 
