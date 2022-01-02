@@ -1,1 +1,1 @@
-/home/david/Dropbox/Documents/Neo Financial/init-neo.el
+../../../.dotfiles-neo/emacs/.config/emacs/elisp/init-neo.el
