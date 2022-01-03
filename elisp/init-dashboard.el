@@ -30,12 +30,16 @@
 
 ;;; Code:
 
-;; (use-package dashboard
-;;   :config
-;;   (dashboard-setup-startup-hook)
-;;   (setq dashboard-items '((recents . 5)
-;;                           (bookmarks . 5)
-;;                           (projects . 5))))
+(use-package dashboard
+  :custom
+  (dashboard-show-shortcuts t)
+  (dashboard-projects-backend 'project-el)
+  (dashboard-items
+   '((recents . 5)
+     (projects . 5)))
+  (dashboard-set-init-info nil)
+  :config
+  (dashboard-setup-startup-hook))
 
 (provide 'init-dashboard)
 

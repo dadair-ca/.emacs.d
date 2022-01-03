@@ -74,6 +74,8 @@
 
 (setq comp-async-report-warnings-errors nil)
 
+(setq inhibit-splash-screen t)
+
 (require 'init-package)
 (require 'init-custom)
 (require 'init-pass)
@@ -87,7 +89,7 @@
 
 (require 'init-ace)
 ;; (require 'init-clojure)
-;; (require 'init-dashboard)
+(require 'init-dashboard)
 (require 'init-devops)
 ;; (require 'init-diary)
 (require 'init-dired)
