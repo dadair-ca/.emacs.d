@@ -1,1 +1,1 @@
-../../../.dotfiles-neo/emacs/.config/emacs/elisp/init-neo.el
+../../.dotfiles-neo/emacs/.emacs.d/elisp/init-neo.el
