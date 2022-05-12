@@ -91,6 +91,20 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
        (todo "WAITING"
              ((org-agenda-overriding-header "Waiting On")))))
 
+     ("N" "Neo"
+      ((agenda ""
+               ((org-agenda-span 3)
+                (org-agenda-time-grid nil)
+                (org-agenda-tag-filter-preset '("CATEGORY=\"NEO\""))))
+       (tags-todo "+CATEGORY=\"Q\"" ((org-agenda-overriding-header "Questions")))
+       (tags-todo "+CATEGORY=\"NEO\"+PRIORITY=\"A\"-WAITING"
+                  ((org-agenda-overriding-header "High-priority incomplete tasks:")
+                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
+       (tags "REFILE"
+             ((org-agenda-overriding-header "Refile")
+              (org-tags-match-list-sublevels nil)))
+       (tags-todo "+CATEGORY=\"READ\"" ((org-agenda-overriding-header "Readings")))))
+
      ("F" "Focus"
       ((agenda ""
                ((org-agenda-span 1)))

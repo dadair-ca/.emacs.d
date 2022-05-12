@@ -47,7 +47,7 @@
    (emacs-lisp . t)
    (gnuplot . t)
    (latex . t)
-   (ledger . t)
+   ;; (ledger . t)
    (python . t)
    (shell . t)))
 
@@ -176,6 +176,9 @@
 
 (eval-after-load 'org-agenda
   '(define-key org-agenda-mode-map (kbd "q") 'da/org-agenda-save-on-quit))
+
+(use-package org-noter
+  :ensure t)
 
 (provide 'init-org)
 

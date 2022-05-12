@@ -36,6 +36,8 @@
   :commands lsp
   :custom
   (lsp-clients-typescript-server-args '("--stdio" "--tsserver-log-file" "/dev/stderr"))
+  (lsp-response-timeout 30)
+  (lsp-enable-file-watchers nil)
   :config
   ;(setq read-process-output-max (* 1024 1024))
   (global-unset-key (kbd "C-x l"))

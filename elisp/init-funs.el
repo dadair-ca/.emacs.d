@@ -64,6 +64,17 @@ Will remove project prefix if inside a project."
   (pop-to-buffer-same-window (get-buffer-create "*emacs-somewhere*"))
   (yank))
 
+(defun da--utf8-to-hex (s)
+  "Convert a set of utf8 encoded characters S to hex."
+  (mapconcat (lambda (c) (format "%02X" c))
+             (encode-coding-string s 'utf-8) ""))
+
+(defun da/region-utf8-to-hex (start end)
+  "Print the marked region between START and END, interpreted as utf8, as hex."
+  (interactive "*r")
+  (message (da--utf8-to-hex (buffer-substring start end)))
+  (deactivate-mark))
+
 (provide 'init-funs)
 
 ;;; init-funs.el ends here

@@ -34,8 +34,8 @@
 (defun da/project-magit-status ()
   "Run `magit-status' on current project."
   (interactive)
-  (let* ((pr (project-current t))
-         (dir (cdr pr)))
+  (let* ((pr (nthcdr 2 (project-current t)))
+         (dir (car pr)))
     (magit-status dir)))
 
 (use-package project
@@ -47,6 +47,7 @@
           (?b "Buffer" project-switch-to-buffer)
           (?r "Query replace" project-query-replace-regexp)
           (?m "Magit" da/project-magit-status)
+          (?v "VC" project-vc-dir)
           (?e "Eshell" project-eshell)))
   (define-key global-map (kbd "C-x p m") #'da/project-magit-status))
 
