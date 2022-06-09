@@ -33,7 +33,9 @@
 (require 'auth-source-pass)
 (auth-source-pass-enable)
 
-(use-package password-store)
+(use-package password-store
+  :config
+  (defalias 'pw 'password-store-copy))
 
 (provide 'init-pass)
 

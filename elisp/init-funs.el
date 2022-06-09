@@ -41,9 +41,9 @@
 Will remove project prefix if inside a project."
   (interactive)
   (let ((buf (buffer-file-name))
-        (proj (project-current nil)))
+        (proj (car (nthcdr 2 (project-current nil)))))
     (if proj
-        (let* ((proj (expand-file-name (cdr proj)))
+        (let* ((proj (expand-file-name proj))
                (splits (split-string buf proj)))
           (da--kill-and-echo (car (cdr splits))))
       (da--kill-and-echo (buffer-file-name)))))
@@ -72,7 +72,7 @@ Will remove project prefix if inside a project."
 (defun da/region-utf8-to-hex (start end)
   "Print the marked region between START and END, interpreted as utf8, as hex."
   (interactive "*r")
-  (message (da--utf8-to-hex (buffer-substring start end)))
+  (da--utf8-to-hex (buffer-substring start end))
   (deactivate-mark))
 
 (provide 'init-funs)
