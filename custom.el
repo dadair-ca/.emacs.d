@@ -3,12 +3,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(find-sibling-rules
-   '(("src/\\(.*\\).ts" "test/\\1.test.ts")
-     ("test/\\(.*\\).test.ts" "src/\\1.ts")))
  '(custom-safe-themes
    '("f21756050d9a6cd931517b54356ffbce5a51e0cd15454199bf408254d6364963" "f22bedc06862db3b29bde2c94960f83c96cfd7ccbccd163a2cb2c1dd076bab38" "d2db4af7153c5d44cb7a67318891e2692b8bf5ddd70f47ee7a1b2d03ad25fcd9" "a10ca93d065921865932b9d7afae98362ce3c347f43cb0266d025d70bec57af1" default))
  '(elpy-formatter 'black)
+ '(find-sibling-rules
+   '(("src/\\(.*\\).ts" "test/\\1.test.ts")
+     ("test/\\(.*\\).test.ts" "src/\\1.ts")))
  '(js-indent-level 2)
  '(org-M-RET-may-split-line '((headline) (default . t)))
  '(org-adapt-indentation nil)
@@ -142,7 +142,7 @@
  '(org-treat-S-cursor-todo-selection-as-state-change nil)
  '(org-use-fast-todo-selection t)
  '(package-selected-packages
-   '(ef-themes toggle-test org-noter wordel org-roam js-mode mct keycast dired-git-info command-log-mode emacs-everywhere pass forge treemacs lsp-metals lsp-python-ms elpy company company-mode slack alert modus-vivendi modus-operandi-theme modus-vivendi-theme theme-changer modus-themes auto-package-update selectrum-prescient prescient marginalia selectrum counsel-projectile councel-projectile counsel ivy org-babel web-mode tide typescript-mode prettier emmet-mode magit which-key doom-modeline diminish use-package))
+   '(lin ef-themes toggle-test org-noter wordel org-roam js-mode mct keycast dired-git-info command-log-mode emacs-everywhere pass forge treemacs lsp-metals lsp-python-ms elpy company company-mode slack alert modus-vivendi modus-operandi-theme modus-vivendi-theme theme-changer modus-themes auto-package-update selectrum-prescient prescient marginalia selectrum counsel-projectile councel-projectile counsel ivy org-babel web-mode tide typescript-mode prettier emmet-mode magit which-key doom-modeline diminish use-package))
  '(send-mail-function 'mailclient-send-it)
  '(warning-suppress-log-types '((comp))))
 (custom-set-faces

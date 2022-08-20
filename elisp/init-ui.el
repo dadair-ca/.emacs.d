@@ -78,18 +78,29 @@
 ;;   (modus-themes-load-vivendi)
 ;;   )
 
-(use-package ef-themes
-  :ensure
-  :custom
-  (ef-themes-to-toggle '(ef-night ef-day))
-  :init
-  (mapc #'disable-theme custom-enabled-themes)
-  :config
+(defun da/load-random-theme ()
+  "Load a random theme based on system settings."
   (if (string-match-p
      "dark"
      (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))
     (ef-themes-load-random 'dark)
   (ef-themes-load-random 'light)))
+
+(use-package ef-themes
+  :ensure
+  :custom
+  (ef-themes-height-1 1.0)
+  (ef-themes-height-2 1.0)
+  (ef-themes-height-3 1.0)
+  (ef-themes-height-4 1.0)
+  (ef-themes-height-5 1.0)
+  (ef-themes-height-6 1.0)
+  (ef-themes-height-7 1.0)
+  (ef-themes-height-8 1.0)
+  :init
+  (mapc #'disable-theme custom-enabled-themes)
+  :config
+  (da/load-random-theme))
 
 ;; (use-package doom-modeline
 ;;   :hook (after-init . doom-modeline-mode)
@@ -113,6 +124,26 @@
 (add-hook 'after-make-frame-functions 'da/disable-scroll-bars)
 
 (setq compilation-scroll-output 'first-error)
+
+(setq display-line-numbers-type t)
+(setq display-line-numbers-major-tick 0)
+(setq display-line-numbers-minor-tick 0)
+(setq display-line-numbers-widen t)
+(global-display-line-numbers-mode)
+
+(use-package lin
+  :ensure t
+  :custom
+  (lin-mode-hooks
+   '(dired-mode-hook
+     ibuffer-mode-hook
+     log-view-mode-hook
+     magit-log-mode-hook
+     occur-mode-hook
+     org-agenda-mode-hook))
+  :config
+  (lin-global-mode 1)
+  (global-hl-line-mode))
 
 (provide 'init-ui)
 

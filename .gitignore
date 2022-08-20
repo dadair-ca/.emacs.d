@@ -51,3 +51,4 @@ projects
 /snippets/web-mode/script
 /org-roam.db
 /snippets-neo
+*.sql

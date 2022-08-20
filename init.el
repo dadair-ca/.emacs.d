@@ -116,6 +116,12 @@
   (message "Loading Neo configuration...")
   (require 'init-neo))
 
-;; (my-org-startup)
+(defun da/idle-function ()
+  "My idle timer function."
+  (interactive)
+  (da/load-random-theme)
+  (org-agenda nil "N"))
+
+(run-with-idle-timer 15 nil 'da/idle-function)
 
 ;;; init.el ends here
