@@ -142,7 +142,7 @@
  '(org-treat-S-cursor-todo-selection-as-state-change nil)
  '(org-use-fast-todo-selection t)
  '(package-selected-packages
-   '(lin ef-themes toggle-test org-noter wordel org-roam js-mode mct keycast dired-git-info command-log-mode emacs-everywhere pass forge treemacs lsp-metals lsp-python-ms elpy company company-mode slack alert modus-vivendi modus-operandi-theme modus-vivendi-theme theme-changer modus-themes auto-package-update selectrum-prescient prescient marginalia selectrum counsel-projectile councel-projectile counsel ivy org-babel web-mode tide typescript-mode prettier emmet-mode magit which-key doom-modeline diminish use-package))
+   '(notmuch lin ef-themes toggle-test org-noter wordel org-roam js-mode mct keycast dired-git-info command-log-mode emacs-everywhere pass forge treemacs lsp-metals lsp-python-ms elpy company company-mode slack alert modus-vivendi modus-operandi-theme modus-vivendi-theme theme-changer modus-themes auto-package-update selectrum-prescient prescient marginalia selectrum counsel-projectile councel-projectile counsel ivy org-babel web-mode tide typescript-mode prettier emmet-mode magit which-key doom-modeline diminish use-package))
  '(send-mail-function 'mailclient-send-it)
  '(warning-suppress-log-types '((comp))))
 (custom-set-faces

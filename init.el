@@ -95,6 +95,7 @@
 (require 'init-dired)
 (require 'init-ediff)
 (require 'init-editing)
+(require 'init-email)
 (require 'init-funs)
 (require 'init-keycast)
 (require 'init-lsp)
@@ -122,6 +123,6 @@
   (da/load-random-theme)
   (org-agenda nil "N"))
 
-(run-with-idle-timer 15 nil 'da/idle-function)
+(run-with-idle-timer (* 5 60) nil 'da/idle-function)
 
 ;;; init.el ends here
