@@ -75,6 +75,13 @@ Will remove project prefix if inside a project."
   (da--utf8-to-hex (buffer-substring start end))
   (deactivate-mark))
 
+(defun da/disable-scroll-bars (frame)
+  "Disables scroll bars."
+  (modify-frame-parameters
+   frame
+   '((vertical-scroll-bars . nil)
+     (horizontal-scroll-bars . nil))))
+
 (provide 'init-funs)
 
 ;;; init-funs.el ends here

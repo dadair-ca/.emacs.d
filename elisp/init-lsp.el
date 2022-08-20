@@ -32,12 +32,16 @@
 
 (use-package lsp-mode
   :hook ((typescript-mode . lsp)
+         (terraform-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
   :custom
   (lsp-clients-typescript-server-args '("--stdio" "--tsserver-log-file" "/dev/stderr"))
+  (lsp-clients-typescript-preferences
+   '(quotePreference "single" importModuleSpecifierPreference "relative"))
   (lsp-response-timeout 30)
   (lsp-enable-file-watchers nil)
+  (lsp-terraform-server 'terraform-ls)
   :config
   ;(setq read-process-output-max (* 1024 1024))
   (global-unset-key (kbd "C-x l"))

@@ -36,7 +36,7 @@
   (interactive)
   (let* ((pr (nthcdr 2 (project-current t)))
          (dir (car pr)))
-    (magit-status dir)))
+    (magit-status (directory-file-name dir))))
 
 (use-package project
   :config

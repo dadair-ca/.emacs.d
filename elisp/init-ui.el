@@ -97,6 +97,10 @@
 (setq default-frame-alist '(;(undecorated . t)
                             (font . "Source Code Pro-11")))
 
+(add-hook 'after-make-frame-functions 'da/disable-scroll-bars)
+
+(setq compilation-scroll-output 'first-error)
+
 (provide 'init-ui)
 
 ;;; init-ui.el ends here
