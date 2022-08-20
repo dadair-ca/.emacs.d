@@ -17,7 +17,6 @@
 /smex-items
 /var/pcache
 auto-save-list
-custom.el
 ede-projects.el
 el-get
 elpa

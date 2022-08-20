@@ -98,7 +98,7 @@
 (require 'init-funs)
 (require 'init-keycast)
 (require 'init-lsp)
-(require 'init-mct)
+;; (require 'init-mct)
 (require 'init-mongosh)
 (require 'init-org)
 (require 'init-org-roam)

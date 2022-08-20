@@ -76,6 +76,8 @@
 (use-package yaml-mode
   :mode "\\.ya?ml\\'")
 
+(global-set-key (kbd "C-c j") 'find-sibling-file)
+
 (provide 'init-prog)
 
 ;;; init-prog.el ends here

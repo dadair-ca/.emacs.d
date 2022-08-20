@@ -67,16 +67,29 @@
 ;; (use-package modus-vivendi-theme :ensure)
 ;; (use-package modus-operandi-theme :ensure)
 
-(use-package modus-themes
+;; (use-package modus-themes
+;;   :ensure
+;;   :init
+;;   (setq modus-themes-slanted-constructs t
+;;         modus-themes-bold-constructs nil)
+;;   (modus-themes-load-themes)
+;;   :config
+;;   ;; (modus-themes-load-operandi)
+;;   (modus-themes-load-vivendi)
+;;   )
+
+(use-package ef-themes
   :ensure
+  :custom
+  (ef-themes-to-toggle '(ef-night ef-day))
   :init
-  (setq modus-themes-slanted-constructs t
-        modus-themes-bold-constructs nil)
-  (modus-themes-load-themes)
+  (mapc #'disable-theme custom-enabled-themes)
   :config
-  ;; (modus-themes-load-operandi)
-  (modus-themes-load-vivendi)
-  )
+  (if (string-match-p
+     "dark"
+     (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))
+    (ef-themes-load-random 'dark)
+  (ef-themes-load-random 'light)))
 
 ;; (use-package doom-modeline
 ;;   :hook (after-init . doom-modeline-mode)
