@@ -30,6 +30,16 @@
 
 ;;; Code:
 
+(use-package smtpmail
+  :ensure t
+  :config
+  (setq smtpmail-smtp-server "smtp.gmail.com")
+  (setq smtpmail-smtp-service 465)
+  (setq smtpmail-stream-type 'ssl)
+  (setq smtpmail-queue-mail nil)
+  (setq send-mail-function 'smtpmail-send-it)
+  (setq smtpmail-debug-info t))
+
 (use-package notmuch
   :ensure t
   :custom
@@ -37,16 +47,20 @@
   (notmuch-saved-searches
    `(( :name "inbox"
        :query "tag:inbox"
-       :sort-order newest-first)
+       :sort-order newest-first
+       :key ,(kbd "i"))
      ( :name "unread (all)"
        :query "tag:unread not tag:archived"
-       :sort-order newest-first)
+       :sort-order newest-first
+       :key ,(kbd "U"))
      ( :name "unread (inbox)"
        :query "tag:unread and tag:inbox"
-       :sort-order newest-first)
+       :sort-order newest-first
+       :key ,(kbd "u"))
      ( :name "github"
        :query "tag:github not tag:archived"
-       :sort-order newest-first)))
+       :sort-order newest-first
+       :key ,(kbd "G"))))
   (notmuch-search-oldest-first nil)
   (notmuch-search-result-format
    '(("date" . "%12s  ")
@@ -66,11 +80,18 @@
   ;; Composing
   (notmuch-mua-compose-in 'current-window)
   (notmuch-always-prompt-for-sender t)
+  ;; Tags
+  (notmuch-archive-tags '("-inbox" "-unread" "+archived"))
+  (notmuch-message-replied-tags '("+replied"))
+  (notmuch-message-forwarded-tags '("+forwarded"))
+  (notmuch-show-mark-read-tags '("-unread"))
+  (notmuch-draft-tags '("+draft"))
+  (notmuch-draft-folder "drafts")
   
   :config
-  (global-unset-key (kbd "C-x m"))
-  (global-set-key (kbd "C-x m c") 'notmuch-mua-new-mail)
-  (global-set-key (kbd "C-x m m") 'notmuch))
+  (global-unset-key (kbd "C-c m"))
+  (global-set-key (kbd "C-c m c") 'notmuch-mua-new-mail)
+  (global-set-key (kbd "C-c m m") 'notmuch))
 
 (provide 'init-email)
 

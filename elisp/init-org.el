@@ -51,9 +51,6 @@
    (python . t)
    (shell . t)))
 
-(defun my-org-startup ()
-  (org-agenda-list))
-
 (defun org-todo-age-time (&optional pos)
   (let ((stamp (org-entry-get (or pos (point)) "CREATED" t)))
     (when stamp

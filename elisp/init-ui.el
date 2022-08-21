@@ -50,34 +50,6 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; (use-package doom-themes
-;;   :ensure t
-;;   :config
-;;   (setq doom-themes-enable-bold t
-;;         doom-themes-enable-italic t)
-;;   (load-theme 'doom-one t)
-;;   (doom-themes-visual-bell-config)
-;;   (doom-themes-neotree-config)
-;;   ;(doom-themes-org-config)
-;;   )
-
-;; (use-package modus-vivendi :ensure)
-;; (use-package modus-operandi :ensure)
-
-;; (use-package modus-vivendi-theme :ensure)
-;; (use-package modus-operandi-theme :ensure)
-
-;; (use-package modus-themes
-;;   :ensure
-;;   :init
-;;   (setq modus-themes-slanted-constructs t
-;;         modus-themes-bold-constructs nil)
-;;   (modus-themes-load-themes)
-;;   :config
-;;   ;; (modus-themes-load-operandi)
-;;   (modus-themes-load-vivendi)
-;;   )
-
 (defun da/load-random-theme ()
   "Load a random theme based on system settings."
   (if (string-match-p
@@ -102,21 +74,12 @@
   :config
   (da/load-random-theme))
 
-;; (use-package doom-modeline
-;;   :hook (after-init . doom-modeline-mode)
-;;   :config
-;;   (setq doom-modeline-buffer-file-name-style 'truncate-all))
-
 (use-package which-key
   :defer 5
   :diminish
   :commands (which-key-mode)
   :config
   (which-key-mode))
-
-;; (load-theme 'tango)
-
-;; (global-display-fill-column-indicator-mode)
 
 (setq default-frame-alist '(;(undecorated . t)
                             (font . "Source Code Pro-11")))
@@ -140,10 +103,23 @@
      log-view-mode-hook
      magit-log-mode-hook
      occur-mode-hook
-     org-agenda-mode-hook))
+     org-agenda-mode-hook
+     notmuch-search-mode-hook
+     notmuch-tree-mode-hook))
   :config
   (lin-global-mode 1)
   (global-hl-line-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Modeline
+
+(setq display-time-format "%a %e %b, %H:%M")
+(setq display-time-interval 60)
+(setq display-time-default-load-average nil)
+(display-time-mode)
+
+(use-package minions
+  :config (minions-mode 1))
 
 (provide 'init-ui)
 

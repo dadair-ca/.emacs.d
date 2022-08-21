@@ -95,6 +95,7 @@
 (require 'init-dired)
 (require 'init-ediff)
 (require 'init-editing)
+(require 'init-elfeed)
 (require 'init-email)
 (require 'init-funs)
 (require 'init-keycast)

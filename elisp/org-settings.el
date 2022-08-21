@@ -97,6 +97,7 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
                 (org-agenda-time-grid nil)
                 (org-agenda-tag-filter-preset '("CATEGORY=\"NEO\""))))
        (tags-todo "+CATEGORY=\"Q\"" ((org-agenda-overriding-header "Questions")))
+       (tags-todo "+WAITING" ((org-agenda-overriding-header "Waiting")))
        (tags-todo "+CATEGORY=\"NEO\"+PRIORITY=\"A\"-WAITING"
                   ((org-agenda-overriding-header "High-priority incomplete tasks:")
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
