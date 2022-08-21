@@ -34,7 +34,8 @@
   :ensure t
   :custom
   (elfeed-feeds
-   '("https://planet.emacslife.com/atom.xml"))
+   '("https://planet.emacslife.com/atom.xml"
+     "https://ag91.github.io/rss.xml"))
   :config
   (global-set-key (kbd "C-x w") 'elfeed))
 

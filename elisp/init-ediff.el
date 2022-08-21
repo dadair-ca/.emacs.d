@@ -30,17 +30,11 @@
 
 ;;; Code:
 
-(defmacro csetq (variable value)
-  `(funcall (or (get ',variable 'custom-set)
-                'set-default)
-            ',variable ,value))
-
 (use-package ediff
-  :config
-  (csetq ediff-window-setup-function 'ediff-setup-windows-plain)
-  (csetq ediff-split-window-function 'split-window-horizontally)
-  ;(csetq ediff-show-ancestor +1)
-  )
+  :custom
+  (ediff-window-setup-function 'ediff-setup-windows-plain)
+  (ediff-split-window-function 'split-window-horizontally)
+  (ediff-show-ancestor +1))
 
 (provide 'init-ediff)
 

@@ -36,7 +36,8 @@
   (dashboard-projects-backend 'project-el)
   (dashboard-items
    '((recents . 5)
-     (projects . 5)))
+     (projects . 5)
+     (bookmarks . 5)))
   (dashboard-set-init-info nil)
   :config
   (dashboard-setup-startup-hook))

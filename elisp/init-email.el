@@ -43,6 +43,9 @@
 (use-package notmuch
   :ensure t
   :custom
+  (mail-user-agent 'message-user-agent)
+  (message-mail-user-agent t)
+  (message-directory "~/Mail")
   ;; Search
   (notmuch-saved-searches
    `(( :name "inbox"
@@ -87,7 +90,7 @@
   (notmuch-show-mark-read-tags '("-unread"))
   (notmuch-draft-tags '("+draft"))
   (notmuch-draft-folder "drafts")
-  
+  (notmuch-fcc-dirs '()) ;; appended to from init-neo.el
   :config
   (global-unset-key (kbd "C-c m"))
   (global-set-key (kbd "C-c m c") 'notmuch-mua-new-mail)
