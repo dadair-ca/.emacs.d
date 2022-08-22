@@ -40,6 +40,28 @@
   (setq send-mail-function 'smtpmail-send-it)
   (setq smtpmail-debug-info t))
 
+(setq da/unread-mail-indicator nil)
+
+(defun da/get-unread-mail ()
+  "Get unread mail."
+  (string-trim
+   (shell-command-to-string
+    "notmuch count tag:unread")))
+
+(defun da/set-unread-mail-indicator ()
+  "Show unread mail in the mode line."
+  (let* ((count (da/get-unread-mail))
+         (indicator (format "@%s " count))
+         (old-indicator da/unread-mail-indicator))
+    (when old-indicator
+      (setq global-mode-string (delete old-indicator global-mode-string)))
+    (cond
+     ((>= (string-to-number count) 1)
+      (setq global-mode-string (push indicator global-mode-string))
+      (setq da/unread-mail-indicator indicator))
+     (t
+      (setq da/unread-mail-indicator nil)))))
+
 (use-package notmuch
   :ensure t
   :custom
@@ -94,7 +116,8 @@
   :config
   (global-unset-key (kbd "C-c m"))
   (global-set-key (kbd "C-c m c") 'notmuch-mua-new-mail)
-  (global-set-key (kbd "C-c m m") 'notmuch))
+  (global-set-key (kbd "C-c m m") 'notmuch)
+  (run-at-time t 60 #'da/set-unread-mail-indicator))
 
 (provide 'init-email)
 
