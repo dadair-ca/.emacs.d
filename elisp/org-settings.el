@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(org-habit-show-all-today t)
  '(org-hide-emphasis-markers t)
- '(org-hide-leading-stars t)
+ '(org-hide-leading-stars nil)
  '(org-M-RET-may-split-line '((headline . nil) (default . t)))
  '(org-agenda-deadline-leaders '("!D!: " "D%02d: " "-D%02d: "))
  '(org-agenda-scheduled-leaders '("" "S%d: "))
@@ -28,6 +28,17 @@
 :ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
 :END:"
       :prepend t)
+     ("m" "Meeting Minutes" entry (file+olp+datetree "~/Dropbox/org/neo.org.gpg" "Meeting Minutes")
+      "* %? :MEETING:
+:PROPERTIES:
+:ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
+:END:
+** Attendees
+- David Adair (DA)
+
+** Notes
+
+** Action Items")
      ("h" "Habit" entry (file "~/Dropbox/org/refile.org")
       "* TODO %?
 SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
@@ -81,62 +92,10 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
  '(org-tags-exclude-from-inheritance '("PROJECT"))
  '(org-agenda-custom-commands
    '((" " "Agenda"
-      ((agenda "" nil)
-       (tags "REFILE"
-             ((org-agenda-overriding-header "Tasks to Refile")
-              (org-tags-match-list-sublevels nil)))
-       (tags-todo "-CANCELLED/!NEXT"
-                  ((org-agenda-overriding-header "Next Tasks")
-                   (org-tags-match-list-sublevels t)))
-       (todo "WAITING"
-             ((org-agenda-overriding-header "Waiting On")))))
-
-     ("N" "Neo"
-      ((agenda ""
-               ((org-agenda-span 3)
-                (org-agenda-time-grid nil)
-                (org-agenda-tag-filter-preset '("CATEGORY=\"NEO\""))))
+      ((agenda "" ((org-agenda-span 3) (org-agenda-time-grid nil)))
+       (tags-todo "+PRIORITY=\"A\"" ((org-agenda-overriding-header "Priority")))
+       (todo "WAITING" ((org-agenda-overriding-header "Waiting")))
+       (tags "REFILE" ((org-agenda-overriding-header "Refile")))
        (tags-todo "+CATEGORY=\"Q\"" ((org-agenda-overriding-header "Questions")))
-       (tags-todo "+WAITING" ((org-agenda-overriding-header "Waiting")))
-       (tags-todo "+CATEGORY=\"NEO\"+PRIORITY=\"A\"-WAITING"
-                  ((org-agenda-overriding-header "High-priority incomplete tasks:")
-                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
-       (tags "REFILE"
-             ((org-agenda-overriding-header "Refile")
-              (org-tags-match-list-sublevels nil)))
-       (tags-todo "+CATEGORY=\"READ\"" ((org-agenda-overriding-header "Readings")))))
-
-     ("F" "Focus"
-      ((agenda ""
-               ((org-agenda-span 1)))
-       (tags-todo "PRIORITY=\"A\"/-WAITING"
-                  ((org-agenda-overriding-header "High-priority incomplete tasks:")
-                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
-       (todo "WAITING"
-             ((org-agenda-overriding-header "Waiting on:")))
-       (todo "NEXT"
-             ((org-agenda-overriding-header "Next actions:")
-              (org-agenda-skip-function '(da/org-skip-subtree-if-priority ?A))))))
-
-     ("W" "Weekly Review"
-      ((agenda "" ((org-agenda-span 7)))
-       (tags-todo "PRIORITY=\"A\"/-WAITING"
-                  ((org-agenda-overriding-header "High-priority incomplete tasks:")
-                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'TODO 'DONE 'CANCELLED))))
-       (tags "REFILE"
-             ((org-agenda-overriding-header "Inbox:")
-              (org-tags-match-list-sublevels nil)))
-       (todo "WAITING"
-             ((org-agenda-overriding-header "Waiting on:")))
-       (tags-todo "+PROJECT/-DONE-CANCELLED"
-                  ((org-agenda-overriding-header "Active projects:")
-                   (org-tags-match-list-sublevels nil)))
-       (tags-todo "+PROJECT/-DONE-CANCELLED"
-                  ((org-agenda-overriding-header "Stuck projects:")
-                   (org-tags-match-list-sublevels nil)
-                   (org-agenda-skip-function 'da/skip-non-stuck-projects)
-                   (org-agenda-sorting-strategy '(category-keep))))
-       (todo "NEXT"
-             ((org-agenda-overriding-header "Next actions:")
-              (org-agenda-skip-function '(da/org-skip-subtree-if-priority ?A))))))))
+       (tags-todo "+CATEGORY=\"READ\"" ((org-agenda-overriding-header "Readings")))))))
  '(org-confirm-babel-evaluate nil))

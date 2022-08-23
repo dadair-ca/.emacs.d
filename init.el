@@ -105,6 +105,7 @@
 (require 'init-org)
 (require 'init-org-roam)
 (require 'init-path)
+(require 'init-pdf)
 (require 'init-prog)
 (require 'init-project)
 ;; (require 'init-python)

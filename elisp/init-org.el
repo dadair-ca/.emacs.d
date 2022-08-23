@@ -36,6 +36,8 @@
   (add-to-list 'org-modules 'org-habit t)
   (load "org-settings"))
 
+(use-package ol-notmuch :ensure t)
+
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c l") 'org-store-link)
@@ -105,7 +107,7 @@
   (org-agenda-quit))
 
 (defadvice org-agenda (around fit-windows-for-agenda activate)
-  "Fit the Org Agenda to its buffer."
+  "Slurps Drafts App notes saved in Dropbox into TODO task for refiling."
   (let ((notes
          (ignore-errors
            (directory-files
