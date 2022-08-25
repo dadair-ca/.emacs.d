@@ -52,11 +52,12 @@
 
 (defun da/load-random-theme ()
   "Load a random theme based on system settings."
+  (mapc #'disable-theme custom-enabled-themes)
   (if (string-match-p
      "dark"
      (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))
     (ef-themes-load-random 'dark)
-  (ef-themes-load-random 'light)))
+    (ef-themes-load-random 'light)))
 
 (use-package ef-themes
   :ensure

@@ -123,7 +123,7 @@
   "My idle timer function."
   (interactive)
   (da/load-random-theme)
-  (org-agenda nil "N"))
+  (org-agenda nil " "))
 
 (run-with-idle-timer (* 5 60) nil 'da/idle-function)
 

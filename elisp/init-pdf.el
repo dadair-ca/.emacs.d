@@ -31,7 +31,9 @@
 ;;; Code:
 
 (use-package pdf-tools
-  :ensure t)
+  :ensure t
+  :config
+  (pdf-tools-install))
 
 (provide 'init-pdf)
 

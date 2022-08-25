@@ -10,11 +10,13 @@
  '(org-agenda-deadline-leaders '("!D!: " "D%02d: " "-D%02d: "))
  '(org-agenda-scheduled-leaders '("" "S%d: "))
  '(org-agenda-fontify-priorities t)
+ '(org-agenda-tags-column -80)
  '(org-agenda-prefix-format
    '((agenda . "  %-11c%?-12t% s")
      (timeline . "  % s")
      (todo . "  %-11c%5(org-todo-age) ")
-     (tags . "  %-11c")))
+     ;(tags . "  %-11c")
+     ))
  '(org-capture-templates
    '(("t" "Todo" entry (file "~/Dropbox/org/refile.org")
       "* TODO %?
@@ -29,16 +31,18 @@
 :END:"
       :prepend t)
      ("m" "Meeting Minutes" entry (file+olp+datetree "~/Dropbox/org/neo.org.gpg" "Meeting Minutes")
-      "* %? :MEETING:
+      "* %?
 :PROPERTIES:
 :ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
 :END:
 ** Attendees
-- David Adair (DA)
+- [X] David Adair (DA)
 
 ** Notes
 
-** Action Items")
+** Action Items"
+      :clock-in t
+      :clock-resume t)
      ("h" "Habit" entry (file "~/Dropbox/org/refile.org")
       "* TODO %?
 SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
