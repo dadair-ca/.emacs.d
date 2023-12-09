@@ -82,6 +82,10 @@
        :query "tag:unread and tag:inbox"
        :sort-order newest-first
        :key ,(kbd "u"))
+     ( :name "sent"
+       :query "tag:sent"
+       :sort-order newest-first
+       :key ,(kbd "s"))
      ( :name "github"
        :query "tag:github not tag:archived"
        :sort-order newest-first
@@ -101,10 +105,12 @@
   (notmuch-hello-recent-searches-max 20)
   ;; Reading
   (notmuch-message-headers-visible t)
-  (notmuch-message-headers '("To" "Cc" "Subject" "Date"))
+  (notmuch-message-headers '("To" "Cc" "Bcc" "Subject" "Date"))
   ;; Composing
   (notmuch-mua-compose-in 'current-window)
   (notmuch-always-prompt-for-sender t)
+  (mail-signature "David Adair\nNeo Financial")
+  (message-signature "David Adair\nNeo Financial")
   ;; Tags
   (notmuch-archive-tags '("-inbox" "-unread" "+archived"))
   (notmuch-message-replied-tags '("+replied"))
@@ -117,7 +123,9 @@
   (global-unset-key (kbd "C-c m"))
   (global-set-key (kbd "C-c m c") 'notmuch-mua-new-mail)
   (global-set-key (kbd "C-c m m") 'notmuch)
-  (run-at-time t 60 #'da/set-unread-mail-indicator))
+  (run-at-time t 60 #'da/set-unread-mail-indicator)
+  ;; Prevent the search bar from wrapping lines
+  (setq notmuch-hello-indent 5))
 
 (provide 'init-email)
 

@@ -30,7 +30,7 @@
 
 ;;; Code:
 
-(setq my-column-limit 80)
+(setq my-column-limit 200)
 
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
@@ -39,9 +39,6 @@
 (delete-selection-mode t)
 
 (setq tab-always-indent 'complete)
-
-(set-fill-column my-column-limit)
-(auto-fill-mode t)
 
 (autoload 'zap-up-to-char "misc"
   "Kill up to, but not including ARGth occurrence of CHAR." t)

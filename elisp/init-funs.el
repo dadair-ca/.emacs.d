@@ -64,6 +64,19 @@ Will remove project prefix if inside a project."
   (pop-to-buffer-same-window (get-buffer-create "*emacs-somewhere*"))
   (yank))
 
+(use-package 0xc :ensure t)
+
+(defun da/combine-3des (comp1 comp2 comp3)
+  "Combine key components COMP1, COMP2, and COMP3 into a 3DES key.
+
+Components should be hex-strings.
+
+Requires `0xc' installed from MELPA."
+  (let* ((dec1 (string-to-number (0xc-convert 10 comp1)))
+         (dec2 (string-to-number (0xc-convert 10 comp2)))
+         (dec3 (string-to-number (0xc-convert 10 comp3))))
+    (0xc-convert 16 (number-to-string (logxor dec1 dec2 dec3)))))
+
 (defun da--utf8-to-hex (s)
   "Convert a set of utf8 encoded characters S to hex."
   (mapconcat (lambda (c) (format "%02X" c))
@@ -76,7 +89,7 @@ Will remove project prefix if inside a project."
   (deactivate-mark))
 
 (defun da/disable-scroll-bars (frame)
-  "Disables scroll bars."
+  "Disable scroll bars in FRAME."
   (modify-frame-parameters
    frame
    '((vertical-scroll-bars . nil)

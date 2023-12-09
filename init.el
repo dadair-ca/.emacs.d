@@ -74,7 +74,7 @@
 
 (setq comp-async-report-warnings-errors nil)
 
-(setq inhibit-splash-screen t)
+;; (setq inhibit-splash-screen t)
 
 (require 'init-package)
 (require 'init-custom)
@@ -90,30 +90,64 @@
 (require 'init-ace)
 ;; (require 'init-clojure)
 (require 'init-dashboard)
-(require 'init-devops)
-;; (require 'init-diary)
+;; (require 'init-devops)
+(require 'init-diary)
+(require 'init-denote)
 (require 'init-dired)
 (require 'init-ediff)
 (require 'init-editing)
 (require 'init-elfeed)
-(require 'init-email)
+;; (require 'init-email)
 (require 'init-funs)
 (require 'init-keycast)
-(require 'init-lsp)
+;; (require 'init-lsp)
 ;; (require 'init-mct)
-(require 'init-mongosh)
+;; (require 'init-mongosh)
 (require 'init-org)
-(require 'init-org-roam)
 (require 'init-path)
 (require 'init-pdf)
 (require 'init-prog)
 (require 'init-project)
 ;; (require 'init-python)
 (require 'init-search)
-(require 'init-sql)
+;; (require 'init-sql)
 (require 'init-ui)
 (require 'init-vcs)
 (require 'init-web)
+
+(use-package vertico
+  :init
+  (vertico-mode))
+
+(use-package savehist
+  :init
+  (savehist-mode))
+
+(use-package emacs
+  :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+  ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+  ;; Vertico commands are hidden in normal buffers.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable recursive minibuffers
+  (setq enable-recursive-minibuffers t))
 
 (when (locate-library "init-neo")
   (message "Loading Neo configuration...")
@@ -123,7 +157,9 @@
   "My idle timer function."
   (interactive)
   (da/load-random-theme)
-  (org-agenda nil " "))
+  (org-agenda nil "g"))
+
+(setq completion-styles '(basic substring partial-completion emacs22))
 
 (run-with-idle-timer (* 5 60) nil 'da/idle-function)
 

@@ -37,11 +37,11 @@
 
 (use-package forge :after magit)
 
-(use-package code-review
-  :custom
-  (code-review-fill-column 80)
-  (code-review-download-dir "/tmp/code-review/")
-  (code-review-ath-login-marker 'forge))
+;; (use-package code-review
+;;   :custom
+;;   (code-review-fill-column 80)
+;;   (code-review-download-dir "/tmp/code-review/")
+;;   (code-review-ath-login-marker 'forge))
 
 (provide 'init-vcs)
 

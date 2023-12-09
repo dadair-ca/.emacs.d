@@ -53,11 +53,13 @@
 (defun da/load-random-theme ()
   "Load a random theme based on system settings."
   (mapc #'disable-theme custom-enabled-themes)
-  (if (string-match-p
-     "dark"
-     (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))
-    (ef-themes-load-random 'dark)
-    (ef-themes-load-random 'light)))
+  ;; (ef-themes-load-random 'dark)
+  ;; (if (string-match-p
+  ;;      "dark"
+  ;;      (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))
+  ;;     (ef-themes-load-random 'dark)
+  ;;   (ef-themes-load-random 'light))
+  )
 
 (use-package ef-themes
   :ensure
@@ -82,8 +84,8 @@
   :config
   (which-key-mode))
 
-(setq default-frame-alist '(;(undecorated . t)
-                            (font . "Source Code Pro-11")))
+;; (setq default-frame-alist '(;(undecorated . t)
+;;                             (font . "Source Code Pro-11")))
 
 (add-hook 'after-make-frame-functions 'da/disable-scroll-bars)
 
@@ -105,11 +107,19 @@
      magit-log-mode-hook
      occur-mode-hook
      org-agenda-mode-hook
-     notmuch-search-mode-hook
-     notmuch-tree-mode-hook))
+     ;;notmuch-search-mode-hook
+     ;;notmuch-tree-mode-hook
+     ))
   :config
   (lin-global-mode 1)
   (global-hl-line-mode))
+
+(global-visual-line-mode 1)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; tab-bar
+
+(setq tab-bar-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Modeline

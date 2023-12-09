@@ -35,7 +35,9 @@
   :custom
   (elfeed-feeds
    '("https://planet.emacslife.com/atom.xml"
-     "https://ag91.github.io/rss.xml"))
+     "https://ag91.github.io/rss.xml"
+     "https://www.rousette.org.uk/index.xml"
+     "https://olddeuteronomy.github.io/index.xml"))
   :config
   (global-set-key (kbd "C-x w") 'elfeed))
 

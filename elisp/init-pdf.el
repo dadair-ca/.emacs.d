@@ -31,6 +31,7 @@
 ;;; Code:
 
 (use-package pdf-tools
+  :hook (pdf-view-mode-hook #'pdf-view-fit-page-to-window)
   :ensure t
   :config
   (pdf-tools-install))
