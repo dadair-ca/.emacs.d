@@ -53,3 +53,5 @@ projects
 /snippets-neo
 *.sql
 *.sqlite
+/org-persist/
+/history

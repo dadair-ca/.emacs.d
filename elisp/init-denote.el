@@ -33,20 +33,20 @@
 (use-package denote
   :ensure t
   :config
-  (setq denote-directory "~/Dropbox/wiki")
+  (setq denote-directory "~/org/")
   (setq denote-date-prompt-use-org-read-date t)
-  (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
+  (add-hook 'text-mode-hook #'denote-fontify-links-mode-maybe)
   (add-hook 'dired-mode-hook #'denote-dired-mode)
   (setq denote-prompts '(subdirectory title keywords))
 
-  (defun journal ()
-    "Create an entry tagged 'journal' with the date as its title.
-If a journal for the date already exists, visit it.  If multiple
+  (defun daily ()
+    "Create an entry tagged 'daily' with the date as its title.
+If a daily for the date already exists, visit it.  If multiple
 entries exist, prompt with completion for a choice between them."
     (interactive)
     (let* ((today (format-time-string "%A %e %B %Y"))
-           (string (denote-sluggify today))
-           (files (denote-directory-files-matching-regexp string)))
+           (string (denote-sluggify 'title today))
+           (files (denote-directory-files string)))
       (cond
        ((> (length files) 1)
         (find-file (completing-read "Select file: " files nil :require-match)))
@@ -55,7 +55,7 @@ entries exist, prompt with completion for a choice between them."
        (t
         (denote
          today
-         '("journal")))))))
+         '("daily")))))))
 
 (provide 'init-denote)
 

@@ -74,46 +74,28 @@
 
 (setq comp-async-report-warnings-errors nil)
 
-;; (setq inhibit-splash-screen t)
-
 (require 'init-package)
 (require 'init-custom)
-(require 'init-pass)
 
 (require 'init-alert)
 (require 'init-basic)
 
 (use-package company :ensure t)
 
-;; (use-package treemacs :ensure t)
-
 (require 'init-ace)
-;; (require 'init-clojure)
 (require 'init-dashboard)
-;; (require 'init-devops)
 (require 'init-diary)
 (require 'init-denote)
 (require 'init-dired)
 (require 'init-ediff)
 (require 'init-editing)
-(require 'init-elfeed)
-;; (require 'init-email)
 (require 'init-funs)
-(require 'init-keycast)
-;; (require 'init-lsp)
-;; (require 'init-mct)
-;; (require 'init-mongosh)
 (require 'init-org)
 (require 'init-path)
-(require 'init-pdf)
-(require 'init-prog)
 (require 'init-project)
-;; (require 'init-python)
 (require 'init-search)
-;; (require 'init-sql)
 (require 'init-ui)
 (require 'init-vcs)
-(require 'init-web)
 
 (use-package vertico
   :init
@@ -148,10 +130,6 @@
 
   ;; Enable recursive minibuffers
   (setq enable-recursive-minibuffers t))
-
-(when (locate-library "init-neo")
-  (message "Loading Neo configuration...")
-  (require 'init-neo))
 
 (defun da/idle-function ()
   "My idle timer function."

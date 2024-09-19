@@ -124,6 +124,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   :ensure t
   :config
   (add-to-list 'org-modules 'org-habit t)
+  (setq org-id-link-to-org-use-id t)
   (setq org-stuck-projects '("" nil nil ""))
   (setq org-habit-show-all-today t)
   (setq org-hide-emphasis-markers t)
@@ -138,20 +139,20 @@ Late deadlines first, then scheduled, then non-late deadlines"
           (tags . "  %-11c%5(org-todo-age) [%e] ")
           (search . "  %-11c%5(org-todo-age) [%e] ")))
   (setq org-capture-templates
-        '(("t" "Todo" entry (file "~/Dropbox/org/refile.org")
+        '(("t" "Todo" entry (file "~/org/refile.org")
            "* TODO %?
 :PROPERTIES:
 :ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
 :END:
 %a"
            :prepend t)
-          ("n" "Note" entry (file "~/Dropbox/org/refile.org")
+          ("n" "Note" entry (file "~/org/refile.org")
            "* %? :NOTE:
 :PROPERTIES:
 :ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
 :END:"
            :prepend t)
-          ("m" "Meeting" entry (file "~/Dropbox/org/refile.org")
+          ("m" "Meeting" entry (file "~/org/refile.org")
            "* %U Meeting on \"%^{Subject}\" :NOTE:
 :PROPERTIES:
 :ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
@@ -159,9 +160,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
 - Attendees
   - [X] David Adair
 - Agenda
-- Notes"
+- Notes
+- Action Items
+- Decisions"
            :prepend t)
-          ("h" "Habit" entry (file "~/Dropbox/org/refile.org")
+          ("h" "Habit" entry (file "~/org/refile.org")
            "* TODO %?
 SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 :PROPERTIES:
@@ -170,17 +173,13 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 :REPEAT_TO_STATE: TODO
 :END:"
            :prepend t)
-          ("p" "Project" entry (file "~/Dropbox/org/refile.org")
-           "* %^{Project} [/] :prj:%^{tag}:
+          ("p" "Project" entry (file "~/org/refile.org")
+           "* %^{Project} :prj:%^{tag}:
 :PROPERTIES:
 :ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
 :CATEGORY: %^{category}
 :VISIBILITY: folded
 :COOKIE_DATA: recursive todo
-:END:
-** Information
-:PROPERTIES:
-:VISIBILITY: folded
 :END:
 ** Notes
 :PROPERTIES:
@@ -191,17 +190,13 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 :VISIBILITY: content
 :END:"
            :prepend t)
-          ("a" "Area" entry (file "~/Dropbox/org/refile.org")
-           "* %^{Area} [/] :%^{tag}:
+          ("a" "Area" entry (file "~/org/refile.org")
+           "* %^{Area} :area:%^{tag}:
 :PROPERTIES:
 :ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
 :CATEGORY: %^{category}
 :VISIBILITY: folded
 :COOKIE_DATA: recursive todo
-:END:
-** Information
-:PROPERTIES:
-:VISIBILITY: folded
 :END:
 ** Notes
 :PROPERTIES:
@@ -212,6 +207,8 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 :VISIBILITY: content
 :END:"
            :prepend t)))
+  (customize-set-variable 'org-global-properties
+                        '(("Effort_ALL" . "0:05 0:15 0:30 1:00 2:00 4:00")))
   (setq org-log-into-drawer t)
   (setq org-log-done 'time)
   (setq org-clock-into-drawer t)
@@ -225,23 +222,24 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
   (setq org-agenda-ndays 1)
   (setq org-agenda-show-all-dates t)
   (setq org-agenda-block-separator nil)
-  (setq org-directory "~/Dropbox/org")
-  (setq org-agenda-files '("~/Dropbox/org/gtd.org"
-                           "~/Dropbox/org/refile.org"
-                           "~/Dropbox/org/neo.org"))
-  (setq org-refile-targets '(("~/Dropbox/org/gtd.org" :regexp . "\\(?:\\(?:Area\\|Note\\|Project\\|Task\\)s\\)")
-                             ("~/Dropbox/org/neo.org" :regexp . "\\(?:\\(?:Area\\|Note\\|Project\\|Task\\)s\\)")
-                             ("~/Dropbox/org/refile.org" :level . 0)))
-  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+  (setq org-directory "~/org")
+  (setq org-agenda-files '("~/org/gtd.org" "~/org/refile.org"))
+  (setq org-refile-targets '(("~/org/gtd.org" :regexp . "\\(?:\\(?:Area\\|Note\\|Project\\|Task\\)s\\)")
+                             ("~/org/refile.org" :level . 0)))
+  (setq org-todo-keywords '((sequence
+                             "TODO(t)"
+                             ;; "NEXT(n)"
+                             "|"
+                             "DONE(d!)")
                             (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
   (setq org-todo-keyword-faces '(("TODO" . lin-yellow)
-                                 ("NEXT" . lin-blue)
+                                 ;; ("NEXT" . lin-blue)
                                  ("DONE" . lin-green)
                                  ("WAITING" . lin-red)
                                  ("HOLD" . lin-magenta)
                                  ("CANCELLED" . lin-green)))
-  (setq org-tag-persistent-alist '(("@home" . ?h) ("@office" . ?o)))
-  (setq org-tags-exclude-from-inheritance '("prj"))
+  (setq org-tag-persistent-alist '(("FLAGGED" . ?f)))
+  (setq org-tags-exclude-from-inheritance '("prj" "area" "HEL"))
   (setq org-use-fast-todo-selection t)
   (setq org-treat-S-cursor-todo-selection-as-state-change nil)
   (setq org-refile-use-outline-path t)
@@ -256,7 +254,8 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
                 (search category-up))))
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-span 'day)
-  (setq org-agenda-hide-tags-regexp "NEO\\|PERSONAL\\|REFILE\\|prj")
+  (setq org-agenda-hide-tags-regexp "NEO\\|PERSONAL\\|REFILE\\|prj\\|area")
+  (setq org-default-priority ?C)
   (setq org-agenda-custom-commands
         '(("g" "Get Things Done (GTD)"
            ((agenda ""
@@ -269,24 +268,16 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
             (todo "WAITING"
                   ((org-agenda-overriding-header "\n🤝️ Waiting On")
                    (org-agenda-todo-ignore-scheduled 'future)))
-            (tags-todo "+PRIORITY=\"A\""
-                       ((org-agenda-overriding-header "\n❗ High Priority")))
-            (tags-todo "-PRIORITY=\"A\"/NEXT"
-                  ((org-agenda-overriding-header "\n🔎 Focus Tasks")
-                   (org-agenda-skip-function
-                    '(org-agenda-skip-entry-if 'deadline))
-                   ;;(org-agenda-prefix-format "  %i %-12c [%e] ")
-                   ))
+            (tags-todo "+PRIORITY=\"A\"-TODO=\"WAITING\"" ((org-agenda-overriding-header "\n❗ Now")))
+            (tags-todo "+PRIORITY=\"B\"-TODO=\"WAITING\"" ((org-agenda-overriding-header "\n➡️ Next")))
             (tags "REFILE"
                   ((org-agenda-overriding-header "\n📥 Inbox")
-                   (org-agenda-prefix-format "  %?-12t% s")
                    (org-tags-match-list-sublevels nil)))
-            ;; WIP - want to focus to some weeks ahead
-            ;; (tags "DEADLINE>=\"<today>\""
-            ;;       ((org-agenda-overriding-header "\n Upcoming Deadlines")))
-            ;;
             (tags "prj"
                   ((org-agenda-overriding-header "\n📁 Projects")
+                   (org-agenda-prefix-format "  %?-12t% s")))
+            (tags "area"
+                  ((org-agenda-overriding-header "\n🪴 Areas")
                    (org-agenda-prefix-format "  %?-12t% s")))
             (tags "CLOSED>=\"<today>\""
                   ((org-agenda-overriding-header "\n✅ Completed Today")))))))
@@ -329,14 +320,14 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
   (org-agenda-quit))
 
 (defadvice org-agenda (around fit-windows-for-agenda activate)
-  "Slurps Drafts App notes saved in Dropbox into TODO task for refiling."
+  "Slurps Drafts App notes saved in Google Drive into TODO task for refiling."
   (let ((notes
          (ignore-errors
            (directory-files
-            "~/Dropbox"
+            "~/adair.david@gmail.com - Google Drive/My Drive"
             t "[0-9].*\\.txt\\'" nil))))
     (when notes
-      (with-current-buffer (find-file-noselect "~/Dropbox/org/refile.org")
+      (with-current-buffer (find-file-noselect "~/org/refile.org")
         (save-excursion
           (goto-char (point-min))
           (forward-line 2)
@@ -400,7 +391,11 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 (use-package org-noter
   :ensure t)
 
+(use-package ox-slack :ensure t)
+
 (require 'org-protocol)
+
+(use-package org-download :ensure t)
 
 (provide 'init-org)
 
