@@ -30,96 +30,6 @@
 
 ;;; Code:
 
-(defun bh/agenda-sort (a b)
-  "Sorting strategy for agenda items.
-Late deadlines first, then scheduled, then non-late deadlines"
-  (let (result)
-    (cond
-                                        ; time specific items are already sorted first by org-agenda-sorting-strategy
-
-                                        ; non-deadline and non-scheduled items next
-     ((bh/agenda-sort-test 'bh/is-not-scheduled-or-deadline a b))
-
-                                        ; deadlines for today next
-     ((bh/agenda-sort-test 'bh/is-due-deadline a b))
-
-                                        ; late deadlines next
-     ((bh/agenda-sort-test-num 'bh/is-late-deadline '> a b))
-
-                                        ; scheduled items for today next
-     ((bh/agenda-sort-test 'bh/is-scheduled-today a b))
-
-                                        ; late scheduled items next
-     ((bh/agenda-sort-test-num 'bh/is-scheduled-late '> a b))
-
-                                        ; pending deadlines last
-     ((bh/agenda-sort-test-num 'bh/is-pending-deadline '< a b))
-
-                                        ; finally default to unsorted
-     (t (setq result nil)))
-    result))
-
-(defmacro bh/agenda-sort-test (fn a b)
-  "Test for agenda sort"
-  `(cond
-    ; if both match leave them unsorted
-    ((and (apply ,fn (list ,a))
-          (apply ,fn (list ,b)))
-     (setq result nil))
-    ; if a matches put a first
-    ((apply ,fn (list ,a))
-     (setq result -1))
-    ; otherwise if b matches put b first
-    ((apply ,fn (list ,b))
-     (setq result 1))
-    ; if none match leave them unsorted
-    (t nil)))
-
-(defmacro bh/agenda-sort-test-num (fn compfn a b)
-  `(cond
-    ((apply ,fn (list ,a))
-     (setq num-a (string-to-number (match-string 1 ,a)))
-     (if (apply ,fn (list ,b))
-         (progn
-           (setq num-b (string-to-number (match-string 1 ,b)))
-           (setq result (if (apply ,compfn (list num-a num-b))
-                            -1
-                          1)))
-       (setq result -1)))
-    ((apply ,fn (list ,b))
-     (setq result 1))
-    (t nil)))
-
-(defun bh/is-not-scheduled-or-deadline (date-str)
-  (and (not (bh/is-deadline date-str))
-       (not (bh/is-scheduled date-str))))
-
-(defun bh/is-due-deadline (date-str)
-  (string-match "Deadline:" date-str))
-
-(defun bh/is-late-deadline (date-str)
-  (string-match "\\([0-9]*\\) d\. ago:" date-str))
-
-(defun bh/is-pending-deadline (date-str)
-  (string-match "In \\([^-]*\\)d\.:" date-str))
-
-(defun bh/is-deadline (date-str)
-  (or (bh/is-due-deadline date-str)
-      (bh/is-late-deadline date-str)
-      (bh/is-pending-deadline date-str)))
-
-(defun bh/is-scheduled (date-str)
-  (or (bh/is-scheduled-today date-str)
-      (bh/is-scheduled-late date-str)))
-
-(defun bh/is-scheduled-today (date-str)
-  (string-match "Scheduled:" date-str))
-
-(defun bh/is-scheduled-late (date-str)
-  (string-match "Sched\.\\(.*\\)x:" date-str))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (use-package org
   :ensure t
   :config
@@ -132,37 +42,19 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (setq org-M-RET-may-split-line '((headline . nil) (default . t)))
   (setq org-agenda-fontify-priorities t)
   (setq org-agenda-tags-column -102)
-  (setq org-agenda-prefix-format
-        '((agenda . "  %-11c%?-12t% s")
-          (timeline . "  % s")
-          (todo . "  %-11c%5(org-todo-age) [%e] ")
-          (tags . "  %-11c%5(org-todo-age) [%e] ")
-          (search . "  %-11c%5(org-todo-age) [%e] ")))
+  ;; (setq org-agenda-prefix-format
+  ;;       '((agenda . "  %-11c%?-12t% s")
+  ;;         (timeline . "  % s")
+  ;;         (todo . "  %-11c%?-12t% s")
+  ;;         (tags . "  %-11c%?-12t% s")
+  ;;         (search . "  %-11c%?-12t% s")))
   (setq org-capture-templates
-        '(("t" "Todo" entry (file "~/org/refile.org")
-           "* TODO %?
+        '(("n" "New" entry (file "~/org/refile.org")
+           "* %?
 :PROPERTIES:
 :ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
 :END:
 %a"
-           :prepend t)
-          ("n" "Note" entry (file "~/org/refile.org")
-           "* %? :NOTE:
-:PROPERTIES:
-:ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
-:END:"
-           :prepend t)
-          ("m" "Meeting" entry (file "~/org/refile.org")
-           "* %U Meeting on \"%^{Subject}\" :NOTE:
-:PROPERTIES:
-:ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
-:END:
-- Attendees
-  - [X] David Adair
-- Agenda
-- Notes
-- Action Items
-- Decisions"
            :prepend t)
           ("h" "Habit" entry (file "~/org/refile.org")
            "* TODO %?
@@ -172,43 +64,7 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 :STYLE: habit
 :REPEAT_TO_STATE: TODO
 :END:"
-           :prepend t)
-          ("p" "Project" entry (file "~/org/refile.org")
-           "* %^{Project} :prj:%^{tag}:
-:PROPERTIES:
-:ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
-:CATEGORY: %^{category}
-:VISIBILITY: folded
-:COOKIE_DATA: recursive todo
-:END:
-** Notes
-:PROPERTIES:
-:VISIBILITY: folded
-:END:
-** Tasks
-:PROPERTIES:
-:VISIBILITY: content
-:END:"
-           :prepend t)
-          ("a" "Area" entry (file "~/org/refile.org")
-           "* %^{Area} :area:%^{tag}:
-:PROPERTIES:
-:ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
-:CATEGORY: %^{category}
-:VISIBILITY: folded
-:COOKIE_DATA: recursive todo
-:END:
-** Notes
-:PROPERTIES:
-:VISIBILITY: folded 
-:END:
-** Tasks
-:PROPERTIES:
-:VISIBILITY: content
-:END:"
            :prepend t)))
-  (customize-set-variable 'org-global-properties
-                        '(("Effort_ALL" . "0:05 0:15 0:30 1:00 2:00 4:00")))
   (setq org-log-into-drawer t)
   (setq org-log-done 'time)
   (setq org-clock-into-drawer t)
@@ -224,29 +80,24 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
   (setq org-agenda-block-separator nil)
   (setq org-directory "~/org")
   (setq org-agenda-files '("~/org/gtd.org" "~/org/refile.org"))
-  (setq org-refile-targets '(("~/org/gtd.org" :regexp . "\\(?:\\(?:Area\\|Note\\|Project\\|Task\\)s\\)")
-                             ("~/org/refile.org" :level . 0)))
+  (setq org-refile-targets '(("~/org/gtd.org" :maxlevel . 3) ("~/org/refile.org" :level . 0)))
   (setq org-todo-keywords '((sequence
                              "TODO(t)"
-                             ;; "NEXT(n)"
                              "|"
                              "DONE(d!)")
                             (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
   (setq org-todo-keyword-faces '(("TODO" . lin-yellow)
-                                 ;; ("NEXT" . lin-blue)
                                  ("DONE" . lin-green)
                                  ("WAITING" . lin-red)
                                  ("HOLD" . lin-magenta)
                                  ("CANCELLED" . lin-green)))
   (setq org-tag-persistent-alist '(("FLAGGED" . ?f)))
-  (setq org-tags-exclude-from-inheritance '("prj" "area" "HEL"))
   (setq org-use-fast-todo-selection t)
   (setq org-treat-S-cursor-todo-selection-as-state-change nil)
   (setq org-refile-use-outline-path t)
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-agenda-repeating-timestamp-show-all t)
-  (setq org-agenda-cmp-user-defined 'bh/agenda-sort)
   (setq org-agenda-sorting-strategy
         (quote ((agenda habit-down time-up user-defined-up effort-up category-keep)
                 (todo category-up effort-up)
@@ -254,7 +105,7 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
                 (search category-up))))
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-span 'day)
-  (setq org-agenda-hide-tags-regexp "NEO\\|PERSONAL\\|REFILE\\|prj\\|area")
+  (setq org-agenda-hide-tags-regexp "REFILE")
   (setq org-default-priority ?C)
   (setq org-agenda-custom-commands
         '(("g" "Get Things Done (GTD)"
@@ -269,16 +120,9 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
                   ((org-agenda-overriding-header "\n🤝️ Waiting On")
                    (org-agenda-todo-ignore-scheduled 'future)))
             (tags-todo "+PRIORITY=\"A\"-TODO=\"WAITING\"" ((org-agenda-overriding-header "\n❗ Now")))
-            (tags-todo "+PRIORITY=\"B\"-TODO=\"WAITING\"" ((org-agenda-overriding-header "\n➡️ Next")))
             (tags "REFILE"
                   ((org-agenda-overriding-header "\n📥 Inbox")
                    (org-tags-match-list-sublevels nil)))
-            (tags "prj"
-                  ((org-agenda-overriding-header "\n📁 Projects")
-                   (org-agenda-prefix-format "  %?-12t% s")))
-            (tags "area"
-                  ((org-agenda-overriding-header "\n🪴 Areas")
-                   (org-agenda-prefix-format "  %?-12t% s")))
             (tags "CLOSED>=\"<today>\""
                   ((org-agenda-overriding-header "\n✅ Completed Today")))))))
   (setq org-confirm-babel-evaluate nil)
@@ -290,30 +134,6 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c b") 'org-switchb)
 
-(defun org-todo-age-time (&optional pos)
-  (let ((stamp (org-entry-get (or pos (point)) "CREATED" t)))
-    (when stamp
-      (time-subtract (current-time)
-                     (org-time-string-to-time
-                      (org-entry-get (or pos (point)) "CREATED" t))))))
-
-(defun org-todo-age (&optional pos)
-  (let ((days (time-to-number-of-days (org-todo-age-time pos))))
-    (cond
-     ((< days 1)   "today")
-     ((< days 7)   (format "%dd" days))
-     ((< days 30)  (format "%.1fw" (/ days 7.0)))
-     ((< days 358) (format "%.1fM" (/ days 30.0)))
-     (t            (format "%.1fY" (/ days 365.0))))))
-
-(defun da/org-skip-subtree-if-priority (priority)
-  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
-        (pri-value (* 1000 (- org-lowest-priority priority)))
-        (pri-current (org-get-priority (thing-at-point 'line t))))
-    (if (= pri-value pri-current)
-        subtree-end
-      nil)))
-
 (defun da/org-agenda-save-on-quit ()
   (interactive)
   (org-save-all-org-buffers)
@@ -324,7 +144,7 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
   (let ((notes
          (ignore-errors
            (directory-files
-            "~/adair.david@gmail.com - Google Drive/My Drive"
+            "~/Library/CloudStorage/GoogleDrive-adair.david@gmail.com/My Drive"
             t "[0-9].*\\.txt\\'" nil))))
     (when notes
       (with-current-buffer (find-file-noselect "~/org/refile.org")
@@ -387,11 +207,6 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 
 (eval-after-load 'org-agenda
   '(define-key org-agenda-mode-map (kbd "q") 'da/org-agenda-save-on-quit))
-
-(use-package org-noter
-  :ensure t)
-
-(use-package ox-slack :ensure t)
 
 (require 'org-protocol)
 

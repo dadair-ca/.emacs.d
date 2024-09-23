@@ -50,42 +50,12 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-(defun da/load-random-theme ()
-  "Load a random theme based on system settings."
-  (mapc #'disable-theme custom-enabled-themes)
-  ;; (ef-themes-load-random 'dark)
-  ;; (if (string-match-p
-  ;;      "dark"
-  ;;      (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))
-  ;;     (ef-themes-load-random 'dark)
-  ;;   (ef-themes-load-random 'light))
-  )
-
-(use-package ef-themes
-  :ensure
-  :custom
-  (ef-themes-height-1 1.0)
-  (ef-themes-height-2 1.0)
-  (ef-themes-height-3 1.0)
-  (ef-themes-height-4 1.0)
-  (ef-themes-height-5 1.0)
-  (ef-themes-height-6 1.0)
-  (ef-themes-height-7 1.0)
-  (ef-themes-height-8 1.0)
-  :init
-  (mapc #'disable-theme custom-enabled-themes)
-  :config
-  (da/load-random-theme))
-
 (use-package which-key
   :defer 5
   :diminish
   :commands (which-key-mode)
   :config
   (which-key-mode))
-
-;; (setq default-frame-alist '(;(undecorated . t)
-;;                             (font . "Source Code Pro-11")))
 
 (add-hook 'after-make-frame-functions 'da/disable-scroll-bars)
 

@@ -33,7 +33,7 @@
 (use-package denote
   :ensure t
   :config
-  (setq denote-directory "~/org/")
+  (setq denote-directory "~/org/note/")
   (setq denote-date-prompt-use-org-read-date t)
   (add-hook 'text-mode-hook #'denote-fontify-links-mode-maybe)
   (add-hook 'dired-mode-hook #'denote-dired-mode)

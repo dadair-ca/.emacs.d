@@ -83,7 +83,7 @@
 (use-package company :ensure t)
 
 (require 'init-ace)
-(require 'init-dashboard)
+;;(require 'init-dashboard)
 (require 'init-diary)
 (require 'init-denote)
 (require 'init-dired)
