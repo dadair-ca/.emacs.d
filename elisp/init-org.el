@@ -42,29 +42,47 @@
   (setq org-M-RET-may-split-line '((headline . nil) (default . t)))
   (setq org-agenda-fontify-priorities t)
   (setq org-agenda-tags-column -102)
-  ;; (setq org-agenda-prefix-format
-  ;;       '((agenda . "  %-11c%?-12t% s")
-  ;;         (timeline . "  % s")
-  ;;         (todo . "  %-11c%?-12t% s")
-  ;;         (tags . "  %-11c%?-12t% s")
-  ;;         (search . "  %-11c%?-12t% s")))
-  (setq org-capture-templates
-        '(("n" "New" entry (file "~/org/refile.org")
-           "* %?
+  (setq org-agenda-prefix-format
+        '((agenda . "  %-11c%?-12t% s")
+          (timeline . "  % s")
+          (todo . "  %-11c%?-12t% s")
+          (tags . "  %-11c%?-12t% s")
+          (search . "  %-11c%?-12t% s")))
+  (setq
+   org-capture-templates
+   '(("n" "New" entry (file "~/org/refile.org")
+      "* %?
 :PROPERTIES:
 :ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
 :END:
 %a"
-           :prepend t)
-          ("h" "Habit" entry (file "~/org/refile.org")
-           "* TODO %?
+      :prepend t)
+     ("h" "Habit" entry (file "~/org/refile.org")
+      "* TODO %?
 SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 :PROPERTIES:
 :ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
 :STYLE: habit
 :REPEAT_TO_STATE: TODO
 :END:"
-           :prepend t)))
+      :prepend t))
+
+   ;; org-roam-capture-templates
+   ;; '(("o" "1:1" entry
+   ;;    (file "~/org/templates/o3.org")
+   ;;    :target (file+datetree nil 'day)
+   ;;    :jump-to-captured t))
+
+   org-roam-dailies-capture-templates
+   '(("d" "default" entry
+      "* %U %?"
+      :target (file+head "%<%Y-%m-%d>.org"
+                         "#+title: %<%Y-%m-%d>\n"))
+     ("m" "meeting" entry
+      (file "~/org/templates/meeting.org")
+      :target (file+head "%<%Y-%m-%d>.org"
+                         "#+title: %<%Y-%m-%d>\n")
+      :jump-to-captured t)))
   (setq org-log-into-drawer t)
   (setq org-log-done 'time)
   (setq org-clock-into-drawer t)
@@ -79,8 +97,8 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
   (setq org-agenda-show-all-dates t)
   (setq org-agenda-block-separator nil)
   (setq org-directory "~/org")
-  (setq org-agenda-files '("~/org/gtd.org" "~/org/refile.org"))
-  (setq org-refile-targets '(("~/org/gtd.org" :maxlevel . 3) ("~/org/refile.org" :level . 0)))
+  (setq org-agenda-files '("~/org/gtd.org" "~/org/neo.org" "~/org/refile.org"))
+  (setq org-refile-targets '(("~/org/gtd.org" :maxlevel . 3) ("~/org/neo.org" :maxlevel . 3) ("~/org/refile.org" :level . 0)))
   (setq org-todo-keywords '((sequence
                              "TODO(t)"
                              "|"
