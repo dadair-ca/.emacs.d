@@ -38,16 +38,37 @@
 
 (use-package org-roam-ui :ensure t)
 
+(defun my-org-roam-dailies-goto-today ()
+  "Goto today's daily."
+  (interactive)
+  (org-roam-dailies-goto-today "d"))
+
+(defun my-org-roam-dailies-goto-yesterday ()
+  "Goto yesterday's daily."
+  (interactive)
+  (org-roam-dailies-goto-yesterday 1 "d"))
+
+(defun my-org-roam-dailies-goto-tomorrow ()
+  "Goto tomorrow's daily."
+  (interactive)
+  (org-roam-dailies-goto-tomorrow 1 "d"))
+
+(defun my-org-roam-dailies-goto-date ()
+  "Goto a specific daily (by date)."
+  (interactive)
+  (org-roam-dailies-goto-date t "d"))
+
 (global-set-key (kbd "C-c n l") 'org-roam-buffer-toggle)
 (global-set-key (kbd "C-c n f") 'org-roam-node-find)
-(global-set-key (kbd "C-c n l") 'org-roam-node-insert)
-(global-set-key (kbd "C-c n l") 'org-roam-capture)
+(global-set-key (kbd "C-c n i") 'org-roam-node-insert)
+(global-set-key (kbd "C-c n c") 'org-roam-capture)
 (global-set-key (kbd "C-c n u") 'org-roam-ui-open)
 
-(global-set-key (kbd "C-c n d t") (lambda () (interactive) (org-roam-dailies-capture-today nil "d")))
-(global-set-key (kbd "C-c n d y") (lambda () (interactive) (org-roam-dailies-capture-yesterday 1 "d")))
-(global-set-key (kbd "C-c n d m") (lambda () (interactive) (org-roam-dailies-capture-tomorrow 1 "d")))
-(global-set-key (kbd "C-c n d d") (lambda () (interactive) (org-roam-dailies-capture-date t "d")))
+(global-set-key (kbd "C-c n d c") 'org-roam-dailies-capture-today)
+(global-set-key (kbd "C-c n d t") 'my-org-roam-dailies-goto-today)
+(global-set-key (kbd "C-c n d y") 'my-org-roam-dailies-goto-yesterday)
+(global-set-key (kbd "C-c n d m") 'my-org-roam-dailies-goto-tomorrow)
+(global-set-key (kbd "C-c n d d") 'my-org-roam-dailies-goto-date)
 
 (provide 'init-org-roam)
 
