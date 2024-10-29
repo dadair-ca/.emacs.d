@@ -31,47 +31,69 @@
 ;;; Code:
 
 (use-package org
-  :ensure t
-  :config
-  (add-to-list 'org-modules 'org-habit t)
-  (setq org-id-link-to-org-use-id t)
-  (setq org-stuck-projects '("" nil nil ""))
-  (setq org-habit-show-all-today t)
-  (setq org-hide-emphasis-markers t)
-  (setq org-hide-leading-stars nil)
-  (setq org-M-RET-may-split-line '((headline . nil) (default . t)))
-  (setq org-agenda-fontify-priorities t)
-  (setq org-agenda-tags-column -102)
-  (setq org-agenda-prefix-format
-        '((agenda . "  %-11c%?-12t% s")
-          (timeline . "  % s")
-          (todo . "  %-11c%?-12t% s")
-          (tags . "  %-11c%?-12t% s")
-          (search . "  %-11c%?-12t% s")))
-  (setq
-   org-capture-templates
-   '(("n" "New" entry (file "~/org/refile.org")
-      "* %?
-:PROPERTIES:
-:ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
-:END:
-%a"
+  :demand t
+  :commands org-resolve-clocks
+  :bind* (("C-c S" . org-store-link)
+          ("C-c l" . org-insert-link))
+  :bind (:map
+         org-mode-map
+         ([return] . (lambda () (interactive) (org-return t)))
+         ([(control return)])
+         ([(control meta return)] . org-insert-heading-after-current))
+  :hook
+  (org-mode             . turn-on-auto-fill)
+  (org-log-buffer-setup . turn-on-auto-fill)
+  :custom
+  (org-id-link-to-org-use-id t)
+  (org-stuck-projects '("" nil nil ""))
+  (org-hide-emphasis-markers t)
+  (org-hide-leading-stars nil)
+  (org-M-RET-may-split-line '((headline . nil) (default . t)))
+  (org-log-into-drawer t)
+  (org-log-done 'time)
+  (org-clock-into-drawer t)
+  (org-adapt-indentation nil)
+  (org-deadline-warning-days 14)
+  (org-extend-today-until 4)
+  (org-global-properties
+   '(("Effort_ALL" . "0:05 0:15 0:30 1:00 2:00 3:00 4:00 6:00 8:00")))
+  (org-directory "~/org")
+  (org-refile-targets '(("~/org/gtd.org" :maxlevel . 3) ("~/org/neo.org" :maxlevel . 3) ("~/org/refile.org" :level . 0)))
+  (org-todo-keywords '((sequence
+                        "TODO(t)"
+                        "|"
+                        "DONE(d!)")
+                       (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
+  (org-todo-keyword-faces '(("TODO" . lin-yellow)
+                            ("DONE" . lin-green)
+                            ("WAITING" . lin-red)
+                            ("HOLD" . lin-magenta)
+                            ("CANCELLED" . lin-green)))
+  (org-tag-persistent-alist
+   '(("Call" . 99)
+     ("Errand" . 101)
+     ("Home" . 104)))
+  (org-tags-column -97)
+  (org-use-fast-todo-selection t)
+  (org-treat-S-cursor-todo-selection-as-state-change nil)
+  (org-refile-use-outline-path t)
+  (org-outline-path-complete-in-steps nil)
+  (org-refile-allow-creating-parent-nodes 'confirm)
+  (org-capture-templates
+   '(("t" "Todo" entry
+      (file "~/org/refile.org")
+      "* TODO %?"
       :prepend t)
-     ("h" "Habit" entry (file "~/org/refile.org")
+     ("h" "Habit" entry
+      (file "~/org/refile.org")
       "* TODO %?
 SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 :PROPERTIES:
-:ID: %(shell-command-to-string \"uuidgen\"):CREATED: %U
 :STYLE: habit
 :REPEAT_TO_STATE: TODO
+:LOG_INTO_DRAWER: t
 :END:"
       :prepend t))
-
-   ;; org-roam-capture-templates
-   ;; '(("o" "1:1" entry
-   ;;    (file "~/org/templates/o3.org")
-   ;;    :target (file+datetree nil 'day)
-   ;;    :jump-to-captured t))
 
    org-roam-dailies-capture-templates
    '(("d" "default" entry
@@ -83,73 +105,111 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
       :target (file+head "%<%Y-%m-%d>.org"
                          "#+title: %<%Y-%m-%d>\n")
       :jump-to-captured t)))
-  (setq org-log-into-drawer t)
-  (setq org-log-done 'time)
-  (setq org-clock-into-drawer t)
-  (setq org-habit-graph-column 60)
-  (setq org-adapt-indentation nil)
-  (setq org-agenda-skip-deadline-if-done t)
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
-  (setq org-agenda-skip-scheduled-if-done t)
-  (setq org-agenda-start-on-weekday nil)
-  (setq org-deadline-warning-days 14)
-  (setq org-agenda-ndays 1)
-  (setq org-agenda-show-all-dates t)
-  (setq org-agenda-block-separator nil)
-  (setq org-directory "~/org")
-  (setq org-agenda-files '("~/org/gtd.org" "~/org/neo.org" "~/org/refile.org"))
-  (setq org-refile-targets '(("~/org/gtd.org" :maxlevel . 3) ("~/org/neo.org" :maxlevel . 3) ("~/org/refile.org" :level . 0)))
-  (setq org-todo-keywords '((sequence
-                             "TODO(t)"
-                             "|"
-                             "DONE(d!)")
-                            (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
-  (setq org-todo-keyword-faces '(("TODO" . lin-yellow)
-                                 ("DONE" . lin-green)
-                                 ("WAITING" . lin-red)
-                                 ("HOLD" . lin-magenta)
-                                 ("CANCELLED" . lin-green)))
-  (setq org-tag-persistent-alist '(("FLAGGED" . ?f)))
-  (setq org-use-fast-todo-selection t)
-  (setq org-treat-S-cursor-todo-selection-as-state-change nil)
-  (setq org-refile-use-outline-path t)
-  (setq org-outline-path-complete-in-steps nil)
-  (setq org-refile-allow-creating-parent-nodes 'confirm)
-  (setq org-agenda-repeating-timestamp-show-all t)
-  (setq org-agenda-sorting-strategy
-        (quote ((agenda habit-down time-up user-defined-up effort-up category-keep)
-                (todo category-up effort-up)
-                (tags category-up effort-up)
-                (search category-up))))
-  (setq org-agenda-use-time-grid t)
-  (setq org-agenda-span 'day)
-  (setq org-agenda-hide-tags-regexp "REFILE")
-  (setq org-default-priority ?C)
-  (setq org-agenda-custom-commands
-        '(("g" "Get Things Done (GTD)"
-           ((agenda ""
-                    ((org-agenda-use-time-grid t)
-                     (org-agenda-time-grid
-                      (quote ((daily today require-timed)
-                              (0800 1000 1200 1400 1600 1800)
-                              "......" "----------------")))
-                     (org-deadline-warning-days 14)))
-            (todo "WAITING"
-                  ((org-agenda-overriding-header "\n🤝️ Waiting On")
-                   (org-agenda-todo-ignore-scheduled 'future)))
-            (tags-todo "+PRIORITY=\"A\"-TODO=\"WAITING\"" ((org-agenda-overriding-header "\n❗ Now")))
-            (tags "REFILE"
-                  ((org-agenda-overriding-header "\n📥 Inbox")
-                   (org-tags-match-list-sublevels nil)))
-            (tags "CLOSED>=\"<today>\""
-                  ((org-agenda-overriding-header "\n✅ Completed Today")))))))
-  (setq org-confirm-babel-evaluate nil)
-  (setq org-startup-indented t)
-  (setq org-agenda-skip-deadline-prewarning-if-scheduled t))
+  (org-confirm-babel-evaluate nil)
+  (org-startup-indented t)
+  (org-startup-folded 'show3levels)
+  :preface
+  (defun org-todo-age-time (&optional pos)
+    (let ((stamp (org-entry-get (or pos (point)) "CREATED" t)))
+      (when stamp
+        (time-subtract (current-time)
+                       (org-time-string-to-time
+                        (org-entry-get (or pos (point)) "CREATED" t))))))
+
+  (defun org-todo-age (&optional pos)
+    (let ((days (time-to-number-of-days (org-todo-age-time pos))))
+      (cond
+       ((< days 1)   "today")
+       ((< days 7)   (format "%dd" days))
+       ((< days 30)  (format "%.1fw" (/ days 7.0)))
+       ((< days 365) (format "%.1fM" (/ days 30.0)))
+       (t            (format "%.1fY" (/ days 365.0)))))))
+
+(use-package org-agenda
+  :commands org-agenda-list
+  :bind* ("C-c a" . org-agenda)
+  :custom
+  (org-agenda-custom-commands
+   '((" " "Get Things Done (GTD)"
+      ((agenda ""
+               ((org-agenda-use-time-grid t)
+                (org-agenda-time-grid
+                 (quote ((daily today require-timed)
+                         (0800 1000 1200 1400 1600 1800)
+                         "......" "----------------")))
+                (org-deadline-warning-days 14)))
+       (todo "WAITING"
+             ((org-agenda-overriding-header "\n🤝️ Waiting On")
+              (org-agenda-todo-ignore-scheduled 'future)))
+       (tags-todo "+PRIORITY=\"A\"-TODO=\"WAITING\"" ((org-agenda-overriding-header "\n❗ Now")))
+       (tags "REFILE"
+             ((org-agenda-overriding-header "\n📥 Inbox")
+              (org-tags-match-list-sublevels nil)))
+       (tags "CLOSED>=\"<today>\""
+             ((org-agenda-overriding-header "\n✅ Completed Today")))))))
+  (org-agenda-fontify-priorities t)
+  (org-agenda-prefix-format
+   '((agenda   . "%-10c%-5e%?-12t% s")
+     (timeline . "% s")
+     (todo     . "%-10c%5(org-todo-age) ")
+     (tags     . "%-10c")))
+  (org-agenda-skip-deadline-if-done t)
+  (org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (org-agenda-skip-scheduled-if-done t)
+  (org-agenda-slip-timestamp-if-done t)
+  (org-agenda-skip-unavailable-files t)
+  (org-agenda-skip-deadline-prewarning-if-scheduled t)
+  (org-agenda-sorting-strategy
+   '((agenda habit-down time-up todo-state-up priority-down)
+     (todo priority-down category-keep)
+     (tags priority-down category-keep)
+     (search category-keep)))
+  (org-agenda-span 'day)
+  (org-agenda-start-on-weekday nil)
+  (org-agenda-ndays 1)
+  (org-agenda-tags-column -100)
+  (org-agenda-show-all-dates t)
+  (org-agenda-block-separator nil)
+  (org-agenda-files '("~/org/gtd.org" "~/org/neo.org" "~/org/refile.org"))
+  (org-agenda-repeating-timestamp-show-all t)
+  (org-agenda-use-time-grid t)
+  (org-agenda-hide-tags-regexp "REFILE"))
+
+(use-package org-appear
+  :after org
+  :hook (org-mode . org-appear-mode))
+
+(use-package org-capture
+  :after org
+  :demand t
+  :preface
+  (defun my/org-basic-properties (&optional arg)
+    (interactive "P")
+    (save-excursion
+      (org-id-get-create arg)
+      (unless (org-entry-get (point) "CREATED")
+        (org-entry-put (point) "CREATED"
+                       (format-time-string (org-time-stamp-format t t))))))
+  :config
+  (add-hook 'org-capture-before-finalize-hook #'my/org-basic-properties))
+
+(use-package org-habit
+  :after org-agenda
+  :custom
+  (org-habit-preceding-days 42)
+  (org-habit-today-glyph 45)
+  (org-habit-graph-column 44))
+
+(use-package ob
+  :after org
+  :defer t
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((gnuplot . t))))
 
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c b") 'org-switchb)
 
 (defun da/org-agenda-save-on-quit ()
@@ -168,7 +228,7 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
       (with-current-buffer (find-file-noselect "~/org/refile.org")
         (save-excursion
           (goto-char (point-min))
-          (forward-line 2)
+          (forward-line 1)
           (dolist (note notes)
             (insert
              "* "
