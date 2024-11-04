@@ -133,14 +133,6 @@
   ;; Enable recursive minibuffers
   (setq enable-recursive-minibuffers t))
 
-(defun da/idle-function ()
-  "My idle timer function."
-  (interactive)
-  (da/load-random-theme)
-  (org-agenda nil "g"))
-
 (setq completion-styles '(basic substring partial-completion emacs22))
-
-(run-with-idle-timer (* 5 60) nil 'da/idle-function)
 
 ;;; init.el ends here

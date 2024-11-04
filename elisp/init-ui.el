@@ -104,4 +104,7 @@
 
 (provide 'init-ui)
 
+(add-to-list 'default-frame-alist
+             '(font . "Menlo-14"))
+
 ;;; init-ui.el ends here
