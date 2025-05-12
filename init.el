@@ -32,6 +32,8 @@
 
 ;;; Code:
 
+;;;; Preamble
+
 (defun update-load-path (&rest _)
   "Update LOAD-PATH."
   (push (expand-file-name "elisp" user-emacs-directory) load-path))
@@ -39,5 +41,9 @@
 (advice-add #'package-initialize :after #'update-load-path)
 
 (update-load-path)
+
+;;;; UI
+
+(pixel-scroll-precision-mode)
 
 ;;; init.el ends here
