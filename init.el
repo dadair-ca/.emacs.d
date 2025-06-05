@@ -144,6 +144,7 @@
    denote-known-keywords
    '("emacs"
      "journal"
+     "pm" ;; General product management
      "nl" ;; Neo lending
      "nc" ;; Neo card
      ))
@@ -162,7 +163,7 @@
 
 (use-package magit
   :ensure t
-  :bind (("C-x g" . magit-status)))l
+  :bind (("C-x g" . magit-status)))
 
 (pixel-scroll-precision-mode)
 
