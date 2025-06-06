@@ -78,6 +78,16 @@
    '((org-agenda-files :maxlevel . 2)
      (nil :maxlevel . 2)))
   (setq
+   org-todo-keywords
+   (quote ((sequence "TODO(t)" "|" "DONE(d)")
+	   (sequence "WAITING(w@/!)" "|" "CANCELLED(c@/!)"))))
+  (setq
+   org-todo-keyword-faces
+   (quote (("TODO" :foreground "red" :weight bold)
+	   ("WAITING" :foreground "orange" :weight bold)
+	   ("DONE" :foreground "green" :weight bold)
+	   ("CANCELLED" :foreground "green" :weight bold))))
+  (setq
    org-capture-templates
    '(("t" "Task" entry
       (file "~/org/inbox-MPro0147.org")
@@ -126,6 +136,7 @@
   :ensure t
   :bind ("C-x b" . consult-buffer))
 
+(add-hook 'dired-mode-hook #'dired-hide-details-mode)
 
 (use-package denote
   :ensure t
@@ -133,22 +144,36 @@
   :bind
   (("C-c n o" . denote-open-or-create)
    ("C-c n l" . denote-link-or-create)
-   ("C-c n b" . denote-backlinks)
-   ("C-c n d" . denote-dired)
-   ("C-c n g" . denote-grep))
+   ("C-c n b" . denote-backlinks))
   :config
   (setq denote-directory (expand-file-name "~/denote"))
   (setq denote-date-prompt-use-org-read-date t)
   (setq denote-infer-keywords nil)
   (setq
    denote-known-keywords
-   '("emacs"
+   '("computer"
+     "emacs"
+     "finances"
+     "health"
+     "home"
      "journal"
+     "personal"
+     "pets"
+     "pets"
+     "vehicle"
      "pm" ;; General product management
      "nl" ;; Neo lending
      "nc" ;; Neo card
      ))
   (denote-rename-buffer-mode 1))
+
+(use-package consult-denote
+  :ensure t
+  :bind
+  (("C-c n f" . consult-denote-find)
+   ("C-c n g" . consult-denote-grep))
+  :config
+  (consult-denote-mode 1))
 
 (use-package denote-journal
   :ensure t
@@ -160,6 +185,8 @@
   (setq denote-journal-directory (expand-file-name "journal" denote-directory))
   (setq denote-journal-keyword "journal")
   (setq denote-journal-title-format 'day-date-month-year))
+
+(global-set-key (kbd "C-x c") 'calendar)
 
 (use-package magit
   :ensure t
@@ -185,4 +212,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(magit consult marginalia orderless vertico orgalist uniline denote-journal denote which-key howm)))
+   '(consult-denote magit consult marginalia orderless vertico orgalist uniline denote-journal denote which-key howm)))
