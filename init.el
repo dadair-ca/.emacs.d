@@ -49,6 +49,7 @@
 (setq backup-directory-alist `(("." . "~/.saves")))
 
 (use-package gptel
+  :ensure t
   :bind (("C-c g RET" . gptel-send)
 	 ("C-c g /" . gptel))
   :config
@@ -73,6 +74,8 @@
   (setq org-directory "~/org")
   (setq org-agenda-files '("~/org"))
   (setq org-default-notes-file "~/org/inbox-MPro0147.org")
+  (setq org-tags-column 0) ;; place tags immediately after headline text
+  (set-face-attribute 'org-tag nil :foreground "Grey" :weight 'thin) ;; subdue tags
   (setq
    org-refile-targets
    '((org-agenda-files :maxlevel . 2)
@@ -88,12 +91,23 @@
 	   ("DONE" :foreground "green" :weight bold)
 	   ("CANCELLED" :foreground "green" :weight bold))))
   (setq
+   org-tag-alist
+   (quote (
+	   ("emacs" . ?e)
+	   ("family" . ?f)
+	   ("health" . ?l)
+	   ("home" . ?h)
+	   ("money" . ?m)
+	   ("pets" . ?c)
+	   ("product" . ?p)
+	   ("tasks" . ?t)
+	   ("vehicle" . ?v)
+	   )))
+  (setq
    org-capture-templates
    '(("t" "Task" entry
       (file "~/org/inbox-MPro0147.org")
       "* TODO %?\n%U\n%a"))))
-   
-
 
 ;; (use-package howm
 ;;   :ensure t
@@ -145,7 +159,7 @@
   (("C-c n o" . denote-open-or-create)
    ("C-c n l" . denote-link-or-create)
    ("C-c n b" . denote-backlinks))
-  :config
+  :init
   (setq denote-directory (expand-file-name "~/denote"))
   (setq denote-date-prompt-use-org-read-date t)
   (setq denote-infer-keywords nil)
@@ -159,7 +173,6 @@
      "journal"
      "personal"
      "pets"
-     "pets"
      "vehicle"
      "pm" ;; General product management
      "nl" ;; Neo lending
@@ -172,7 +185,7 @@
   :bind
   (("C-c n f" . consult-denote-find)
    ("C-c n g" . consult-denote-grep))
-  :config
+  :init
   (consult-denote-mode 1))
 
 (use-package denote-journal
@@ -212,4 +225,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(consult-denote magit consult marginalia orderless vertico orgalist uniline denote-journal denote which-key howm)))
+   '(gptel consult-denote magit consult marginalia orderless vertico orgalist uniline denote-journal denote which-key howm)))
