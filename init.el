@@ -70,12 +70,19 @@
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
 	 ("C-c l" . org-store-link))
+  :config
+  (set-face-attribute 'org-tag nil :foreground "Grey" :weight 'thin) ;; subdue tags
   :init
   (setq org-directory "~/org")
   (setq org-agenda-files '("~/org"))
   (setq org-default-notes-file "~/org/inbox-MPro0147.org")
   (setq org-tags-column 0) ;; place tags immediately after headline text
-  (set-face-attribute 'org-tag nil :foreground "Grey" :weight 'thin) ;; subdue tags
+  (setq org-log-into-drawer t)
+  (setq org-id-link-to-org-use-id t)
+  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-todo-ignore-scheduled t)
+  (setq org-agenda-include-diary nil) ;; directly integrated in diary.org file
   (setq
    org-refile-targets
    '((org-agenda-files :maxlevel . 2)
@@ -107,16 +114,29 @@
    org-capture-templates
    '(("t" "Task" entry
       (file "~/org/inbox-MPro0147.org")
-      "* TODO %?\n%U\n%a"))))
+      "* TODO %?
+:PROPERTIES:
+:CREATED: %U
+:END:
+%a")
+     ("r" "Task (from region)" entry
+      (file "~/org/inbox-MPro0147.org")
+      "* TODO %i%?
+:PROPERTIES:
+:CREATED: %U
+:END:
+%a")
+     ("h" "Habit" entry
+      (file "~/org/inbox-MPro0147.org")
+      "* TODO %?
+:PROPERTIES:
+:CREATED: %U
+:STYLE: habit
+:END:"))))
 
-;; (use-package howm
-;;   :ensure t
-;;   :config
-;;   (setq howm-view-use-grep t)
-;;   (setq howm-directory "~/howm/")
-;;   (setq howm-menu-file "0000-00-00-000000.txt")
-;;   (setq howm-keyword-file (expand-file-name ".howm-keys" howm-directory))
-;;   (setq howm-history-file (expand-file-name ".howm-history" howm-directory)))
+(require 'org-habit)
+(add-to-list 'org-modules 'org-habit)
+(setq org-agenda-show-habits t)
 
 (use-package uniline :ensure t)
 
