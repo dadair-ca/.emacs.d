@@ -111,6 +111,12 @@
 	   ("vehicle" . ?v)
 	   )))
   (setq
+   org-agenda-custom-commands
+   '((" " "Default"
+      ((agenda "" ((org-agenda-span 1)))
+       (todo "WAITING")
+       (todo "TODO")))))
+  (setq
    org-capture-templates
    '(("t" "Task" entry
       (file "~/org/inbox-MPro0147.org")
@@ -129,6 +135,7 @@
      ("h" "Habit" entry
       (file "~/org/inbox-MPro0147.org")
       "* TODO %?
+SCHEDULED: <%<%Y-%m-%d %a .+1d>>
 :PROPERTIES:
 :CREATED: %U
 :STYLE: habit
@@ -137,6 +144,14 @@
 (require 'org-habit)
 (add-to-list 'org-modules 'org-habit)
 (setq org-agenda-show-habits t)
+(setq org-habit-show-habits-only-for-today t)
+
+(use-package org-habit-stats
+  :ensure t
+  :bind (:map org-mode-map
+	      ("C-c h" . org-habit-stats-view-habit-at-point)
+	      :map org-agenda-mode-map
+	      ("C-c H" . org-habit-stats-view-habit-at-point-agenda)))
 
 (use-package uniline :ensure t)
 
@@ -168,7 +183,8 @@
 
 (use-package consult
   :ensure t
-  :bind ("C-x b" . consult-buffer))
+  :bind (("C-x b" . consult-buffer)
+	 ("C-*" . consult-outline)))
 
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 
@@ -245,4 +261,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(gptel consult-denote magit consult marginalia orderless vertico orgalist uniline denote-journal denote which-key howm)))
+   '(org-habit-stats gptel consult-denote magit consult marginalia orderless vertico orgalist uniline denote-journal denote which-key howm)))
