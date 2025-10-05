@@ -34,10 +34,6 @@
 
 ;;;; Preamble
 
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
-
 (defun update-load-path (&rest _)
   "Update LOAD-PATH."
   (push (expand-file-name "elisp" user-emacs-directory) load-path))
@@ -46,9 +42,53 @@
 
 (update-load-path)
 
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(defun prot/keyboard-quit-dwim ()
+  "Do-What-I-Mean behaviour for a general `keyboard-quit'.
+
+The generic `keyboard-quit' does not do the expected thing when
+the minibuffer is open.  Whereas we want it to close the
+minibuffer, even without explicitly focusing it.
+
+The DWIM behaviour of this command is as follows:
+
+- When the region is active, disable it.
+- When a minibuffer is open, but not focused, close the minibuffer.
+- When the Completions buffer is selected, close it.
+- In every other case use the regular `keyboard-quit'."
+  (interactive)
+  (cond
+   ((region-active-p)
+    (keyboard-quit))
+   ((derived-mode-p 'completion-list-mode)
+    (delete-completion-window))
+   ((> (minibuffer-depth) 0)
+    (abort-recursive-edit))
+   (t
+    (keyboard-quit))))
+
+(define-key global-map (kbd "C-g") #'prot/keyboard-quit-dwim)
+
+(straight-use-package 'gptel)
+
 (use-package gptel
-  :bind (("C-c g RET" . gptel-send)
-	 ("C-c g /" . gptel))
+  :bind (("C-c RET" . gptel-send)
+	 ("C-c /" . gptel))
   :config
   (setq gptel-default-mode 'org-mode)
   (setq gptel-model 'gpt-4o)
@@ -61,8 +101,31 @@
      (writing . "You are a large language model and a writing assistant. Respond concisely.")
      )))
 
-(use-package howm
-  :ensure t)
+(use-package org
+  :ensure nil
+  :defer t
+  :mode ("\\.org\\'" . org-mode)
+  :bind (("C-c c" . org-capture)
+	 ("C-c a" . org-agenda)
+	 ("C-c l" . org-store-link))
+  :config
+  (setq
+   org-agenda-files
+   '("~/org/brain"))
+  (setq
+   org-capture-templates
+   '(("l" "Log" entry
+      (file "~/org/brain/journal.org")
+      "* %U %?"
+      :prepend t)
+     ("t" "Task" entry
+      (file "~/org/brain/journal.org")
+      "* TODO %?")))
+  (setq org-insert-heading-respect-content t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t))
+
+(straight-use-package 'which-key)
 
 (use-package which-key
   :ensure t
@@ -71,18 +134,6 @@
 
 (pixel-scroll-precision-mode)
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "White" :foreground "Black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 140 :width normal :foundry "nil" :family "Menlo")))))
+(setenv "GPG_AGENT_INFO" nil)
 
 ;;; init.el ends here
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages '(which-key howm)))
