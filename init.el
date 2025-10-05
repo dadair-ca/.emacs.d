@@ -47,111 +47,10 @@
 (update-load-path)
 
 (setq backup-directory-alist `(("." . "~/.saves")))
+(setq-default create-lockfiles nil)
 
-(use-package gptel
-  :ensure t
-  :bind (("C-c g RET" . gptel-send)
-	 ("C-c g /" . gptel))
-  :config
-  (setq gptel-default-mode 'org-mode)
-  (setq gptel-model 'gpt-4o)
-  (setq gptel-include-reasoning "*Reasoning*")
-  (setq
-   gptel-directives
-   '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
-     (product . "You are a very senior product manager at a Canadian D2C fintech.  Respond concisely.")
-     (strategy . "You are an expert product strategist with deep knowledge of Canadian D2C fintechs and Canadian provincial and federal regulations and laws.  Challenge my assumptions and ask probing questions to refine strategy.  Repond concidely.")
-     (writing . "You are a large language model and a writing assistant. Respond concisely.")
-     )))
-
-(use-package org
-  :ensure t
-  :defer t
-  :bind (("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-	 ("C-c l" . org-store-link))
-  :config
-  (set-face-attribute 'org-tag nil :foreground "Grey" :weight 'thin) ;; subdue tags
-  :init
-  (setq org-directory "~/org")
-  (setq org-agenda-files '("~/org"))
-  (setq org-default-notes-file "~/org/inbox-MPro0147.org")
-  (setq org-tags-column 0) ;; place tags immediately after headline text
-  (setq org-log-into-drawer t)
-  (setq org-id-link-to-org-use-id t)
-  (setq org-agenda-skip-scheduled-if-done t)
-  (setq org-agenda-skip-deadline-if-done t)
-  (setq org-agenda-todo-ignore-scheduled t)
-  (setq org-agenda-include-diary nil) ;; directly integrated in diary.org file
-  (setq
-   org-refile-targets
-   '((org-agenda-files :maxlevel . 2)
-     (nil :maxlevel . 2)))
-  (setq
-   org-todo-keywords
-   (quote ((sequence "TODO(t)" "|" "DONE(d)")
-	   (sequence "WAITING(w@/!)" "|" "CANCELLED(c@/!)"))))
-  (setq
-   org-todo-keyword-faces
-   (quote (("TODO" :foreground "red" :weight bold)
-	   ("WAITING" :foreground "orange" :weight bold)
-	   ("DONE" :foreground "green" :weight bold)
-	   ("CANCELLED" :foreground "green" :weight bold))))
-  (setq
-   org-tag-alist
-   (quote (
-	   ("emacs" . ?e)
-	   ("family" . ?f)
-	   ("health" . ?l)
-	   ("home" . ?h)
-	   ("money" . ?m)
-	   ("pets" . ?c)
-	   ("product" . ?p)
-	   ("tasks" . ?t)
-	   ("vehicle" . ?v)
-	   )))
-  (setq
-   org-agenda-custom-commands
-   '((" " "Default"
-      ((agenda "" ((org-agenda-span 1)))
-       (todo "WAITING")
-       (todo "TODO")))))
-  (setq
-   org-capture-templates
-   '(("t" "Task" entry
-      (file "~/org/inbox-MPro0147.org")
-      "* TODO %?
-:PROPERTIES:
-:CREATED: %U
-:END:
-%a")
-     ("r" "Task (from region)" entry
-      (file "~/org/inbox-MPro0147.org")
-      "* TODO %i%?
-:PROPERTIES:
-:CREATED: %U
-:END:
-%a")
-     ("h" "Habit" entry
-      (file "~/org/inbox-MPro0147.org")
-      "* TODO %?
-SCHEDULED: <%<%Y-%m-%d %a .+1d>>
-:PROPERTIES:
-:CREATED: %U
-:STYLE: habit
-:END:"))))
-
-(require 'org-habit)
-(add-to-list 'org-modules 'org-habit)
-(setq org-agenda-show-habits t)
-(setq org-habit-show-habits-only-for-today t)
-
-(use-package org-habit-stats
-  :ensure t
-  :bind (:map org-mode-map
-	      ("C-c h" . org-habit-stats-view-habit-at-point)
-	      :map org-agenda-mode-map
-	      ("C-c H" . org-habit-stats-view-habit-at-point-agenda)))
+(require 'init-org)
+(require 'init-ledger)
 
 (use-package uniline :ensure t)
 
@@ -180,6 +79,11 @@ SCHEDULED: <%<%Y-%m-%d %a .+1d>>
 	      ("M-A" . marginalia-cycle))
   :init
   (marginalia-mode))
+
+(use-package company
+  :ensure t
+  :config
+  (add-hook 'after-init-hook 'global-company-mode))
 
 (use-package consult
   :ensure t
@@ -245,6 +149,8 @@ SCHEDULED: <%<%Y-%m-%d %a .+1d>>
 
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
+(recentf-mode 1)
+
 ;;; init.el ends here
 
 (custom-set-faces
@@ -253,7 +159,8 @@ SCHEDULED: <%<%Y-%m-%d %a .+1d>>
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :extend nil :stipple nil :background "White" :foreground "Black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 140 :width normal :foundry "nil" :family "Menlo"))))
- '(emoji ((t (:height 110 :family "Apple Color Emoji")))))
+ '(emoji ((t (:height 110 :family "Apple Color Emoji"))))
+ '(org-mode-line-clock ((t (:background "grey75" :foreground "red" :box (:line-width -1 :style released-button))))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -261,4 +168,4 @@ SCHEDULED: <%<%Y-%m-%d %a .+1d>>
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(org-habit-stats gptel consult-denote magit consult marginalia orderless vertico orgalist uniline denote-journal denote which-key howm)))
+   '(company ledger-mode homw hledger-mode org-habit org-habit-stats gptel consult-denote magit consult marginalia orderless vertico orgalist uniline denote-journal denote which-key)))
