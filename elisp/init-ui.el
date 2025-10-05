@@ -34,9 +34,9 @@
 ;;   :config
 ;;   (run-with-idle-timer 300 nil #'fireplace))
 
-;; (use-package hl-line
-;;   :ensure nil
-;;   :hook (after-init . global-hl-line-mode))
+(use-package hl-line
+  :ensure nil
+  :hook (after-init . global-hl-line-mode))
 
 (use-package show-paren
   :ensure nil
@@ -67,22 +67,22 @@
 (setq display-line-numbers-widen t)
 (global-display-line-numbers-mode)
 
-(use-package lin
-  :ensure t
-  :custom
-  (lin-mode-hooks
-   '(dired-mode-hook
-     ibuffer-mode-hook
-     log-view-mode-hook
-     magit-log-mode-hook
-     occur-mode-hook
-     org-agenda-mode-hook
-     ;;notmuch-search-mode-hook
-     ;;notmuch-tree-mode-hook
-     ))
-  :config
-  (lin-global-mode 1)
-  (global-hl-line-mode))
+;; (use-package lin
+;;   :ensure t
+;;   :custom
+;;   (lin-mode-hooks
+;;    '(dired-mode-hook
+;;      ibuffer-mode-hook
+;;      log-view-mode-hook
+;;      magit-log-mode-hook
+;;      occur-mode-hook
+;;      org-agenda-mode-hook
+;;      ;;notmuch-search-mode-hook
+;;      ;;notmuch-tree-mode-hook
+;;      ))
+;;   :config
+;;   (lin-global-mode 1)
+;;   (global-hl-line-mode))
 
 (global-visual-line-mode 1)
 
@@ -98,6 +98,34 @@
 (setq display-time-interval 60)
 (setq display-time-default-load-average nil)
 (display-time-mode)
+
+;;; Vertico, Orderless, Marginalia, Consult
+
+(use-package vertico
+  :ensure t
+  :custom
+  (vertico-resize t)
+  (vertico-cycle t)
+  :init
+  (vertico-mode))
+
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package marginalia
+  :ensure t
+  :bind (:map minibuffer-local-map
+              ("M-A" . marginalia-cycle))
+  :init
+  (marginalia-mode))
+
+(use-package consult
+  :ensure t
+  :bind ("C-x b" . consult-buffer))
 
 (provide 'init-ui)
 

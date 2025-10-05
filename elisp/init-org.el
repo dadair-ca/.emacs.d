@@ -64,11 +64,11 @@
                         "|"
                         "DONE(d!)")
                        (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))
-  (org-todo-keyword-faces '(("TODO" . lin-yellow)
-                            ("DONE" . lin-green)
-                            ("WAITING" . lin-red)
-                            ("HOLD" . lin-magenta)
-                            ("CANCELLED" . lin-green)))
+  (org-todo-keyword-faces '(("TODO" . diff-refine-changed)
+                            ("DONE" . diff-refine-added)
+                            ("WAITING" . diff-refine-removed)
+                            ("HOLD" . diff-nonexistent)
+                            ("CANCELLED" . diff-refine-added)))
   (org-tag-persistent-alist
    '(("Call" . 99)
      ("Errand" . 101)
