@@ -85,27 +85,34 @@
   (setq
    org-capture-templates
    '(("t" "Task" entry
-      (file "~/org/refile.org")
+      (file "~/git/org/refile.org")
       "* TODO %?
-:PROPERTIES:
-:CREATED: %U
-:END:
 %a")
      ("r" "Task (from region)" entry
-      (file "~/org/refile.org")
+      (file "~/git/org/refile.org")
       "* TODO %i%?
-:PROPERTIES:
-:CREATED: %U
-:END:
 %a")
      ("h" "Habit" entry
-      (file "~/org/refile.org")
+      (file "~/git/org/refile.org")
       "* TODO %? :habit:
 SCHEDULED: <%<%Y-%m-%d %a .+1d>>
 :PROPERTIES:
-:CREATED: %U
 :STYLE: habit
 :END:"))))
+
+(use-package org-capture
+  :after org
+  :demand t
+  :preface
+  (defun my/org-basic-properties (&optional arg)
+    (interactive "P")
+    (save-excursion
+      (org-id-get-create arg)
+      (unless (org-entry-get (point) "CREATED")
+        (org-entry-put (point) "CREATED"
+                       (format-time-string (org-time-stamp-format t t))))))
+  :config
+  (add-hook 'org-capture-before-finalize-hook #'my/org-basic-properties))
 
 (require 'org-habit)
 (add-to-list 'org-modules 'org-habit)
@@ -119,5 +126,58 @@ SCHEDULED: <%<%Y-%m-%d %a .+1d>>
 	      :map org-agenda-mode-map
 	      ("C-c H" . org-habit-stats-view-habit-at-point-agenda)))
 
+(defadvice org-agenda (around fit-windows-for-agenda activate)
+  "Slurps Drafts App notes saved in Google Drive into TODO task for refiling."
+  (let ((notes
+         (ignore-errors
+           (directory-files
+            "~/Library/CloudStorage/GoogleDrive-adair.david@gmail.com/My Drive"
+            t "[0-9].*\\.txt\\'" nil))))
+    (when notes
+      (with-current-buffer (find-file-noselect "~/git/org/refile.org")
+        (save-excursion
+          (goto-char (point-min))
+          (forward-line 1)
+          (dolist (note notes)
+            (insert
+             "* TODO "
+             (with-temp-buffer
+               (insert-file-contents note)
+               (goto-char (point-min))
+               (forward-line)
+               (unless (bolp))
+               (insert ?\n)
+               (goto-char (point-max))
+               (unless (bolp)
+                 (insert ?\n))
+               (let ((uuid (substring (shell-command-to-string "uuidgen") 0 -1))
+                     (file (file-name-nondirectory note)))
+                 (string-match
+                  (concat "\\`\\([0-9]\\{4\\}\\)"
+                          "-\\([0-9]\\{2\\}\\)"
+                          "-\\([0-9]\\{2\\}\\)"
+                          "-\\([0-9]\\{2\\}\\)"
+                          "-\\([0-9]\\{2\\}\\)"
+                          "-\\([0-9]\\{2\\}\\)"
+                          "\\.txt\\'") file)
+                 (let* ((year (string-to-number (match-string 1 file)))
+                        (mon (string-to-number (match-string 2 file)))
+                        (day (string-to-number (match-string 3 file)))
+                        (hour (string-to-number (match-string 4 file)))
+                        (min (string-to-number (match-string 5 file)))
+                        (sec (string-to-number (match-string 6 file)))
+                        (date (format "%04d-%02d-%02d %s"
+                                      year mon day
+                                      (calendar-day-name (list mon day year) t))))
+                   (insert (format (concat ":PROPERTIES:\n"
+                                           ":ID: %s\n"
+                                           ":CREATED: ")
+                                   uuid))
+                   (insert (format "[%s %02d:%02d]\n:END:\n" date hour min))))
+               (buffer-string)))
+            (delete-file note t)))
+        (when (buffer-modified-p)
+          (save-buffer)))))
+  ad-do-it)
 
 (provide 'init-org)
