@@ -93,15 +93,15 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 :REPEAT_TO_STATE: TODO
 :LOG_INTO_DRAWER: t
 :END:"
-      :prepend t))
+      :prepend t)))
 
-   org-roam-dailies-capture-templates
+  (org-roam-dailies-capture-templates
    '(("d" "default" entry
       "* %U %?"
       :target (file+head "%<%Y-%m-%d>.org"
                          "#+title: %<%Y-%m-%d>\n"))
      ("m" "meeting" entry
-      (file "~/git/roam/templates/meeting.org")
+      (file "~/git/org/template/meeting.org")
       :target (file+head "%<%Y-%m-%d>.org"
                          "#+title: %<%Y-%m-%d>\n")
       :jump-to-captured t)))
