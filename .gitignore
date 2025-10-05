@@ -55,4 +55,3 @@ projects
 *.sqlite
 /org-persist/
 /history
-/straight
