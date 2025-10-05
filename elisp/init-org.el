@@ -57,8 +57,8 @@
   (org-extend-today-until 4)
   (org-global-properties
    '(("Effort_ALL" . "0:05 0:15 0:30 1:00 2:00 3:00 4:00 6:00 8:00")))
-  (org-directory "~/org")
-  (org-refile-targets '(("~/org/gtd.org" :maxlevel . 3) ("~/org/neo.org" :maxlevel . 3) ("~/org/refile.org" :level . 0)))
+  (org-directory "~/git/org")
+  (org-refile-targets '(("~/git/org/gtd.org" :maxlevel . 3) ("~/git/org/neo.org" :maxlevel . 3) ("~/git/org/refile.org" :level . 0)))
   (org-todo-keywords '((sequence
                         "TODO(t)"
                         "|"
@@ -81,11 +81,11 @@
   (org-refile-allow-creating-parent-nodes 'confirm)
   (org-capture-templates
    '(("t" "Todo" entry
-      (file "~/org/refile.org")
+      (file "~/git/org/refile.org")
       "* TODO %?"
       :prepend t)
      ("h" "Habit" entry
-      (file "~/org/refile.org")
+      (file "~/git/org/refile.org")
       "* TODO %?
 SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 :PROPERTIES:
@@ -101,7 +101,7 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
       :target (file+head "%<%Y-%m-%d>.org"
                          "#+title: %<%Y-%m-%d>\n"))
      ("m" "meeting" entry
-      (file "~/org/templates/meeting.org")
+      (file "~/git/roam/templates/meeting.org")
       :target (file+head "%<%Y-%m-%d>.org"
                          "#+title: %<%Y-%m-%d>\n")
       :jump-to-captured t)))
@@ -170,12 +170,13 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
   (org-agenda-tags-column -100)
   (org-agenda-show-all-dates t)
   (org-agenda-block-separator nil)
-  (org-agenda-files '("~/org/gtd.org" "~/org/neo.org" "~/org/refile.org"))
+  (org-agenda-files '("~/git/org/gtd.org" "~/git/org/neo.org" "~/git/org/refile.org"))
   (org-agenda-repeating-timestamp-show-all t)
   (org-agenda-use-time-grid t)
   (org-agenda-hide-tags-regexp "REFILE"))
 
 (use-package org-appear
+  :ensure t
   :after org
   :hook (org-mode . org-appear-mode))
 
@@ -217,7 +218,7 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
   (org-save-all-org-buffers)
   (org-agenda-quit))
 
-(defadvice org-agenda (around fit-windows-for-agenda activate)
+(defadvice org-agenda (around slurp-drafts activate)
   "Slurps Drafts App notes saved in Google Drive into TODO task for refiling."
   (let ((notes
          (ignore-errors
@@ -225,7 +226,7 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
             "~/Library/CloudStorage/GoogleDrive-adair.david@gmail.com/My Drive"
             t "[0-9].*\\.txt\\'" nil))))
     (when notes
-      (with-current-buffer (find-file-noselect "~/org/refile.org")
+      (with-current-buffer (find-file-noselect "~/git/org/refile.org")
         (save-excursion
           (goto-char (point-min))
           (forward-line 1)

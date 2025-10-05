@@ -99,10 +99,6 @@
 (require 'init-ui)
 (require 'init-vcs)
 
-(use-package vertico
-  :init
-  (vertico-mode))
-
 (use-package savehist
   :init
   (savehist-mode))

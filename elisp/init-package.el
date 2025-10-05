@@ -58,14 +58,12 @@
 (eval-when-compile
   (require 'use-package))
 
-(use-package diminish)
-
-(use-package auto-package-update
-  :config
-  (setq auto-package-update-delete-old-versions t)
-  (setq auto-package-update-interval 7)
-  (setq auto-package-update-prompt-before-update t)
-  (auto-package-update-maybe))
+;; (use-package auto-package-update
+;;   :config
+;;   (setq auto-package-update-delete-old-versions t)
+;;   (setq auto-package-update-interval 7)
+;;   (setq auto-package-update-prompt-before-update t)
+;;   (auto-package-update-maybe))
 
 (provide 'init-package)
 

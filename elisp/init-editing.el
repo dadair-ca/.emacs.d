@@ -57,10 +57,6 @@
 
 (global-auto-revert-mode t)
 
-(use-package guru-mode
-  :diminish guru-mode
-  :init (add-hook 'prog-mode-hook 'guru-mode))
-
 (setq whitespace-line-column my-column-limit
       whitespace-style '(face line-tail))
 

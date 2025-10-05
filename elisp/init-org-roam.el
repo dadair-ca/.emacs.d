@@ -33,7 +33,7 @@
 (use-package org-roam
   :ensure t
   :config
-  (setq org-roam-directory (file-truename "~/org/roam"))
+  (setq org-roam-directory (file-truename "~/git/org"))
   (org-roam-db-autosync-mode))
 
 (use-package org-roam-ui :ensure t)

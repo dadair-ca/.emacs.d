@@ -31,6 +31,7 @@
 ;;; Code:
 
 (use-package exec-path-from-shell
+  :ensure t
   :config
   (when (memq system-type '(gnu/linux darwin x))
     (exec-path-from-shell-initialize)))

@@ -30,7 +30,7 @@
 
 ;;; Code:
 
-(use-package rg)
+(use-package rg :ensure t)
 
 (provide 'init-search)
 

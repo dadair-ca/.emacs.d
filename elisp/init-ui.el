@@ -99,9 +99,6 @@
 (setq display-time-default-load-average nil)
 (display-time-mode)
 
-(use-package minions
-  :config (minions-mode 1))
-
 (provide 'init-ui)
 
 (add-to-list 'default-frame-alist
