@@ -33,6 +33,8 @@
 (use-package smartparens
   :ensure t
   :hook (prog-mode)
+  :bind (("C-)" . sp-forward-slurp-sexp)
+         ("C-M-)" . sp-forward-barf-sexp))
   :config
   (require 'smartparens-config)
   (smartparens-strict-mode))

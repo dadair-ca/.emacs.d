@@ -232,7 +232,7 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
           (forward-line 1)
           (dolist (note notes)
             (insert
-             "* "
+             "* TODO "
              (with-temp-buffer
                (insert-file-contents note)
                (goto-char (point-min))

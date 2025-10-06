@@ -90,6 +90,7 @@
 (require 'init-ediff)
 (require 'init-editing)
 (require 'init-funs)
+(require 'init-gptel)
 (require 'init-org)
 (require 'init-org-roam)
 (require 'init-path)

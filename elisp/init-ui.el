@@ -50,12 +50,22 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-(use-package which-key
-  :defer 5
-  :diminish
-  :commands (which-key-mode)
-  :config
-  (which-key-mode))
+(defun my/default-frame-layout ()
+  "Reconfigure current frame to default frame layout on screen."
+  (interactive)
+  (let ((f (selected-frame)))
+    (set-frame-position f 450 40)
+    (set-frame-width f 110)
+    (set-frame-height f 68)))
+
+(my/default-frame-layout)
+
+;; (use-package which-key
+;;   :defer 5
+;;   :diminish
+;;   :commands (which-key-mode)
+;;   :config
+;;   (which-key-mode))
 
 (add-hook 'after-make-frame-functions 'da/disable-scroll-bars)
 

@@ -33,15 +33,8 @@
 (defvar ediff-window-setup-functin 'ediff-setup-windows-plain)
 
 (use-package magit
-  :bind ("<f2>" . magit-status))
-
-(use-package forge :after magit)
-
-;; (use-package code-review
-;;   :custom
-;;   (code-review-fill-column 80)
-;;   (code-review-download-dir "/tmp/code-review/")
-;;   (code-review-ath-login-marker 'forge))
+  :ensure t
+  :bind (("C-x g" . magit-status)))
 
 (provide 'init-vcs)
 

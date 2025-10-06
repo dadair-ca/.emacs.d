@@ -32,6 +32,8 @@
 
 (use-package org-roam
   :ensure t
+  :bind
+  (("C-c n f" . org-roam-node-find))
   :config
   (setq org-roam-directory (file-truename "~/git/org"))
   (org-roam-db-autosync-mode))
