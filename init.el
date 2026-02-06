@@ -32,140 +32,175 @@
 
 ;;; Code:
 
-;;;; Preamble
+(add-to-list 'load-path (expand-file-name "elisp" user-emacs-directory))
 
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
+(let ((normal-gc-cons-threshold (* 20 1024 1024))
+      (init-gc-cons-threshold (* 128 1024 1024)))
+  (setq gc-cons-threshold init-gc-cons-threshold)
+  (add-hook 'emacs-startup-hook
+            (lambda () (setq gc-cons-threshold
+                             normal-gc-cons-threshold))))
 
-(defun update-load-path (&rest _)
-  "Update LOAD-PATH."
-  (push (expand-file-name "elisp" user-emacs-directory) load-path))
+(setq-default user-full-name "David Adair"
+	      user-mail-address "adair.david@gmail.com")
 
-(advice-add #'package-initialize :after #'update-load-path)
+(require 'config-path)
+(require 'init-elpa)
 
-(update-load-path)
+(setq custom-file (concat user-emacs-directory "custom.el"))
 
-(setq backup-directory-alist `(("." . "~/.saves")))
-(setq-default create-lockfiles nil)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'init-org)
-(require 'init-ledger)
+(require 'init-ai)
+(require 'init-ide)
+(require 'init-dired)
+(require 'init-ui)
 
-(use-package uniline :ensure t)
+(require 'savehist)
+(setq savehist-file (locate-user-emacs-file "savehist"))
+(setq history-length 500)
+(setq history-delete-duplicates t)
+(setq savehist-save-minibuffer-history t)
+(add-hook 'after-init-hook #'savehist-mode)
 
-(use-package vertico
-  :ensure t
-  :custom
-  (vertico-resize t)
-  (vertico-cycle t)
-  :init
-  (vertico-mode))
+(defun my/goto-agenda-file ()
+  (interactive)
+  "Jump to agenda file."
+  (find-file "~/git/brain/agenda.txt"))
 
-(use-package savehist
-  :init
-  (savehist-mode))
+(defun agenda-move-line-up ()
+  "Move current line up one line, swapping with the line above."
+  (interactive)
+  (when (> (line-number-at-pos) 1)
+    (let ((col (current-column)))
+      (transpose-lines 1)
+      (forward-line -2)
+      (move-to-column col))))
 
-(use-package orderless
-  :ensure t
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
+(defun agenda-move-line-down ()
+  "Move current line down one line, swapping with the line below."
+  (interactive)
+  (unless (= (line-end-position) (point-max))
+    (let ((col (current-column)))
+      (forward-line 1)
+      (transpose-lines 1)
+      (forward-line -1)
+      (move-to-column col))))
 
-(use-package marginalia
-  :ensure t
-  :bind (:map minibuffer-local-map
-	      ("M-A" . marginalia-cycle))
-  :init
-  (marginalia-mode))
+(defun agenda-sort-entries ()
+  "Sort agenda entries by date, preserving the preamble."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    ;; Skip preamble (;;; lines)
+    (while (and (not (eobp))
+                (looking-at "^;;;"))
+      (forward-line 1))
+    ;; Skip blank lines after preamble
+    (while (and (not (eobp))
+                (looking-at "^$"))
+      (forward-line 1))
+    (let ((sort-start (point)))
+      (sort-lines nil sort-start (point-max)))))
 
-(use-package company
-  :ensure t
+(defun agenda-cancel-entry ()
+  "Toggle +CANCEL tag on current agenda entry."
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (when (looking-at "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}")
+      (if (re-search-forward " \\+CANCEL" (line-end-position) t)
+          (replace-match "")
+        (end-of-line)
+        (if (re-search-backward "\\[" (line-beginning-position) t)
+            (progn (skip-chars-backward " ")
+                   (insert " +CANCEL"))
+          (insert " +CANCEL"))))))
+
+(defvar-local agenda-preamble-overlay nil
+  "Overlay for hiding agenda preamble.")
+
+(defun agenda-preamble-bounds ()
+  "Return (BEG . END) of preamble, or nil if none."
+  (save-excursion
+    (goto-char (point-min))
+    (when (looking-at "^;;;")
+      (let ((beg (point)))
+        (while (and (not (eobp))
+                    (looking-at "^;;;"))
+          (forward-line 1))
+        (cons beg (point))))))
+
+(defun agenda-preamble-line-p ()
+  "Return t if point is on a preamble line."
+  (save-excursion
+    (beginning-of-line)
+    (looking-at "^;;;")))
+
+(defun agenda-toggle-preamble ()
+  "Toggle visibility of preamble."
+  (interactive)
+  (when-let ((bounds (agenda-preamble-bounds)))
+    (if (and agenda-preamble-overlay
+             (overlay-buffer agenda-preamble-overlay))
+        (progn
+          (delete-overlay agenda-preamble-overlay)
+          (setq agenda-preamble-overlay nil))
+      (setq agenda-preamble-overlay
+            (make-overlay (car bounds) (cdr bounds)))
+      (overlay-put agenda-preamble-overlay 'display
+                   (propertize ";;; ...\n" 'face 'shadow)))))
+
+(defun agenda-collapse-preamble ()
+  "Collapse preamble if not already collapsed."
+  (unless (and agenda-preamble-overlay
+               (overlay-buffer agenda-preamble-overlay))
+    (agenda-toggle-preamble)))
+
+(defun agenda-cycle-at-point ()
+  "Cycle visibility: preamble if on ;;; line, else default outline."
+  (interactive)
+  (if (agenda-preamble-line-p)
+      (agenda-toggle-preamble)
+    (agenda-outline-cycle)))
+
+(use-package agenda
+  :ensure (:host github :repo "rougier/agenda")
+  :bind (("M-a" . my/goto-agenda-file)
+	 ("C-c a c" . agenda-capture)
+	 ("C-c a d" . agenda-view-day)
+	 ("C-c a w" . agenda-view-week)
+	 ("C-c a m" . agenda-view-month-1)
+	 :map agenda-edit-mode-map
+	 ("C-c a" . nil)
+	 ("s-<up>" . agenda-move-line-up)
+	 ("s-<down>" . agenda-move-line-down)
+	 ("C-c s" . agenda-sort-entries)
+	 ("C-c k" . agenda-cancel-entry)
+	 ("TAB" . agenda-cycle-at-point))
+  :demand t
   :config
-  (add-hook 'after-init-hook 'global-company-mode))
-
-(use-package consult
-  :ensure t
-  :bind (("C-x b" . consult-buffer)
-	 ("C-*" . consult-outline)))
-
-(add-hook 'dired-mode-hook #'dired-hide-details-mode)
+  (setq agenda-file "~/git/brain/agenda.txt")
+  (add-hook 'agenda-edit-mode-hook #'agenda-collapse-preamble))
 
 (use-package denote
-  :ensure t
-  :hook (dired-mode . denote-dired-mode)
-  :bind
-  (("C-c n o" . denote-open-or-create)
-   ("C-c n l" . denote-link-or-create)
-   ("C-c n b" . denote-backlinks))
-  :init
-  (setq denote-directory (expand-file-name "~/denote"))
-  (setq denote-date-prompt-use-org-read-date t)
-  (setq denote-infer-keywords nil)
-  (setq
-   denote-known-keywords
-   '("computer"
-     "emacs"
-     "finances"
-     "health"
-     "home"
-     "journal"
-     "personal"
-     "pets"
-     "vehicle"
-     "pm" ;; General product management
-     "nl" ;; Neo lending
-     "nc" ;; Neo card
-     ))
+  :ensure (:host github :repo "protesilaos/denote")
+  :bind (("C-c n c" . denote)
+	 ("C-c n l" . denote-link))
+  :config
+  (setq denote-directory "~/git/brain")
+  (setq denote-file-type 'text)
+  (add-hook 'dired-mode-hook #'denote-dired-mode)
   (denote-rename-buffer-mode 1))
 
 (use-package consult-denote
-  :ensure t
-  :bind
-  (("C-c n f" . consult-denote-find)
-   ("C-c n g" . consult-denote-grep))
-  :init
+  :ensure (:host github :repo "protesilaos/consult-denote")
+  :after (consult denote)
+  :bind (("C-c n f" . consult-denote-find)
+	 ("C-c n g" . consult-denote-grep))
+  :config
   (consult-denote-mode 1))
 
-(use-package denote-journal
-  :ensure t
-  :hook (calendar-mode . denote-journal-calendar-mode)
-  :bind
-  (("C-c n j o" . denote-journal-new-or-existing-entry)
-   ("C-c n j l" . denote-journal-link-or-create-entry))
-  :config
-  (setq denote-journal-directory (expand-file-name "journal" denote-directory))
-  (setq denote-journal-keyword "journal")
-  (setq denote-journal-title-format 'day-date-month-year))
-
-(global-set-key (kbd "C-x c") 'calendar)
-
-(use-package magit
-  :ensure t
-  :bind (("C-x g" . magit-status)))
-
-(pixel-scroll-precision-mode)
-
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
-
-(recentf-mode 1)
+(global-auto-revert-mode t)
 
 ;;; init.el ends here
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "White" :foreground "Black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 140 :width normal :foundry "nil" :family "Menlo"))))
- '(emoji ((t (:height 110 :family "Apple Color Emoji"))))
- '(org-mode-line-clock ((t (:background "grey75" :foreground "red" :box (:line-width -1 :style released-button))))))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(company ledger-mode homw hledger-mode org-habit org-habit-stats gptel consult-denote magit consult marginalia orderless vertico orgalist uniline denote-journal denote which-key)))

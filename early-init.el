@@ -31,13 +31,13 @@
 
 ;;; Code:
 
-(setq gc-cons-threshold 402653184)
-
 (setq package-enable-at-startup nil)
 
-(setq menu-bar-mode nil)
-(setq tool-bar-mode nil)
-(setq scroll-bar-mode nil)
-(modify-all-frames-parameters '((vertical-scroll-bars)))
+(add-to-list 'default-frame-alist '(tool-bar-lines . 0))
+(add-to-list 'default-frame-alist '(menu-bar-lines . 0))
+(add-to-list 'default-frame-alist '(undecorated . nil))
+(add-to-list 'default-frame-alist '(undecorated-round . nil))
+(add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
+(add-to-list 'default-frame-alist '(horizontal-scroll-bars . nil))
 
 ;;; early-init.el ends here

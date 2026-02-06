@@ -40,7 +40,7 @@
   (set-face-attribute 'org-tag nil :foreground "Grey" :weight 'thin) ;; subdue tags
   :init
   (setq org-directory "~/git/org")
-  (setq org-agenda-files '("~/git/org/todo.org" "~/git/org/refile.org" "~/git/org/neo.org"))
+  (setq org-agenda-files '("~/git/org/gtd.org" "~/git/org/refile.org" "~/git/org/neo.org"))
   (setq org-default-notes-file "~/git/org/refile.org")
   (setq org-tags-column 0) ;; place tags immediately after headline text
   (setq org-log-into-drawer t)
