@@ -1,51 +1,29 @@
-;;; init.el --- Emacs configurations.	-*- lexical-binding: t no-byte-compile: t; -*-
-
-;; Copyright (C) 2019 David Adair
-
-;; Author: David Adair <adair.david@gmail.com>
-;; URL: https://github.com/adairdavid/.emacs.d
-;; Version: 0.0.1
-;; Keywords: .emacs.d
-
-;; This file is not part of GNU Emacs.
-;;
-;; This program is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU General Public License as
-;; published by the Free Software Foundation; either version 2, or
-;; (at your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-;; General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this program; see the file COPYING.  If not, write to
-;; the Free Software Foundation, Inc., 51 Franklin Street, Fifth
-;; Floor, Boston, MA 02110-1301, USA.
-;;
-
-;;; Commentary:
-;;
-;; My Emacs configuration.
-;;
-
-;;; Code:
-
 (add-to-list 'load-path (expand-file-name "user-lisp" user-emacs-directory))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(menu-bar-mode 0)
+(tool-bar-mode 0)
+(scroll-bar-mode 0)
+(column-number-mode 1)
+(global-hl-line-mode t)
+(display-battery-mode 1)
+(display-time-mode 1)
+(global-display-fill-column-indicator-mode 1)
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
 
-;;; init.el ends here
+(load-theme 'modus-operandi-tinted)
+
+(use-package howm
+  :vc (:url "https://github.com/kaorahi/howm")
+  :ensure t
+  :init
+  (setq howm-directory "~/git/howm"))
+
+(defun unfill-paragraph ()
+  "Takes a multi-line paragraph and makes it into a single line of text."
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-paragraph nil)))
+
+(keymap-global-set "M-Q" 'unfill-paragraph)
