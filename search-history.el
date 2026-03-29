@@ -1,1 +1,0 @@
-((:query "task" :count 5 :last-used (26949 58570 437350 0)))
