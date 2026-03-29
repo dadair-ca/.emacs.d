@@ -53,7 +53,6 @@
 
 (require 'init-ai)
 (require 'init-ide)
-(require 'init-dired)
 (require 'init-ui)
 
 (require 'savehist)
@@ -63,143 +62,100 @@
 (setq savehist-save-minibuffer-history t)
 (add-hook 'after-init-hook #'savehist-mode)
 
-(defun my/goto-agenda-file ()
-  (interactive)
-  "Jump to agenda file."
-  (find-file "~/git/brain/agenda.txt"))
+(require 'org-id)
 
-(defun agenda-move-line-up ()
-  "Move current line up one line, swapping with the line above."
-  (interactive)
-  (when (> (line-number-at-pos) 1)
-    (let ((col (current-column)))
-      (transpose-lines 1)
-      (forward-line -2)
-      (move-to-column col))))
+(defun my/org-capture-add-default-properties ()
+  (org-entry-put nil "ID" (org-id-get-create))
+  (org-id-copy))
 
-(defun agenda-move-line-down ()
-  "Move current line down one line, swapping with the line below."
-  (interactive)
-  (unless (= (line-end-position) (point-max))
-    (let ((col (current-column)))
-      (forward-line 1)
-      (transpose-lines 1)
-      (forward-line -1)
-      (move-to-column col))))
-
-(defun agenda-sort-entries ()
-  "Sort agenda entries by date, preserving the preamble."
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    ;; Skip preamble (;;; lines)
-    (while (and (not (eobp))
-                (looking-at "^;;;"))
-      (forward-line 1))
-    ;; Skip blank lines after preamble
-    (while (and (not (eobp))
-                (looking-at "^$"))
-      (forward-line 1))
-    (let ((sort-start (point)))
-      (sort-lines nil sort-start (point-max)))))
-
-(defun agenda-cancel-entry ()
-  "Toggle +CANCEL tag on current agenda entry."
-  (interactive)
-  (save-excursion
-    (beginning-of-line)
-    (when (looking-at "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}")
-      (if (re-search-forward " \\+CANCEL" (line-end-position) t)
-          (replace-match "")
-        (end-of-line)
-        (if (re-search-backward "\\[" (line-beginning-position) t)
-            (progn (skip-chars-backward " ")
-                   (insert " +CANCEL"))
-          (insert " +CANCEL"))))))
-
-(defvar-local agenda-preamble-overlay nil
-  "Overlay for hiding agenda preamble.")
-
-(defun agenda-preamble-bounds ()
-  "Return (BEG . END) of preamble, or nil if none."
-  (save-excursion
-    (goto-char (point-min))
-    (when (looking-at "^;;;")
-      (let ((beg (point)))
-        (while (and (not (eobp))
-                    (looking-at "^;;;"))
-          (forward-line 1))
-        (cons beg (point))))))
-
-(defun agenda-preamble-line-p ()
-  "Return t if point is on a preamble line."
-  (save-excursion
-    (beginning-of-line)
-    (looking-at "^;;;")))
-
-(defun agenda-toggle-preamble ()
-  "Toggle visibility of preamble."
-  (interactive)
-  (when-let ((bounds (agenda-preamble-bounds)))
-    (if (and agenda-preamble-overlay
-             (overlay-buffer agenda-preamble-overlay))
-        (progn
-          (delete-overlay agenda-preamble-overlay)
-          (setq agenda-preamble-overlay nil))
-      (setq agenda-preamble-overlay
-            (make-overlay (car bounds) (cdr bounds)))
-      (overlay-put agenda-preamble-overlay 'display
-                   (propertize ";;; ...\n" 'face 'shadow)))))
-
-(defun agenda-collapse-preamble ()
-  "Collapse preamble if not already collapsed."
-  (unless (and agenda-preamble-overlay
-               (overlay-buffer agenda-preamble-overlay))
-    (agenda-toggle-preamble)))
-
-(defun agenda-cycle-at-point ()
-  "Cycle visibility: preamble if on ;;; line, else default outline."
-  (interactive)
-  (if (agenda-preamble-line-p)
-      (agenda-toggle-preamble)
-    (agenda-outline-cycle)))
-
-(use-package agenda
-  :ensure (:host github :repo "rougier/agenda")
-  :bind (("M-a" . my/goto-agenda-file)
-	 ("C-c a c" . agenda-capture)
-	 ("C-c a d" . agenda-view-day)
-	 ("C-c a w" . agenda-view-week)
-	 ("C-c a m" . agenda-view-month-1)
-	 :map agenda-edit-mode-map
-	 ("C-c a" . nil)
-	 ("s-<up>" . agenda-move-line-up)
-	 ("s-<down>" . agenda-move-line-down)
-	 ("C-c s" . agenda-sort-entries)
-	 ("C-c k" . agenda-cancel-entry)
-	 ("TAB" . agenda-cycle-at-point))
+(use-package org
   :demand t
+  :bind (("C-c a" . org-agenda)
+	 ("C-c c" . org-capture))
   :config
-  (setq agenda-file "~/git/brain/agenda.txt")
-  (add-hook 'agenda-edit-mode-hook #'agenda-collapse-preamble))
+  (setq
+   org-directory "~/git/org"
+   org-agenda-files '("~/git/org")
+   org-default-notes-file "~/git/org/inbox.org"
+   org-modules '(ol-doi
+		 ol-w3m
+		 ol-bbdb
+		 ol-bibtex
+		 ol-docview
+		 ol-gnus
+		 ol-info
+		 ol-irc
+		 ol-mhe
+		 ol-rmail
+		 ol-eww
+		 org-habit)
+   org-capture-templates
+   '(("i" "Inbox" entry (file "inbox.org")
+      "* TODO %?
+:PROPERTIES:
+:CREATED: %U
+:END:
+%a"
+      :before-finalize my/org-capture-add-default-properties))))
 
 (use-package denote
   :ensure (:host github :repo "protesilaos/denote")
-  :bind (("C-c n c" . denote)
-	 ("C-c n l" . denote-link))
+  :demand t
+  :bind (("C-c n o" . denote-open-or-create)
+	 ("C-c n l" . denote-link-or-create))
+  :hook ((dired-mode . denote-dired-mode)
+	 (text-mode . denote-fontify-links-mode))
   :config
-  (setq denote-directory "~/git/brain")
+  (setq denote-directory "~/git/org")
   (setq denote-file-type 'text)
-  (add-hook 'dired-mode-hook #'denote-dired-mode)
-  (denote-rename-buffer-mode 1))
+  (denote-rename-buffer-mode 1)
+  (setq denote-date-prompt-use-org-read-date t)
+  (setq denote-prompts '(title keywords file-type)))
+
+(use-package denote-journal
+  :ensure (:host github :repo "protesilaos/denote-journal")
+  :commands (denote-journal-new-entry
+	     denote-journal-new-or-existing-entry
+	     denote-journal-link-or-create-entry)
+  :hook (calendar-mode . denote-journal-calendar-mode)
+  :bind (("C-c n j o" . denote-journal-new-or-existing-entry)
+	 ("C-c n j l" . denote-journal-link-or-create-entry)
+	 ("C-x c" . calendar))
+  :config
+  (setq
+   denote-journal-directory denote-directory
+   denote-journal-keyword "journal"
+   denote-journal-title-format 'day-date-month-year))
 
 (use-package consult-denote
   :ensure (:host github :repo "protesilaos/consult-denote")
-  :after (consult denote)
-  :bind (("C-c n f" . consult-denote-find)
-	 ("C-c n g" . consult-denote-grep))
+  :demand t
+  :bind (("C-c n g" . consult-denote-grep))
   :config
   (consult-denote-mode 1))
+
+(use-package dired
+  :hook ((dired-mode . dired-hide-details-mode))
+  :config
+  (when (string= system-type "darwin")       
+    (setq dired-use-ls-dired nil)))
+
+(use-package beancount
+  :ensure (:host github :repo "beancount/beancount-mode")
+  :demand t
+  :mode ("\\.beancount\\'" . beancount-mode))
+
+(use-package ledger-mode
+  :custom
+  ((ledger-binary-path "hledger")
+   (ledger-mode-should-check-version nil)
+   (ledger-report-auto-width nil)
+   (ledger-report-links-in-register nil)
+   (ledger-report-native-highlighting-arguments '("--color=always")))
+  :mode ("\\.hledger\\'" "\\.ledger\\'"))
+
+(use-package markdown-mode
+  :ensure t)
 
 (global-auto-revert-mode t)
 

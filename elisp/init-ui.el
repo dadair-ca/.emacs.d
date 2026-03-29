@@ -34,10 +34,10 @@
 ;;; Code:
 
 (set-face-attribute 'default nil :height 130)
-;;(setq default-frame-alist '((width . 165) (height . 60) (top . 125) (left . 310)))
+(setq default-frame-alist '((width . 165) (height . 60) (top . 125) (left . 310)))
 (setq inhibit-startup-screen t)
 (pixel-scroll-precision-mode)
-(load-theme 'wombat)
+(load-theme 'modus-vivendi)
 
 (setopt use-short-answers t)
 

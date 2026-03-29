@@ -64,7 +64,7 @@
   (corfu-cycle t)
   (corfu-auto t)
   (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.0)
+  (corfu-auto-delay 1.0)
   (corfu-popupinfo-delay '(0.5 . 0.2))
   :init
   (global-corfu-mode)
