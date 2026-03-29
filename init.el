@@ -32,20 +32,20 @@
 
 ;;; Code:
 
-(add-to-list 'load-path (expand-file-name "elisp" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "user-lisp" user-emacs-directory))
 
-(let ((normal-gc-cons-threshold (* 20 1024 1024))
-      (init-gc-cons-threshold (* 128 1024 1024)))
-  (setq gc-cons-threshold init-gc-cons-threshold)
-  (add-hook 'emacs-startup-hook
-            (lambda () (setq gc-cons-threshold
-                             normal-gc-cons-threshold))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 
-(use-package beancount
-  :vc (:url "https://github.com/beancount/beancount-mode")
-  :demand t
-  :mode ("\\.beancount\\'" . beancount-mode))
-
-(global-auto-revert-mode t)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 
 ;;; init.el ends here
