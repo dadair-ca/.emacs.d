@@ -22,6 +22,11 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize))
+
 (use-package consult
   :ensure t
   :bind (("C-x b" . consult-buffer)
@@ -85,7 +90,9 @@
 (use-package vulpea
   :ensure t
   :bind (("C-c n f" . vulpea-find)
-	 ("C-c n i" . vulpea-insert))
+	 ("C-c n i" . vulpea-insert)
+	 ("C-c n b" . vulpea-find-backlink)
+	 ("C-c n t a" . vulpea-buffer-tags-add))
   :config
   (setq vulpea-db-sync-directories (list org-directory))
   (setq vulpea-default-notes-directory org-directory)
@@ -206,6 +213,11 @@
 	  (todo . " %i %(my/org-agenda-category) ")
 	  (tags . " %i %(my/org-agenda-category) ")
 	  (serach . " %i %(my/org-agenda-category) ")))
+  (setq org-agenda-custom-commands
+	'((" " "Agenda"
+	   ((tags "REFILE"
+		  ((org-agenda-overriding-header "To refile")
+		   (org-tags-match-list-sublevels nil)))))))
   (advice-add 'org-agenda :before #'my/resolve-org-agenda-files)
   (advice-add 'org-todo-list :before #'my/resolve-org-agenda-files))
 
