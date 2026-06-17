@@ -4,8 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(consult-vulpea exec-path-from-shell marginalia orderless vertico
-		    vulpea-journal)))
+   '(consult consult-vulpea marginalia orderless vertico vulpea-journal)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
