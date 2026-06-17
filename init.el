@@ -8,12 +8,13 @@
 (global-hl-line-mode t)
 (display-battery-mode 1)
 (display-time-mode 1)
-(global-display-fill-column-indicator-mode 1)
+(setq-default fill-column 72)
+;; (global-display-fill-column-indicator-mode 1)
 (setq inhibit-startup-screen t)
 
 (setq make-backup-files nil)
 
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
+;; (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
 (load-theme 'modus-operandi-tinted)
 
@@ -91,6 +92,8 @@
   (setq vulpea-db-location (expand-file-name "vulpea.db" user-emacs-directory))
   (vulpea-db-autosync-mode +1))
 
+(require 'vulpea)
+
 (use-package consult-vulpea
   :ensure t
   :after vulpea
@@ -135,11 +138,39 @@
   "Add an ID property with a newly generated ID to the current node."
   (org-id-get-create))
 
+(defun my/get-file-prop (name)
+  "Get a buffer property called NAME as a string."
+  (org-with-point-at 1
+    (when (re-search-forward (concat "^#\\+" name ": \\(.*\\)")
+                             (point-max) t)
+      (buffer-substring-no-properties
+       (match-beginning 1)
+       (match-end 1)))))
+
+(defun my/org-agenda-category ()
+  "Get the category of item at point."
+  (let* ((file-name (when buffer-file-name
+		      (file-name-sans-extension
+		       (file-name-nondirectory buffer-file-name))))
+	 (title (my/get-file-prop "title"))
+	 (category (org-get-category)))
+    (or (if (and
+	     title
+	     (string-equal category file-name))
+	    title
+	  category)
+	"")))
+
 (use-package org
   :bind (("C-c c" . org-capture)
 	 ("C-c a" . org-agenda))
   :config
   (setq org-id-link-to-org-use-id t)
+  (setq org-clock-out-remove-zero-time-clocks t)
+  (setq org-startup-indented t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+  (setq org-log-state-notes-insert-after-drawers nil)
   (setq org-capture-templates
 	`(("t" "todo" plain (file ,(my/org-inbox-file-path))
 	   "* TODO %?
@@ -147,7 +178,34 @@
 :CREATED: %U
 :END:
 - >>> :: %a"
-	   :prepare-finalize my/org-capture-add-id)))
+	   :prepare-finalize my/org-capture-add-id
+	   :clock-in t :clock-resume t)
+	  ("m" "Meeting" entry (file ,(my/org-inbox-file-path))
+	   "* MEETING \"%?\" :MEETING:
+:PROPERTIES:
+:CREATED: %U
+:END:
+- >>> :: %a"
+	   :prepare-finalize my/org-capture-add-id
+	   :clock-in t :clock-resume t)))
+  (setq org-todo-keywords
+	'((sequence "TODO(t)" "|" "DONE(d!)")
+	  (sequence "HOLD(h@/!)" "WAITING(w@/!)" "|" "CANCELLED(c@)" "MEETING")))
+  (setq org-todo-keyword-faces
+	'(("TODO" :foreground "red" :weight bold)
+	  ("NEXT" :foreground "blue" :weight bold)
+	  ("DONE" :foreground "forest green" :weight bold)
+	  ("WAITING" :foreground "orange" :weight bold)
+	  ("HOLD" :foreground "magenta" :weight bold)
+	  ("CANCELLED" :foreground "forest green" :weight bold)))
+  (setq org-tags-exclude-from-inheritance '("agenda" "project" "area" "people" "MEETING"))
+  (setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                   (org-agenda-files :maxlevel . 9))))  
+  (setq org-agenda-prefix-format
+	'((agenda . " %i %(my/org-agenda-category)%?-12t% s")
+	  (todo . " %i %(my/org-agenda-category) ")
+	  (tags . " %i %(my/org-agenda-category) ")
+	  (serach . " %i %(my/org-agenda-category) ")))
   (advice-add 'org-agenda :before #'my/resolve-org-agenda-files)
   (advice-add 'org-todo-list :before #'my/resolve-org-agenda-files))
 
