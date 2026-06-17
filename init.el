@@ -17,6 +17,10 @@
 
 (load-theme 'modus-operandi-tinted)
 
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+
 (use-package consult
   :ensure t
   :bind (("C-x b" . consult-buffer)
@@ -38,101 +42,6 @@
   (completion-category-overrides '((file (styles
 					  partial-completion)))))
 
-(use-package org
-  :ensure nil
-  :bind (("C-c c" . org-capture)
-	 ("C-c a" . org-agenda))
-  :config
-  (setq org-list-demote-modify-bullet (quote (("+" . "-")
-                                            ("*" . "-")
-                                            ("1." . "-")
-                                            ("1)" . "-")
-                                            ("A)" . "-")
-                                            ("B)" . "-")
-                                            ("a)" . "-")
-                                            ("b)" . "-")
-                                            ("A." . "-")
-                                            ("B." . "-")
-                                            ("a." . "-")
-                                            ("b." . "-"))))
-  (setq org-modules '(org-id org-habit))
-  (setq org-startup-indented t)
-  (setq org-insert-heading-respect-content nil)
-  (setq org-reverse-note-order nil)
-  (setq org-id-method 'uuidgen)
-  (setq org-deadline-warning-days 30)
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t)
-  (setq org-log-state-notes-insert-after-drawers nil)
-  (setq org-directory "~/git/org")
-  (setq org-agenda-files '("~/git/org"))
-  (setq org-default-notes-file "~/git/org/refile.org")
-  (setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                   (org-agenda-files :maxlevel . 9))))
-  
-  (setq org-todo-keywords
-	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-	  (sequence "HOLD(h@/!)" "WAITING(w@/!)" "|" "CANCELLED(c@)" "MEETING")))
-  (setq org-todo-keyword-faces
-	'(("TODO" :foreground "red" :weight bold)
-	  ("NEXT" :foreground "blue" :weight bold)
-	  ("DONE" :foreground "forest green" :weight bold)
-	  ("WAITING" :foreground "orange" :weight bold)
-	  ("HOLD" :foreground "magenta" :weight bold)
-	  ("CANCELLED" :foreground "forest green" :weight bold)))
-  (setq org-todo-state-tags-triggers
-	'(("CANCELLED" ("CANCELLED" . t))
-	  ("WAITING" ("WAITING" . t))
-	  ("HOLD" ("WAITING") ("HOLD" . t))
-	  (done ("WAITING") ("HOLD"))
-	  ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-	  ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-	  ("DONE" ("WAITING") ("CANCELLED") ("HOLD"))))
-  (setq org-capture-templates
-	'(("t" "todo" entry (file "~/git/org/refile.org")
-	   "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-	  ("n" "note" entry (file "~/git/org/refile.org")
-	   "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-	  ("m" "Meeting" entry (file "~/git/org/refile.org")
-	   "* MEETING \"%?\" :MEETING:\n%U" :clock-in t :clock-resume t)
-	  ("h" "Habit" entry (file "~/git/org/refile.org")
-	   "* NEXT %?
-SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
-:PROPERTIES:
-:STYLE: habit
-:REPEAT_TO_STATE: NEXT
-:END:
-%U
-%a
-")))
-  (setq org-clock-out-remove-zero-time-clocks t)
-  (setq org-agenda-dim-blocked-tasks nil)
-  (setq org-agenda-compact-blocks t)
-  (setq org-agenda-span 'day)
-  (setq org-agenda-custom-commands
-	'(("N" "Notes" tags "NOTE"
-	   ((org-agenda-overriding-header "Notes")
-	    (org-tags-match-list-sublevels t)))
-	  ("h" "Habits" tags-todo "STYLE=\"habit\""
-	   ((org-agenda-overriding-header "Habits")
-	    (org-agenda-sorting-strategy
-	     '(todo-state-down effort-up category-keep))))
-	  (" " "Agenda"
-	   ((agenda "" nil)
-	    (tags "REFILE"
-		  ((org-agenda-overriding-header "Tasks to Refile")
-		   (org-tags-match-list-sublevels nil)))
-	    (todo "NEXT"
-		  ((org-agenda-overriding-header "Next Tasks")
-		   (org-tags-match-list-sublevels nil)))
-	    (tags-todo "-CANCELLED+WAITING|HOLD/!"
-		       ((org-agenda-overriding-header "Waiting and Postponed Tasks")
-			(org-tags-match-list-sublevels nil)))
-	    (tags "CLOSED>=\"<today>\""
-		  ((org-agenda-overriding-header "Completed Today")
-		   (org-tags-match-list-sublevels nil)))))))
-  (run-at-time "00:59" 3600 'org-save-all-org-buffers))
-
 (use-package marginalia
   :ensure t
   :demand t
@@ -140,45 +49,6 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 	      ("M-A" . marginalia-cycle))
   :init
   (marginalia-mode))
-
-;; (use-package denote
-;;   :vc (:url "https://github.com/protesilaos/denote")
-;;   :ensure t
-;;   :demand t
-;;   ;; :bind (("C-c n o" . denote-open-or-create)
-;;   ;; 	 ("C-c n l" . denote-link-or-create))
-;;   :hook ((dired-mode . denote-dired-mode)
-;; 	 (text-mode . denote-fontify-links-mode))
-;;   :config
-;;   (setq denote-directory "~/git/org")
-;;   (setq denote-file-type 'text)
-;;   (denote-rename-buffer-mode 1)
-;;   (setq denote-date-prompt-use-org-read-date t)
-;;   (setq denote-prompts '(title keywords file-type)))
-
-;; (use-package denote-journal
-;;   :vc (:url "https://github.com/protesilaos/denote-journal")
-;;   :ensure t
-;;   :commands (denote-journal-new-entry
-;; 	     denote-journal-new-or-existing-entry
-;; 	     denote-journal-link-or-create-entry)
-;;   :hook (calendar-mode . denote-journal-calendar-mode)
-;;   :bind (("C-c n j o" . denote-journal-new-or-existing-entry)
-;; 	 ("C-c n j l" . denote-journal-link-or-create-entry)
-;; 	 ("C-x c" . calendar))
-;;   :config
-;;   (setq
-;;    denote-journal-directory denote-directory
-;;    denote-journal-keyword "journal"
-;;    denote-journal-title-format 'day-date-month-year))
-
-;; (use-package consult-denote
-;;   :vc (:url "https://github.com/protesilaos/consult-denote")
-;;   :ensure t
-;;   :demand t
-;;   :bind (("C-c n g" . consult-denote-grep))
-;;   :config
-;;   (consult-denote-mode 1))
 
 (defun unfill-paragraph ()
   "Takes a multi-line paragraph and makes it into a single line of text."
@@ -188,9 +58,101 @@ SCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")
 
 (keymap-global-set "M-Q" 'unfill-paragraph)
 
-(use-package beancount
-  :vc (:url "https://github.com/beancount/beancount-mode")
-  :ensure t
-  :mode ("\\.beancount\\'"))
-
 (put 'narrow-to-region 'disabled nil)
+
+;;; Vulpea & Org
+
+(setq org-directory "~/git/vulpea")
+
+(defun org-directory-buffer-p ()
+  "Return non-nil if the currently visited buffer is an org directory file."
+  (and buffer-file-name
+       (string-prefix-p
+	(expand-file-name (file-name-as-directory org-directory))
+	(file-name-directory buffer-file-name))))
+
+(defun my/agenda-note-p ()
+  "Return non-nil if current buffer has any non-completed todo entries."
+  (org-element-map
+      (org-element-parse-buffer 'headline)
+      'headline
+    (lambda (h)
+      (eq (org-element-property :todo-type h)
+	  'todo))
+    nil 'first-match))
+
+(use-package vulpea
+  :ensure t
+  :bind (("C-c n f" . vulpea-find)
+	 ("C-c n i" . vulpea-insert))
+  :config
+  (setq vulpea-db-sync-directories (list org-directory))
+  (setq vulpea-default-notes-directory org-directory)
+  (setq vulpea-db-location (expand-file-name "vulpea.db" user-emacs-directory))
+  (vulpea-db-autosync-mode +1))
+
+(use-package consult-vulpea
+  :ensure t
+  :after vulpea
+  :config
+  (consult-vulpea-mode 1))
+
+(defun my/tag-agenda-notes ()
+  "Update the `agenda' tag in the current org buffer."
+  (when (and (not (active-minibuffer-window))
+	     (org-directory-buffer-p))
+    (save-excursion
+      (goto-char (point-min))
+      (let* ((tags (vulpea-buffer-tags-get))
+	     (original-tags tags))
+	(if (my/agenda-note-p)
+	    (setq tags (cons "agenda" tags))
+	  (setq tags (remove "agenda" tags)))
+	(setq tags (seq-uniq tags))
+	(when (or (seq-difference tags original-tags)
+		  (seq-difference original-tags tags))
+	  (apply #'vulpea-buffer-tags-set tags))))))
+
+(add-hook 'find-file-hook #'my/tag-agenda-notes)
+(add-hook 'before-save-hook #'my/tag-agenda-notes)
+
+(defun my/org-inbox-file-path ()
+  "Resolves the default org inbox file path, relative to org-directory."
+  (format "inbox-%s.org" (system-name)))
+
+(defun my/agenda-notes ()
+  "Return a list of notes tagged with `agenda'."
+  (seq-uniq
+   (seq-map
+    #'vulpea-note-path
+    (vulpea-db-query-by-tags-some '("agenda")))))
+
+(defun my/resolve-org-agenda-files (&rest _)
+  "Dynamically resolve the value of `org-agenda-files'."
+  (setq org-agenda-files (my/agenda-notes)))
+
+(defun my/org-capture-add-id ()
+  "Add an ID property with a newly generated ID to the current node."
+  (org-id-get-create))
+
+(use-package org
+  :bind (("C-c c" . org-capture)
+	 ("C-c a" . org-agenda))
+  :config
+  (setq org-id-link-to-org-use-id t)
+  (setq org-capture-templates
+	`(("t" "todo" plain (file ,(my/org-inbox-file-path))
+	   "* TODO %?
+:PROPERTIES:
+:CREATED: %U
+:END:
+- >>> :: %a"
+	   :prepare-finalize my/org-capture-add-id)))
+  (advice-add 'org-agenda :before #'my/resolve-org-agenda-files)
+  (advice-add 'org-todo-list :before #'my/resolve-org-agenda-files))
+
+(use-package vulpea-journal
+  :ensure t
+  :bind (("C-c n j o" . vulpea-journal))
+  :config
+  (vulpea-journal-setup))
