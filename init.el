@@ -24,11 +24,13 @@
 
 ;;; Code:
 
-;;; Cache Paths
+;;; EXEC path from shell
 
-(defvar cache-directory
-  (expand-file-name "cache/" user-emacs-directory)
-  "Base directory for cache files.")
+(use-package exec-path-from-shell
+  :vc (:url "https://github.com/purcell/exec-path-from-shell")
+  :init
+  (when (memq window-system '(mac ns x pgtk))
+    (exec-path-from-shell-initialize)))
 
 ;;; General Emacs Configs
 
@@ -39,6 +41,7 @@
    ("M-z" . nil)
    ("C-x C-b" . ibuffer)
    ("C-M-z" . delete-pair)
+   ("C-;" . duplicate-dwim)
    )
   :config
   (setq
@@ -46,7 +49,7 @@
    make-backup-files nil
    pixel-scroll-precision-mode t
    read-answer-short t
-   recentf-mode 1
+   ;;recentf-mode 1
    savehist-mode 1))
 
 ;;; ABBREV
@@ -61,7 +64,11 @@
       ("ra" "→")
       ("la" "←")
       ("ua" "↑")
-      ("da" "↓"))))
+      ("da" "↓")
+      ("hc" "✔")
+      ("hx" "✘")
+      ("fl" "⚑")
+      ("qq" "⁇"))))
 
 ;;; AUTO-REVERT
 
@@ -73,26 +80,43 @@
    auto-revert-verbose t
    global-auto-revert-non-file-buffers t))
 
-;;; ICOMPLETE
+;;; VERTICO
 
-(use-package icomplete
-  :ensure nil
-  :bind (:map icomplete-minibuffer-map
-	      ("C-n" . icomplete-forward-completions)
-	      ("C-p" . icomplete-backward-completions)
-	      ("RET" . icomplete-force-complete-and-exit)
-	      ("C-j" . exit-minibuffer))
-  :hook (after-init-hook . icomplete-vertical-mode)
+(use-package vertico
+  :ensure t
   :config
-  (setq
-   icomplete-delay-completions-threshold 0
-   icomplete-compute-delay 0
-   icomplete-show-matches-on-no-input t
-   icomplete-hide-common-prefix nil
-   icomplete-with-completion-tables t
-   icomplete-in-buffer t
-   icomplete-max-delay-chars 0
-   icomplete-scroll t))
+  (setq vertico-resize t)
+  (setq vertico-cycle t)
+  :init
+  (vertico-mode))
+
+;;; ORDERLESS
+
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+;;; CONSULT
+
+(use-package consult
+  :ensure t
+  :bind
+  (("C-x b" . consult-buffer)
+   ("C-*" . consult-outline)))
+
+;;; MARGINALIA
+
+(use-package marginalia
+  :ensure t
+  :demand t
+  :bind
+  (:map minibuffer-local-map
+	("M-A" . marginalia-cycle))
+  :init
+  (marginalia-mode))
 
 ;;; DIRED
 
@@ -133,53 +157,41 @@
   (setopt
    vc-auto-revert-mode t))
 
-;;; Org
+;;; HOWM
 
-(use-package org
-  :ensure nil
-  :defer t
-  :bind
-  (("C-c c" . org-capture)
-   ("C-c a" . org-agenda))
-  :mode ("\\.org\\'" . org-mode)
+(use-package howm
+  :vc (:url "https://github.com/kaorahi/howm")
+  :ensure t
   :config
-  (setopt org-export-backends '(ascii html icalendar latex odt md))
-  (setq
-   org-startup-folded t
-   org-startup-indented t
-   org-auto-align-tags nil
-   org-tags-column 0
+  (setq howm-directory "~/git/howm")
+  (setq howm-follow-theme t))
 
-   org-agenda-tags-column 0
-   org-agenda-block-separator ?-)
-  (setq org-ellipsis " ↴ ")
-  (set-face-attribute 'org-ellipsis nil :inherit 'default :box nil)
+(defun unfill-paragraph ()
+  "Takes a multi-line paragraph and makes it into a single line of text."
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-paragraph nil)))
 
-  (setq org-todo-keywords
-	'((sequence "TODO(t)" "|" "DONE(d!)")
-	  (sequence "HOLD(h@/!)" "WAITING(w@/!)" "|" "CANCELLED(c@)" "MEETING")))
+(keymap-global-set "M-Q" 'unfill-paragraph)
 
-  (setq org-todo-keyword-faces
-	'(("TODO" :foreground "red" :weight bold)
-	  ("NEXT" :foreground "blue" :weight bold)
-	  ("DONE" :foreground "forest green" :weight bold)
-	  ("WAITING" :foreground "orange" :weight bold)
-	  ("HOLD" :foreground "magenta" :weight bold)
-	  ("CANCELLED" :foreground "forest green" :weight bold)))  
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(consult consult-denote denote denote-journal exec-path-from-shell
+	     howm marginalia orderless vertico))
+ '(package-vc-selected-packages
+   '((exec-path-from-shell :url
+			   "https://github.com/purcell/exec-path-from-shell")
+     (howm :url "https://github.com/kaorahi/howm"))))
 
-  (setq org-log-done 'time)
-
-  (setq org-agenda-files '("~/git/org/"))
-  (setq org-default-notes-file "~/git/org/refile.org")
-
-  (setq org-id-link-to-org-use-id t)
-
-  (setq org-capture-templates
-	`(("t" "todo" entry (file org-default-notes-file)
-	   "* TODO %?
-:PROPERTIES:
-:CREATED: %U
-:END:
-- >>> :: %a"))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 
 ;;; init.el ends here
