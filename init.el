@@ -55,10 +55,6 @@
   (setq calendar-date-style 'iso)
   (setq calendar-time-zone-style 'numeric)
 
-  (require 'solar)
-  (setq calendar-latitude 51.04
-	calendar-longitude -114.03)
-
   (require 'cal-dst)
   (setq calendar-standard-time-zone-name "-0700")
   (setq calendar-daylight-time-zone-name "-0600"))
@@ -99,8 +95,10 @@
   (marginalia-mode))
 
 (use-package savehist
+  :config
+  (setq history-length 1000)
   :init
-  (savehist-mode))
+  (savehist-mode 1))
 
 ;;; DENOTE
 
@@ -275,45 +273,32 @@
   (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
   (defun da--before-finalize-function ()
-    "Add entry properties.  Intended use is through capture hooks."
-    (org-entry-put (point) "ID" (org-id-get-create)))
+    "Add 'ID' & 'CREATED' to captured entry, and add 'LINK' tag if 'SLACK' or
+'URL' properties are non-nil."
+    (org-id-get-create)
+    (org-entry-put nil "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]"))
+    (let ((slack (org-entry-get nil "SLACK"))
+	  (url (org-entry-get nil "URL")))
+      ;; If either property exists and is not an empty string
+      (when (or (and slack (not (string= slack "")))
+                (and url (not (string= url ""))))
+        ;; Add the "LINK" tag without prompting
+        (org-toggle-tag "LINK" 'on))))
+
+  (setq org-property-format "%-1s %s")
 
   (setq org-capture-templates
 	`(("t" "Task" entry (file "inbox.org")
-	   "* TODO %?
-:PROPERTIES:
-:CREATED: %U
-:END:
-%a"
+	   "* TODO %?\n%a"
 	   :before-finalize da--before-finalize-function)
 	  ("n" "Note" entry (file "inbox.org")
-	   "* %? :NOTE:
-:PROPERTIES:
-:CREATED: %U
-:END:
-%a"
+	   "* %? :NOTE:\n%a"
 	   :before-finalize da--before-finalize-function)
 	  ("m" "Meeting" entry (file "inbox.org")
-	   "* MEETING \"%?\"
-:PROPERTIES:
-:CREATED: %U
-:END:
-"
+	   "* MEETING \"%?\""
 	   :before-finalize da--before-finalize-function)
-	  ("p" "Phone Call" entry (file "inbox.org")
-	   "* PHONE \"%?\"
-:PROPERTIES:
-:CREATED: %U
-:END:
-"
-	   :before-finalize da--before-finalize-function)
-	  ("s" "Slack" entry (file "inbox.org")
-	   "* %? :URL:
-:PROPERTIES:
-:CREATED: %U
-:SLACK: %^{Thread URL}
-:END:
-"
+	  ("p" "Phone call" entry (file "inbox.org")
+	   "* PHONE \"%?\""
 	   :before-finalize da--before-finalize-function)
 	  ("h" "Habit" entry (file "inbox.org")
 	   ,(concat "* HABIT %?
@@ -321,7 +306,6 @@ SCHEDULED: "
 		    (format-time-string "<%Y-%m-%d %a .+1d/3d>")
 		    "\n"
 		    ":PROPERTIES:
-:CREATED: %U
 :STYLE: habit
 :REPEAT_TO_STATE: HABIT
 :END:
@@ -367,7 +351,9 @@ SCHEDULED: "
 		     "https://github.com/protesilaos/denote-journal")
      (consult-denote :url
 		     "https://github.com/protesilaos/consult-denote")
-     (denote :url "https://github.com/protesilaos/denote"))))
+     (denote :url "https://github.com/protesilaos/denote")))
+ '(safe-local-variable-values
+   '((calendar-latitude . 51.04) (calendar-longitude . -114.03))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
