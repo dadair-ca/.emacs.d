@@ -27,12 +27,80 @@
 ;;; BASE
 
 (use-package emacs
+  :ensure nil
   :hook
   ((text-mode . turn-on-auto-fill))
+  :bind
+  (("C-c ;" . duplicate-dwim)
+   ("C-x M-e" . eval-buffer))
+  :config
+  (setq duplicate-line-final-position -1)
+  (setq adaptive-fill-mode t)
+  (setq make-backup-files nil)
+  (setq create-lockfiles nil)
+  (setq which-key-mode 1))
+
+;;; CALENDAR
+
+(use-package calendar
+  :ensure nil
+  :bind
+  (("C-x c" . calendar))
+  :config
+  (setq calendar-mode-line-format nil)
+  (setq calendar-time-display-form
+	'(24-hours ":" minutes
+		   (when time-zone (format "(%s)" time-zone))))
+  (setq calendar-week-start-day 1)
+  (setq calendar-date-style 'iso)
+  (setq calendar-time-zone-style 'numeric)
+
+  (require 'solar)
+  (setq calendar-latitude 51.04
+	calendar-longitude -114.03)
+
+  (require 'cal-dst)
+  (setq calendar-standard-time-zone-name "-0700")
+  (setq calendar-daylight-time-zone-name "-0600"))
+
+;;; CONSULT, ORDERLESS, VERTICO, MARGINALIA
+
+(use-package consult
+  :vc (:url "https://github.com/minad/consult")
+  :bind
+  (("C-x b" . consult-buffer)
+   ("C-x r b" . consult-bookmark)
+   ("M-g o" . consult-outline)
+   ("M-s g" . consult-grep)
+   ("M-s l" . consult-line)))
+
+(use-package orderless
+  :vc (:url "https://github.com/oantolin/orderless")
   :custom
-  (adaptive-fill-mode t)
-  (make-backup-files nil)
-  (create-lockfiles nil))
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package vertico
+  :vc (:url "https://github.com/minad/vertico")
+  :custom
+  (vertico-scroll-margin 0)
+  (vertico-count 10)
+  (vertico-resize t)
+  (vertico-cycle t)
+  :init
+  (vertico-mode))
+
+(use-package marginalia
+  :vc (:url "https://github.com/minad/marginalia")
+  :bind
+  (:map minibuffer-local-map
+	("M-A" . marginalia-cycle))
+  :init
+  (marginalia-mode))
+
+(use-package savehist
+  :init
+  (savehist-mode))
 
 ;;; DENOTE
 
@@ -75,12 +143,25 @@
   :config
   (consult-denote-mode 1))
 
+(defun da--insert-journal-log-header ()
+  "Insert a log header into buffer at point."
+  (interactive)
+  (let* ((stamp (concat "--" (format-time-string "T%H%M%S")))
+	 (l (length stamp))
+	 (p (- 70 l)))
+    (insert stamp (make-string p ?-))))
+
 (use-package denote-journal
   :vc (:url "https://github.com/protesilaos/denote-journal")
   :hook
   ((calendar-mode . denote-journal-calendar-mode))
   :bind
-  (("C-c n j" . denote-journal-new-or-existing-entry))
+  (("C-c n j" . denote-journal-new-or-existing-entry)
+   :map text-mode-map
+   ("C-c j l" . da--insert-journal-log-header)
+   :map denote-journal-calendar-mode-map
+   ("F" . denote-journal-calendar-fine-file)
+   ("N" . denote-journal-calendar-new-or-existing))
   :config
   (setq denote-journal-directory (expand-file-name "journal" denote-directory))
   (setq denote-journal-keyword "journal")
@@ -89,27 +170,29 @@
 ;;; DIRED
 
 (use-package dired
-  :custom
-  (dired-use-ls-dired nil))
+  :ensure nil
+  :config
+  (setq dired-use-ls-dired nil)
+  (setq dired-dwim-target t))
 
 ;;; ORG
 
+(require 'org-habit)
+
 (use-package org
-  :hook
-  ((org-mode . org-indent-mode))
+  :ensure nil
   :bind
   (("C-c c" . org-capture)
    ("C-c l" . org-store-link)
    ("C-c o" . org-open-at-point-global)
-   ("C-c A" . org-agenda)
-   ("C-c a" . (lambda ()
-		"Call `org-agenda' with custom configuration."
-		(interactive)
-		(org-agenda nil "A"))))
+   ("C-c a" . org-agenda)
+   :map org-mode-map
+   ("C-c M-l" . org-insert-last-stored-link)
+   ("C-c C-M-l" . org-toggle-link-display))
   :config
+  (setq org-modules '(org-habit))
   (setq org-directory "~/Documents/org/")
   (setq org-imenu-depth 7)
-  (setq org-ellipsis " ▼")
   (setq org-M-RET-may-split-line '((default . nil)))
   (setq org-hide-emphasis-markers nil)
   (setq org-hide-macro-markers nil)
@@ -128,53 +211,51 @@
   (setq org-priority-faces nil)
 
   (setq org-indent-mode-turns-on-hiding-stars nil)
-  (setq org-indent-indentation-per-level 2)
-  (setq org-startup-folded 'content)
 
   (setq org-refile-targets
 	'((org-agenda-files . (:maxlevel . 2))
 	  (nil . (:maxlevel . 2))))
   (setq org-refile-use-outline-path nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
-  (setq org-reverse-note-order nil)
+  (setq org-reverse-note-order t)
+
+  (setq org-tag-alist (quote ((:startgroup)
+                              ("@errand" . ?e)
+                              ("@office" . ?o)
+                              ("@home" . ?H)
+			      ("@call" . ?C)
+                              (:endgroup)
+                              ("WAITING" . ?w)
+                              ("HOLD" . ?h)
+                              ("NOTE" . ?n)
+                              ("CANCELLED" . ?c)
+                              ("FLAGGED" . ??))))
 
   (setq org-todo-keywords
-	'((sequence "TODO(t)" "MAYBE(m)" "|" "CANCELLED(c@)" "DONE(d!)")))
-
-  (defface prot/org-todo-alternative
-    '((t :inherit (italic org-todo)))
-    "Face for alternative TODO-type Org keywords.")
-
-  (defface prot/org-done-alternative
-    '((t :inherit (italic org-done)))
-    "Face for alternative DONE-type Org keywords.")
-
-  (defface prot/org-tag-personal
-    '((default :inherit unspecified :weight regular :slant normal)
-      (((class color) (min-colors 88) (background light))
-       :foreground "#004476")
-      (((class color) (min-colors 88) (background dark))
-       :foreground "#c0d0ef")
-      (t :foreground "cyan"))
-    "Face for personal Org tag.")
-
-  (defface prot/org-tag-neo
-    '((default :inherit unspecified :weight regular :slant normal)
-      (((class color) (min-colors 88) (background light))
-       :foreground "#603f00")
-      (((class color) (min-colors 88) (background dark))
-       :foreground "#deba66")
-      (t :foreground "yellow"))
-    "Face for neo Org tag.")
-
-  (setq org-tag-faces
-	'(("personal" . prot/org-tag-personal)
-	  ("neo" . prot/org-tag-neo)))
+	(quote ((sequence "TODO(t)" "NEXT(n)" "HABIT(b)" "|" "DONE(d)")
+		(sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
   (setq org-todo-keyword-faces
-	'(("MAYBE" . prot/org-todo-alternative)
-	  ("CANCELLED" . prot/org-done-alternative)))
+      (quote (("TODO" :foreground "red" :weight bold)
+              ("NEXT" :foreground "blue" :weight bold)
+              ("DONE" :foreground "forest green" :weight bold)
+              ("WAITING" :foreground "orange" :weight bold)
+              ("HOLD" :foreground "magenta" :weight bold)
+              ("CANCELLED" :foreground "forest green" :weight bold)
+	      ("HABIT" :foreground "purple" :weight bold))))
 
+  (setq org-todo-state-tags-triggers
+      (quote (("CANCELLED" ("CANCELLED" . t))
+              ("WAITING" ("WAITING" . t))
+              ("HOLD" ("WAITING") ("HOLD" . t))
+              (done ("WAITING") ("HOLD"))
+              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+
+  (setq org-tag-faces
+	'(("inbox" . (:background "magenta1" :foreground "white" :weight bold))))
+  
   (setq org-fontify-done-headline nil)
   (setq org-fontify-todo-headline nil)
   (setq org-fontify-whole-heading-line nil)
@@ -193,157 +274,78 @@
   (setq org-link-keep-stored-after-insertion nil)
   (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
+  (defun da--before-finalize-function ()
+    "Add entry properties.  Intended use is through capture hooks."
+    (org-entry-put (point) "ID" (org-id-get-create)))
+
   (setq org-capture-templates
-	`(("t" "Task to do (Personal)" entry
-	   (file+headline "gtd.org" "All tasks")
-	   "* TODO %^{Title} %^g\n")
-	  ("T" "Task to do (Work)" entry
-	   (file+headline "neo.org" "All tasks")
-	   "* TODO %^{Title} %^g\n")
-	  ("r" "Routine task (Personal)" entry
-	   (file+headline "gtd.org" "Routine")
-	   "* TODO %^{Title} %^g\n")
-	  ("R" "Routine task (Work)" entry
-	   (file+headline "neo.org" "Routine")
-	   "* TODO %^{Title} %^g\n")))
+	`(("t" "Task" entry (file "inbox.org")
+	   "* TODO %?
+:PROPERTIES:
+:CREATED: %U
+:END:
+%a"
+	   :before-finalize da--before-finalize-function)
+	  ("n" "Note" entry (file "inbox.org")
+	   "* %? :NOTE:
+:PROPERTIES:
+:CREATED: %U
+:END:
+%a"
+	   :before-finalize da--before-finalize-function)
+	  ("m" "Meeting" entry (file "inbox.org")
+	   "* MEETING \"%?\"
+:PROPERTIES:
+:CREATED: %U
+:END:
+"
+	   :before-finalize da--before-finalize-function)
+	  ("p" "Phone Call" entry (file "inbox.org")
+	   "* PHONE \"%?\"
+:PROPERTIES:
+:CREATED: %U
+:END:
+"
+	   :before-finalize da--before-finalize-function)
+	  ("s" "Slack" entry (file "inbox.org")
+	   "* %? :URL:
+:PROPERTIES:
+:CREATED: %U
+:SLACK: %^{Thread URL}
+:END:
+"
+	   :before-finalize da--before-finalize-function)
+	  ("h" "Habit" entry (file "inbox.org")
+	   ,(concat "* HABIT %?
+SCHEDULED: "
+		    (format-time-string "<%Y-%m-%d %a .+1d/3d>")
+		    "\n"
+		    ":PROPERTIES:
+:CREATED: %U
+:STYLE: habit
+:REPEAT_TO_STATE: HABIT
+:END:
+")
+	   :before-finalize da--before-finalize-function)))
 
-  (setq org-agenda-custom-commands
-	`(("A" "Daily agenda and top-priority tasks"
-	   ((agenda "" ((org-agenda-overriding-header "\nPending scheduled tasks")
-			(org-agenda-span 1)
-			(org-agenda-show-all-dates nil)
-			(org-scheduled-past-days 365)
-			(org-scheduled-delays-days 1)
-			(org-agenda-time-grid nil)
-			(org-agenda-block-separator nil)
-			(org-agenda-entry-types '(:scheduled))
-			(org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-			(org-agenda-day-face-function (lambda (date) 'org-agenda-date))
-			(org-agenda-format-date "")
-			))
-	    (agenda "" ((org-agenda-overriding-header "\nToday's agenda\n")
-			(org-agenda-span 1)
-			(org-deadline-warning-days 0)
-			(org-agenda-block-separator nil)
-			(org-scheduled-past-days 0)
-			(org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "ROUTINE"))
-			;; We don't need the `org-agenda-date-today'
-			;; highlight because that only has a practical
-			;; utility in multi-day views.
-			(org-agenda-day-face-function (lambda (date) 'org-agenda-date))
-			(org-agenda-format-date "%A %-e %B %Y")))
-	    (agenda "" ((org-agenda-overriding-header "\nNext three days\n")
-			(org-agenda-start-on-weekday nil)
-			(org-agenda-start-day nil)
-			(org-agenda-start-day "+1d")
-			(org-agenda-span 3)
-			(org-deadline-warning-days 0)
-			(org-agenda-block-separator nil)
-			(org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
-	    (agenda "" ((org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n")
-			(org-agenda-time-grid nil)
-			(org-agenda-start-on-weekday nil)
-			;; We don't want to replicate the previous section's
-			;; three days, so we start counting from the day after.
-			(org-agenda-start-day "+4d")
-			(org-agenda-span 14)
-			(org-agenda-show-all-dates nil)
-			(org-deadline-warning-days 0)
-			(org-agenda-block-separator nil)
-			(org-agenda-entry-types '(:deadline))
-			(org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done)))))
-	   )))
+  ;;(setq org-agenda-custom-commands nil)
 
-  (setq org-default-notes-file (make-temp-file "emacs-org-notes-")) ; send it to oblivion
   (setq org-agenda-files (list org-directory))
-  (setq org-agenda-span 'week)
+  (setq org-agenda-span 'day)
   (setq org-agenda-start-on-weekday 1)  ; Monday
   (setq org-agenda-confirm-kill t)
   (setq org-agenda-show-all-dates t)
-  (setq org-agenda-show-outline-path nil)
   (setq org-agenda-window-setup 'current-window)
-  (setq org-agenda-skip-comment-trees t)
-  (setq org-agenda-menu-show-matcher t)
-  (setq org-agenda-menu-two-columns nil)
-  (setq org-agenda-sticky nil)
-  (setq org-agenda-custom-commands-contexts nil)
-  (setq org-agenda-max-entries nil)
-  (setq org-agenda-max-todos nil)
-  (setq org-agenda-max-tags nil)
-  (setq org-agenda-max-effort nil)
-
-  (setq org-agenda-prefix-format "%c	 %t %s")
-  (setq org-agenda-sorting-strategy
-        '(((agenda habit-down time-up priority-down category-keep)
-           (todo priority-down category-keep)
-           (tags priority-down category-keep)
-           (search category-keep))))
-  (setq org-agenda-breadcrumbs-separator "->")
-  (setq org-agenda-todo-keyword-format "%-1s")
-  (setq org-agenda-fontify-priorities 'cookies)
-  (setq org-agenda-category-icon-alist nil)
-  (setq org-agenda-remove-times-when-in-prefix nil)
-  (setq org-agenda-remove-timeranges-from-blocks nil)
-  (setq org-agenda-compact-blocks nil)
-  (setq org-agenda-block-separator ?—)
-
-  (setq org-agenda-bulk-mark-char "#")
-  (setq org-agenda-persistent-marks nil)
-
-  (setq diary-file (make-temp-file "emacs-diary-"))
 
   (setq org-agenda-dim-blocked-tasks t)
   (setq org-agenda-todo-list-sublevels t)
 
-  (setq org-agenda-include-deadlines t)
-  (setq org-deadline-warning-days 0)
-  (setq org-agenda-skip-scheduled-if-done nil)
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
-  (setq org-agenda-skip-timestamp-if-deadline-is-shown t)
-  (setq org-agenda-skip-deadline-if-done nil)
-  (setq org-agenda-skip-deadline-prewarning-if-scheduled 1)
-  (setq org-agenda-skip-scheduled-delay-if-deadline nil)
-  (setq org-agenda-skip-additional-timestamps-same-entry nil)
-  (setq org-agenda-skip-timestamp-if-done nil)
-  (setq org-agenda-search-headline-for-time nil)
-  (setq org-scheduled-past-days 365)
-  (setq org-deadline-past-days 365)
-  (setq org-agenda-move-date-from-past-immediately-to-today t)
-  (setq org-agenda-show-future-repeats t)
-  (setq org-agenda-prefer-last-repeat nil)
-  (setq org-agenda-timerange-leaders
-        '("" "(%d/%d): "))
-  (setq org-agenda-scheduled-leaders
-        '("Scheduled: " "Sched.%2dx: "))
-  (setq org-agenda-inactive-leader "[")
-  (setq org-agenda-deadline-leaders
-        '("Deadline:  " "In %3d d.: " "%2d d. ago: "))
-  ;; Time grid
-  (setq org-agenda-time-leading-zero t)
-  (setq org-agenda-timegrid-use-ampm nil)
-  (setq org-agenda-use-time-grid t)
-  (setq org-agenda-show-current-time-in-grid t)
-  (setq org-agenda-current-time-string (concat "Now " (make-string 70 ?.)))
-  (setq org-agenda-time-grid
-        '((daily today require-timed)
-          ( 0600 0700 0800 0900 1000 1100
-            1200 1300 1400 1500 1600 1700
-            1800 1900 2000 2100 2200 2300)
-          "" ""))
-  (setq org-agenda-default-appointment-duration nil)
-
-  (setq org-agenda-todo-ignore-with-date t)
-  (setq org-agenda-todo-ignore-timestamp t)
-  (setq org-agenda-todo-ignore-scheduled t)
-  (setq org-agenda-todo-ignore-deadlines t)
-  (setq org-agenda-todo-ignore-time-comparison-use-seconds t)
-  (setq org-agenda-tags-todo-honor-ignore-options nil)
+  (setq org-deadline-warning-days 35)
 
   (setq org-agenda-show-inherited-tags t)
   (setq org-agenda-use-tag-inheritance
         '(todo search agenda))
   (setq org-agenda-hide-tags-regexp nil)
-  (setq org-agenda-remove-tags nil)
   (setq org-agenda-tags-column 1)
   )
 
@@ -355,9 +357,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(consult-denote denote denote-journal))
+ '(package-selected-packages
+   '(consult-denote denote denote-journal marginalia orderless vertico))
  '(package-vc-selected-packages
-   '((denote-journal :url "https://github.com/protesilaos/denote-journal")
+   '((marginalia :url "https://github.com/minad/marginalia")
+     (vertico :url "https://github.com/minad/vertico")
+     (orderless :url "https://github.com/oantolin/orderless")
+     (denote-journal :url
+		     "https://github.com/protesilaos/denote-journal")
      (consult-denote :url
 		     "https://github.com/protesilaos/consult-denote")
      (denote :url "https://github.com/protesilaos/denote"))))
