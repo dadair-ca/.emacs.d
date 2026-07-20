@@ -26,12 +26,18 @@
 
 ;;; BASE
 
+(use-package exec-path-from-shell
+  :vc (:url "https://github.com/purcell/exec-path-from-shell")
+  :ensure t
+  :init
+  (exec-path-from-shell-initialize))
+
 (use-package emacs
   :ensure nil
   :hook
   ((text-mode . turn-on-auto-fill))
   :bind
-  (("C-c ;" . duplicate-dwim)
+  (("C-;" . duplicate-dwim)
    ("C-x M-e" . eval-buffer))
   :config
   (setq duplicate-line-final-position -1)
@@ -125,7 +131,7 @@
    ("C-c C-d C-f" . denote-dired-rename-marked-files-using-front-matter))
   :config
   (setq denote-directory (expand-file-name "~/Documents/notes"))
-  (setq denote-file-type 'text)
+  (setq denote-file-type 'org)
   (setq denote-known-keywords '("emacs"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
@@ -173,6 +179,19 @@
   (setq dired-use-ls-dired nil)
   (setq dired-dwim-target t))
 
+;;; EMBARK
+
+(use-package embark
+  :vc (:url "https://github.com/oantolin/embark")
+  :ensure t
+  :bind
+  (("C-." . embark-act)
+   ("C-;" . embark-dwim)
+   ("C-h B" . embark-bindings)))
+
+(use-package embark-consult
+  :ensure t)
+
 ;;; ORG
 
 (require 'org-habit)
@@ -217,17 +236,18 @@
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-reverse-note-order t)
 
-  (setq org-tag-alist (quote ((:startgroup)
-                              ("@errand" . ?e)
-                              ("@office" . ?o)
-                              ("@home" . ?H)
-			      ("@call" . ?C)
-                              (:endgroup)
-                              ("WAITING" . ?w)
-                              ("HOLD" . ?h)
-                              ("NOTE" . ?n)
-                              ("CANCELLED" . ?c)
-                              ("FLAGGED" . ??))))
+  (setq org-tag-persistent-alist (quote ((:startgroup)
+					 ("@errand" . ?e)
+					 ("@office" . ?o)
+					 ("@home" . ?H)
+					 ("@call" . ?C)
+					 (:endgroup)
+					 ("WAITING" . ?w)
+					 ("HOLD" . ?h)
+					 ("NOTE" . ?n)
+					 ("CANCELLED" . ?c)
+					 ("LINK" . ?l)
+					 ("FLAGGED" . ??))))
 
   (setq org-todo-keywords
 	(quote ((sequence "TODO(t)" "NEXT(n)" "HABIT(b)" "|" "DONE(d)")
@@ -310,9 +330,37 @@ SCHEDULED: "
 :REPEAT_TO_STATE: HABIT
 :END:
 ")
+	   :before-finalize da--before-finalize-function)
+	  ("R" "Product review" entry (file "inbox.org")
+	   ,(concat "* TODO (%^{For Who}) Review: %? :LINK:
+SCHEDULED:"
+		    (format-time-string "<%Y-%m-%d %a>")
+		    "\n"
+		    ":PROPERTIES:
+:URL: %^{Document link}
+:SLACK: %^{Slack thread}
+:END:
+")
 	   :before-finalize da--before-finalize-function)))
 
-  ;;(setq org-agenda-custom-commands nil)
+  (setq org-agenda-custom-commands
+	`(("N" "Notes" tags "NOTE")
+	  ("h" "Habits" tags-todo "STYLE=\"habit\"")
+	  (" " "Agenda"
+	   ((tags-todo "PRIORITY=\"A\"")
+	    (agenda ""
+		    ((org-agenda-span 3)
+		     (org-agenda-start-day "0d")))
+	    (tags "inbox")
+	    (tags-todo "-CANCELLED+WAITING|HOLD/!")
+	    (tags "CLOSED>=\"<today>\"")))))
+
+  (setq org-habit-preceding-days 63)
+
+  (setq org-agenda-include-diary t)
+
+  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-skip-deadline-if-done t)
 
   (setq org-agenda-files (list org-directory))
   (setq org-agenda-span 'day)
@@ -342,9 +390,13 @@ SCHEDULED: "
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(consult-denote denote denote-journal marginalia orderless vertico))
+   '(consult-denote denote denote-journal embark embark-consult
+		    exec-path-from-shell marginalia orderless vertico))
  '(package-vc-selected-packages
-   '((marginalia :url "https://github.com/minad/marginalia")
+   '((exec-path-from-shell :url
+			   "https://github.com/purcell/exec-path-from-shell")
+     (embark :url "https://github.com/oantolin/embark")
+     (marginalia :url "https://github.com/minad/marginalia")
      (vertico :url "https://github.com/minad/vertico")
      (orderless :url "https://github.com/oantolin/orderless")
      (denote-journal :url
