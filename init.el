@@ -24,8 +24,6 @@
 
 ;;; Code:
 
-;;; BASE
-
 (use-package exec-path-from-shell
   :vc (:url "https://github.com/purcell/exec-path-from-shell")
   :ensure t
@@ -39,14 +37,14 @@
   :bind
   (("C-;" . duplicate-dwim)
    ("C-x M-e" . eval-buffer))
-  :config
-  (setq duplicate-line-final-position -1)
-  (setq adaptive-fill-mode t)
-  (setq make-backup-files nil)
-  (setq create-lockfiles nil)
-  (setq which-key-mode 1))
-
-;;; CALENDAR
+  :custom
+  (duplicate-line-final-position -1)
+  (fill-column 72)
+  (adaptive-fill-mode t)
+  (create-lockfiles nil)
+  (make-backup-files nil)
+  :init
+  (which-key-mode 1))
 
 (use-package calendar
   :ensure nil
@@ -64,8 +62,6 @@
   (require 'cal-dst)
   (setq calendar-standard-time-zone-name "-0700")
   (setq calendar-daylight-time-zone-name "-0600"))
-
-;;; CONSULT, ORDERLESS, VERTICO, MARGINALIA
 
 (use-package consult
   :vc (:url "https://github.com/minad/consult")
@@ -106,8 +102,6 @@
   :init
   (savehist-mode 1))
 
-;;; DENOTE
-
 (use-package denote
   :vc (:url "https://github.com/protesilaos/denote")
   :hook
@@ -131,7 +125,7 @@
    ("C-c C-d C-f" . denote-dired-rename-marked-files-using-front-matter))
   :config
   (setq denote-directory (expand-file-name "~/Documents/notes"))
-  (setq denote-file-type 'org)
+  (setq denote-file-type 'text)
   (setq denote-known-keywords '("emacs"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
@@ -141,6 +135,7 @@
 
 (use-package consult-denote
   :vc (:url "https://github.com/protesilaos/consult-denote")
+  :after (consult)
   :bind
   (("C-c n f" . consult-denote-find)
    ("C-c n g" . consult-denote-grep))
@@ -164,22 +159,18 @@
    :map text-mode-map
    ("C-c j l" . da--insert-journal-log-header)
    :map denote-journal-calendar-mode-map
-   ("F" . denote-journal-calendar-fine-file)
+   ("F" . denote-journal-calendar-find-file)
    ("N" . denote-journal-calendar-new-or-existing))
   :config
   (setq denote-journal-directory (expand-file-name "journal" denote-directory))
   (setq denote-journal-keyword "journal")
   (setq denote-journal-title-format 'day-date-month-year))
 
-;;; DIRED
-
 (use-package dired
   :ensure nil
   :config
   (setq dired-use-ls-dired nil)
   (setq dired-dwim-target t))
-
-;;; EMBARK
 
 (use-package embark
   :vc (:url "https://github.com/oantolin/embark")
@@ -192,7 +183,10 @@
 (use-package embark-consult
   :ensure t)
 
-;;; ORG
+(use-package ledger-mode
+  :vc (:url "https://github.com/ledger/ledger-mode")
+  :ensure t
+  :demand t)
 
 (require 'org-habit)
 
@@ -288,10 +282,6 @@
   (setq org-log-redeadline 'time)
   (setq org-log-reschedule 'time)
 
-  (setq org-link-context-for-files t)
-  (setq org-link-keep-stored-after-insertion nil)
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-
   (defun da--before-finalize-function ()
     "Add 'ID' & 'CREATED' to captured entry, and add 'LINK' tag if 'SLACK' or
 'URL' properties are non-nil."
@@ -306,6 +296,16 @@
         (org-toggle-tag "LINK" 'on))))
 
   (setq org-property-format "%-1s %s")
+
+  (defun da--org-capture-select-person ()
+    "Prompt for a common collaborator."
+    (let ((people '("Dakota Krienke"
+		    "Reid McCallum"
+		    "Laura Newton"
+		    "Andres Villanueva"
+		    "Leo Guimaraes"
+		    "Marcelle Saulnier-Holland")))
+      (completing-read "Who: " people)))
 
   (setq org-capture-templates
 	`(("t" "Task" entry (file "inbox.org")
@@ -332,7 +332,7 @@ SCHEDULED: "
 ")
 	   :before-finalize da--before-finalize-function)
 	  ("R" "Product review" entry (file "inbox.org")
-	   ,(concat "* TODO (%^{For Who}) Review: %? :LINK:
+	   ,(concat "* TODO (%(da--org-capture-select-person)) Review: %?
 SCHEDULED:"
 		    (format-time-string "<%Y-%m-%d %a>")
 		    "\n"
@@ -361,6 +361,7 @@ SCHEDULED:"
 
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-skip-deadline-prewarning-if-scheduled t)
 
   (setq org-agenda-files (list org-directory))
   (setq org-agenda-span 'day)
@@ -381,6 +382,18 @@ SCHEDULED:"
   (setq org-agenda-tags-column 1)
   )
 
+(use-package howm
+  :vc (:url "https://github.com/kaorahi/howm")
+  :ensure t
+  :custom
+  (howm-directory "~/git/howm"))
+
+(use-package newsticker
+  :ensure nil
+  :custom
+  (newsticker-url-list '(("Planet Emacslife" "https://planet.emacslife.com/atom.xml")
+			 ("The Universe of Discource" "https://blog.plover.com/index.atom"))))
+
 (provide 'init)
 ;;; init.el ends here
 
@@ -389,11 +402,10 @@ SCHEDULED:"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(consult-denote denote denote-journal embark embark-consult
-		    exec-path-from-shell marginalia orderless vertico))
+ '(package-selected-packages '(howm))
  '(package-vc-selected-packages
-   '((exec-path-from-shell :url
+   '((howm :url "https://github.com/kaorahi/howm")
+     (exec-path-from-shell :url
 			   "https://github.com/purcell/exec-path-from-shell")
      (embark :url "https://github.com/oantolin/embark")
      (marginalia :url "https://github.com/minad/marginalia")
