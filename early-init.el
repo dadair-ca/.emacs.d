@@ -24,6 +24,14 @@
 
 ;;; Code:
 
+;; Emacs 31.1 from emacsformacosx.com bundles a libgccjit that derives the
+;; macOS deployment target as Darwin major - 9; on macOS 27 that produces an
+;; invalid -mmacosx-version-min=18.0, so every native compile fails.
+;; Override it before async native compilation starts.
+(when (eq system-type 'darwin)
+  (setenv "MACOSX_DEPLOYMENT_TARGET"
+          (or (getenv "MACOSX_DEPLOYMENT_TARGET") "11")))
+
 (setq inhibit-startup-screen t)
 
 (setq default-frame-alist

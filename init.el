@@ -299,12 +299,7 @@
 
   (defun da--org-capture-select-person ()
     "Prompt for a common collaborator."
-    (let ((people '("Dakota Krienke"
-		    "Reid McCallum"
-		    "Laura Newton"
-		    "Andres Villanueva"
-		    "Leo Guimaraes"
-		    "Marcelle Saulnier-Holland")))
+    (let ((people '()))
       (completing-read "Who: " people)))
 
   (setq org-capture-templates
@@ -382,18 +377,6 @@ SCHEDULED:"
   (setq org-agenda-tags-column 1)
   )
 
-(use-package howm
-  :vc (:url "https://github.com/kaorahi/howm")
-  :ensure t
-  :custom
-  (howm-directory "~/git/howm"))
-
-(use-package newsticker
-  :ensure nil
-  :custom
-  (newsticker-url-list '(("Planet Emacslife" "https://planet.emacslife.com/atom.xml")
-			 ("The Universe of Discource" "https://blog.plover.com/index.atom"))))
-
 (provide 'init)
 ;;; init.el ends here
 
@@ -404,8 +387,7 @@ SCHEDULED:"
  ;; If there is more than one, they won't work right.
  '(package-selected-packages '(howm))
  '(package-vc-selected-packages
-   '((howm :url "https://github.com/kaorahi/howm")
-     (exec-path-from-shell :url
+   '((exec-path-from-shell :url
 			   "https://github.com/purcell/exec-path-from-shell")
      (embark :url "https://github.com/oantolin/embark")
      (marginalia :url "https://github.com/minad/marginalia")
