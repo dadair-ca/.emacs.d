@@ -1,5 +1,6 @@
 *.elc
 *~
+*.eld
 .DS_Store
 .cache
 .cask

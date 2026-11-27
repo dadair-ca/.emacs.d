@@ -124,8 +124,8 @@
    ("C-c C-d C-k" . denote-dired-rename-marked-files-with-keywords)
    ("C-c C-d C-f" . denote-dired-rename-marked-files-using-front-matter))
   :config
-  (setq denote-directory (expand-file-name "~/Documents/notes"))
-  (setq denote-file-type 'text)
+  (setq denote-directory (expand-file-name "~/git/denote"))
+  (setq denote-file-type 'org)
   (setq denote-known-keywords '("emacs"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
@@ -183,11 +183,6 @@
 (use-package embark-consult
   :ensure t)
 
-(use-package ledger-mode
-  :vc (:url "https://github.com/ledger/ledger-mode")
-  :ensure t
-  :demand t)
-
 (require 'org-habit)
 
 (use-package org
@@ -202,7 +197,7 @@
    ("C-c C-M-l" . org-toggle-link-display))
   :config
   (setq org-modules '(org-habit))
-  (setq org-directory "~/Documents/org/")
+  (setq org-directory "~/git/org/")
   (setq org-imenu-depth 7)
   (setq org-M-RET-may-split-line '((default . nil)))
   (setq org-hide-emphasis-markers nil)
@@ -266,7 +261,7 @@
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
   (setq org-tag-faces
-	'(("inbox" . (:background "magenta1" :foreground "white" :weight bold))))
+	'(("refile" . (:background "magenta1" :foreground "white" :weight bold))))
   
   (setq org-fontify-done-headline nil)
   (setq org-fontify-todo-headline nil)
@@ -303,19 +298,19 @@
       (completing-read "Who: " people)))
 
   (setq org-capture-templates
-	`(("t" "Task" entry (file "inbox.org")
+	`(("t" "Task" entry (file "refile.org")
 	   "* TODO %?\n%a"
 	   :before-finalize da--before-finalize-function)
-	  ("n" "Note" entry (file "inbox.org")
+	  ("n" "Note" entry (file "refile.org")
 	   "* %? :NOTE:\n%a"
 	   :before-finalize da--before-finalize-function)
-	  ("m" "Meeting" entry (file "inbox.org")
+	  ("m" "Meeting" entry (file "refile.org")
 	   "* MEETING \"%?\""
 	   :before-finalize da--before-finalize-function)
-	  ("p" "Phone call" entry (file "inbox.org")
+	  ("p" "Phone call" entry (file "refile.org")
 	   "* PHONE \"%?\""
 	   :before-finalize da--before-finalize-function)
-	  ("h" "Habit" entry (file "inbox.org")
+	  ("h" "Habit" entry (file "refile.org")
 	   ,(concat "* HABIT %?
 SCHEDULED: "
 		    (format-time-string "<%Y-%m-%d %a .+1d/3d>")
@@ -326,7 +321,7 @@ SCHEDULED: "
 :END:
 ")
 	   :before-finalize da--before-finalize-function)
-	  ("R" "Product review" entry (file "inbox.org")
+	  ("R" "Product review" entry (file "refile.org")
 	   ,(concat "* TODO (%(da--org-capture-select-person)) Review: %?
 SCHEDULED:"
 		    (format-time-string "<%Y-%m-%d %a>")
@@ -346,7 +341,7 @@ SCHEDULED:"
 	    (agenda ""
 		    ((org-agenda-span 3)
 		     (org-agenda-start-day "0d")))
-	    (tags "inbox")
+	    (tags "refile")
 	    (tags-todo "-CANCELLED+WAITING|HOLD/!")
 	    (tags "CLOSED>=\"<today>\"")))))
 
